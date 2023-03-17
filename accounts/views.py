@@ -5,6 +5,7 @@ from rest_framework.exceptions import AuthenticationFailed
 from .serializers import UserSerializer , UserCompeleteProfileSerializer
 from .models import User
 import jwt , datetime
+from django.shortcuts import get_object_or_404
 
 class RegisterView(APIView):
     def post(self , request):
@@ -77,7 +78,9 @@ class UserProfileList(generics.ListCreateAPIView):
 class UserProfileDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = User.objects.all()
     serializer_class = UserCompeleteProfileSerializer
-
+    def get_object(self):
+        UserName= self.kwargs.get("username")
+        return get_object_or_404(User, username=UserName)
 
 
 
