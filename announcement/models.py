@@ -3,10 +3,10 @@ from accounts.models import *
 
 
 class Announcement(models.Model):
-    # announcer = models.ForeignKey(
-    #     User,
-    #     on_delete=models.CASCADE
-    # )
+    announcer = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE
+    )
 
     id = models.AutoField(primary_key=True)
 
@@ -20,5 +20,4 @@ class Announcement(models.Model):
     timestamp_created = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return 'This is an announcement with ID ' + str(self.id) + '.'
-    
+        return 'This is an announcement with ID ' + str(self.id) + " and the announcer is "+str(self.announcer)+ '.' 
