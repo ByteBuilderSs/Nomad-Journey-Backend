@@ -11,6 +11,12 @@ def GetAnnouncementList(request):
     return Response(serializer.data)
 
 @api_view(['GET'])
+def GetAnnouncementListOfEachAnnouncer(request , fk):
+    announcements = Announcement.objects.filter(announcer = fk)
+    serializer = AnnouncementSerializer(announcements, many=True)
+    return Response(serializer.data)
+
+@api_view(['GET'])
 def GetSingleAnnouncement(request, pk):
     announcement = Announcement.objects.get(id=pk)
     serializer = AnnouncementSerializer(announcement, many=False)
