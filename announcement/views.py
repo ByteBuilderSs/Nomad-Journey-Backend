@@ -11,12 +11,6 @@ def GetAnnouncementList(request):
     return Response(serializer.data)
 
 @api_view(['GET'])
-def GetAnnouncementListOfEachAnnouncer(request , fk):
-    announcements = Announcement.objects.filter(announcer = fk)
-    serializer = AnnouncementSerializer(announcements, many=True)
-    return Response(serializer.data)
-
-@api_view(['GET'])
 def GetSingleAnnouncement(request, pk):
     announcement = Announcement.objects.get(id=pk)
     serializer = AnnouncementSerializer(announcement, many=False)
@@ -24,16 +18,17 @@ def GetSingleAnnouncement(request, pk):
 
 @api_view(['POST'])
 def CreateAnnouncement(request):
-    serializer = AnnouncementSerializer(data=request.data)
+    serializer = AnnouncementSerializer(data=request.data, context={"request" : request})
     
     if serializer.is_valid():
         serializer.save()
     return Response(serializer.data)
 
-@api_view(['POST'])
+@api_view(['PUT'])
 def EditAnnouncement(request, pk):
     announcement = Announcement.objects.get(id=pk)
     serializer = AnnouncementSerializer(instance=announcement, data=request.data)
+
     if serializer.is_valid():
         serializer.save()
     return Response(serializer.data)

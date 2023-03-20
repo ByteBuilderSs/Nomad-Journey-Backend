@@ -1,14 +1,13 @@
 from django.db import models
-from accounts.models import *
+from accounts.models import User
 
 
 class Announcement(models.Model):
     announcer = models.ForeignKey(
         User,
-        on_delete=models.CASCADE
+        on_delete=models.CASCADE,
+        default=None
     )
-
-    id = models.AutoField(primary_key=True)
 
     country = models.CharField(max_length=100)
     city = models.CharField(max_length=100)
@@ -20,4 +19,4 @@ class Announcement(models.Model):
     timestamp_created = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return 'This is an announcement with ID ' + str(self.id) + " and the announcer is "+str(self.announcer)+ '.' 
+        return 'This is an announcement with ID ' + str(self.id) + '.'

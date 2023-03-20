@@ -5,4 +5,7 @@ class AnnouncementSerializer(serializers.ModelSerializer):
     class Meta:
         model = Announcement
         fields = '__all__'
-        depth = 1
+
+    def create(self, validated_data):
+        validated_data['announcer'] = self.context['request'].user
+        return super().create(validated_data)
