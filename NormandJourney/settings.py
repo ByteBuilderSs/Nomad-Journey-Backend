@@ -148,16 +148,19 @@ AUTH_USER_MODEL = 'accounts.User'
 #     'JWT_AUTH_HEADER_PREFIX': 'Bearer',
 # }
 
-# CROS_ORIGIN_ALLOW_ALL = True
-CROS_ALLOW_CREDENTIALS = False
+CROS_ORIGIN_ALLOW_ALL = True
+# CROS_ALLOW_CREDENTIALS = False
 # CORS_ALLOWED_ORIGINS = [
 #     "http://localhost:8080",
 #     "http://127.0.0.1:8080"
 # ]
-CORS_ORIGIN_WHITELIST = ["http://localhost:3000" , "http://127.0.0.1:8000"]
+# CORS_ORIGIN_WHITELIST = ["http://localhost:3000" , "http://127.0.0.1:8000"]
 
 
 SIMPLE_JWT = {
-    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=60),
-    'REFRESH_TOKEN_LIFETIME': timedelta(days=30),
+    'ACCESS_TOKEN_LIFETIME': timedelta(hours=2),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
+    "AUTH_HEADER_TYPES": ("Bearer",),
+    "ROTATE_REFRESH_TOKENS": True,
+    "BLACKLIST_AFTER_ROTATION": True
 }
