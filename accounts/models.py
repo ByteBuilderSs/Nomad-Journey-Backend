@@ -49,6 +49,7 @@ class User(AbstractUser):
     phone_number = models.CharField(max_length=20 , null=True)
     # is_active = models.BooleanField(default=True)
     profile_photo = models.ImageField(upload_to='customer_photos' , null=True)
+    image_code = models.TextField(null=True, blank=True)
     ssn = models.CharField(max_length=20 , null=True)
     first_name = models.CharField(max_length=255)
     last_name = models.CharField(max_length=255)
