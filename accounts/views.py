@@ -20,15 +20,9 @@ class RegisterView(APIView):
             try:
                 body = json.loads(request.body.decode('utf-8'))
                 serializer = UserSerializer(data=body)
-                # serializer.is_valid(raise_exception=True)
+                serializer.is_valid(raise_exception=True)
                 if serializer.is_valid():
-                    created_user = User.objects.create(username=body["username"], 
-                                                        first_name=body["first_name"],
-                                                        last_name=body["last_name"],
-                                                        email=body["email"],
-                                                        password=hash_sha256(body["password"]),
-                                                        password_again=hash_sha256(body["password_again"]))
-                    
+                    serializer.save()
                     return Response(serializer.data, status=status.HTTP_200_OK)
                 else:
                     return Response(serializer.errors , status = status.HTTP_400_BAD_REQUEST)

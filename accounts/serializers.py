@@ -4,6 +4,7 @@ from django.contrib.auth import authenticate
 from django.contrib.auth.models import update_last_login
 from rest_framework import serializers
 from rest_framework_jwt.settings import api_settings
+from NormandJourney.tools import hash_sha256
 
 JWT_PAYLOAD_HANDLER = api_settings.JWT_PAYLOAD_HANDLER
 JWT_ENCODE_HANDLER = api_settings.JWT_ENCODE_HANDLER
@@ -19,6 +20,7 @@ class UserSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         password = validated_data.pop('password',None)
         instance = self.Meta.model(**validated_data)
+        instance.password_again = hash_sha256(instance.password_again)
         if password is not None:
             instance.set_password(password)
         instance.save()
