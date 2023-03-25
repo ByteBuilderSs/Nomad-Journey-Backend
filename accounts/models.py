@@ -40,6 +40,8 @@ class User(AbstractUser):
     User_education = models.CharField(max_length=100,null=True)
     User_nationality = models.CharField(max_length=100, null=True)
     User_address = models.TextField(blank=True , null=True)
+    User_address_lat = models.FloatField(null=True)
+    User_address_long = models.FloatField(null = True)
     User_gender = models.CharField(max_length=1, choices=GENDER_CHOICES , null=True)
     User_country_code = models.CharField(max_length=2 , null=True)
     User_country = models.CharField(max_length=100 , null=True)
@@ -64,3 +66,13 @@ class User(AbstractUser):
 
     def __str__(self):
         return self.first_name+" "+self.last_name
+    
+class City(models.Model):
+    city_name = models.CharField(max_length=100, primary_key=True)
+    country = models.CharField(max_length=100)
+    c_lat = models.FloatField()
+    c_long = models.FloatField()
+    abbrev_city = models.CharField(max_length=3)
+
+    def __str__(self):
+        return f"{self.cityName}: ({self.cLat}, {self.cLong})"
