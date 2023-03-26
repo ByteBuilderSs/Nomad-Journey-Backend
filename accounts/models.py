@@ -55,7 +55,7 @@ class User(AbstractUser):
     User_gender = models.CharField(max_length=1, choices=GENDER_CHOICES , null=True)
     User_country_code = models.CharField(max_length=2 , null=True)
     User_country = models.CharField(max_length=100 , null=True)
-    User_city = models.ForeignKey(City,on_delete=models.CASCADE,default=None)
+    User_city = models.ForeignKey(City,on_delete=models.CASCADE,default=None  ,null=True)
     User_postal_code = models.CharField(max_length=10 , null=True)
     User_phone_number = models.CharField(max_length=20 , null=True)
     # is_active = models.BooleanField(default=True)
