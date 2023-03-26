@@ -5,6 +5,7 @@ from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.exceptions import AuthenticationFailed
 from .serializers import UserSerializer , UserCompeleteProfileSerializer
 from .models import User
+from .permissions import IsOwner
 import jwt , datetime
 from django.shortcuts import get_object_or_404
 import json
@@ -106,6 +107,7 @@ class UserProfileList(generics.ListCreateAPIView):
         return queryset
     
 class UserProfileDetail(generics.RetrieveUpdateDestroyAPIView):
+    permission_classes = (IsOwner,)
     queryset = User.objects.all()
     serializer_class = UserCompeleteProfileSerializer
     def get_object(self):

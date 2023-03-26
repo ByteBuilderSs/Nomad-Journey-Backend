@@ -8,7 +8,7 @@ urlpatterns = [
     path('login/' , LoginView.as_view()),
     path('login-user/' , UserView.as_view()),
     path('logout/' , LogoutView.as_view()),
-    path('users/' , UserProfileList.as_view()),
+    # path('users/' , UserProfileList.as_view()),
     path('user/<str:username>/', UserProfileDetail.as_view()),
     # urls for token APIs
     # path('token/', jwt_views.TokenObtainPairView.as_view(), name='token_obtain_pair'),
