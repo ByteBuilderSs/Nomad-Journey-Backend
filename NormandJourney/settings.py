@@ -47,15 +47,28 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    # cors middleware
+    'corsheaders.middleware.CorsMiddleware',
+    # default
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
-    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
+CORS_ORIGIN_ALLOW_ALL=False
+
+CORS_ORIGIN_WHITELIST=(
+    'http://localhost:3000',
+    'http://localhost:3001',
+    'http://localhost:3002',
+    'http://localhost:3003',
+    'http://localhost:3004',
+    
+)
 
 ROOT_URLCONF = 'NormandJourney.urls'
 
@@ -83,9 +96,12 @@ WSGI_APPLICATION = 'NormandJourney.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
+        'ENGINE': 'django.db.backends.postgresql_psycopg2', 
+        'NAME': 'nomadjourney',        
+        'USER': 'postgres',        
+        'PASSWORD': 'aysa1380',        
+        'HOST': 'localhost',        
+        'PORT': '5432',}
 }
 
 
@@ -148,13 +164,16 @@ AUTH_USER_MODEL = 'accounts.User'
 #     'JWT_AUTH_HEADER_PREFIX': 'Bearer',
 # }
 
-CROS_ORIGIN_ALLOW_ALL = True
-# CROS_ALLOW_CREDENTIALS = False
+# CROS_ORIGIN_ALLOW_ALL = True
+CROS_ALLOW_CREDENTIALS = False
 # CORS_ALLOWED_ORIGINS = [
 #     "http://localhost:8080",
 #     "http://127.0.0.1:8080"
 # ]
-# CORS_ORIGIN_WHITELIST = ["http://localhost:3000" , "http://127.0.0.1:8000"]
+# CORS_ORIGIN_WHITELIST = [
+#     "http://localhost:3000" ,
+#     "http://127.0.0.1:8000"
+# ]
 
 
 SIMPLE_JWT = {
