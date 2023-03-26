@@ -26,9 +26,7 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
 
     @classmethod
     def get_token(cls, user):
-        token = super().get_token(user)
-        token["username"] = user.username
-        return token
+        return RefreshToken.for_user(user)
 
     def super_validate(self, attrs):
         authenticate_kwargs = {
@@ -58,7 +56,8 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
 
         data['refresh'] = str(refresh)
         data['access'] = str(refresh.access_token)
-
+        data.update({'username': self.user.username})
+        data.update({'user_id': self.user.id})
         if api_settings.UPDATE_LAST_LOGIN:
             update_last_login(None, self.user)
 
