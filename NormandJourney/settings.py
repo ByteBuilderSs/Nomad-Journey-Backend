@@ -97,7 +97,7 @@ WSGI_APPLICATION = 'NormandJourney.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2', 
-        'NAME': 'nomadjourney',        
+        'NAME': 'nomadjourney1',        
         'USER': 'postgres',        
         'PASSWORD': 'aysa1380',        
         'HOST': 'localhost',        

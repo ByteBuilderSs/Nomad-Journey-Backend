@@ -29,6 +29,16 @@ class UserManager(BaseUserManager):
 
         return self._create_user(email, password, **extra_fields)
 
+class City(models.Model):
+    city_name = models.CharField(max_length=100, primary_key=True)
+    country = models.CharField(max_length=100)
+    c_lat = models.FloatField()
+    c_long = models.FloatField()
+    abbrev_city = models.CharField(max_length=3)
+
+    def __str__(self):
+        return f"{self.cityName}: ({self.cLat}, {self.cLong})"
+
 
 class User(AbstractUser):
     GENDER_CHOICES = (
@@ -45,7 +55,7 @@ class User(AbstractUser):
     User_gender = models.CharField(max_length=1, choices=GENDER_CHOICES , null=True)
     User_country_code = models.CharField(max_length=2 , null=True)
     User_country = models.CharField(max_length=100 , null=True)
-    User_city = models.CharField(max_length=100 , null=True)
+    User_city = models.ForeignKey(City,on_delete=models.CASCADE,default=None)
     User_postal_code = models.CharField(max_length=10 , null=True)
     User_phone_number = models.CharField(max_length=20 , null=True)
     # is_active = models.BooleanField(default=True)
@@ -67,12 +77,4 @@ class User(AbstractUser):
     def __str__(self):
         return self.first_name+" "+self.last_name
     
-class City(models.Model):
-    city_name = models.CharField(max_length=100, primary_key=True)
-    country = models.CharField(max_length=100)
-    c_lat = models.FloatField()
-    c_long = models.FloatField()
-    abbrev_city = models.CharField(max_length=3)
 
-    def __str__(self):
-        return f"{self.cityName}: ({self.cLat}, {self.cLong})"
