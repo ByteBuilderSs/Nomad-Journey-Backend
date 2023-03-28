@@ -17,17 +17,17 @@ class RegisterView(APIView):
     permission_classes = (AllowAny,)
     def post(self, request):
         if request.method == "POST":
-            try:
-                body = json.loads(request.body.decode('utf-8'))
-                serializer = UserSerializer(data=body)
-                serializer.is_valid(raise_exception=True)
-                if serializer.is_valid():
-                    serializer.save()
-                    return Response(serializer.data, status=status.HTTP_200_OK)
-                else:
-                    return Response(serializer.errors , status = status.HTTP_400_BAD_REQUEST)
-            except:
-                return Response({"message": "Something went wrong:("}, status=status.HTTP_400_BAD_REQUEST)
+            # try:
+            body = json.loads(request.body.decode('utf-8'))
+            serializer = UserSerializer(data=body)
+            serializer.is_valid(raise_exception=True)
+            if serializer.is_valid():
+                serializer.save()
+                return Response(serializer.data, status=status.HTTP_200_OK)
+            else:
+                return Response(serializer.errors , status = status.HTTP_400_BAD_REQUEST)
+            # except:
+            #     return Response({"message": "Something went wrong:("}, status=status.HTTP_400_BAD_REQUEST)
 
 class LoginView(APIView):
     permission_classes = (AllowAny, )
