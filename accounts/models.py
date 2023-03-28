@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser , BaseUserManager
+
 # Create your models here.
 
 class UserManager(BaseUserManager):
@@ -30,12 +31,14 @@ class UserManager(BaseUserManager):
         return self._create_user(email, password, **extra_fields)
 
 class City(models.Model):
-    city_name = models.CharField(max_length=100, primary_key=True)
-    country = models.CharField(max_length=100)
+    city_name = models.CharField(max_length=100,blank=True)
+    country = models.CharField(max_length=100,blank=True)
     c_lat = models.FloatField()
     c_long = models.FloatField()
-    abbrev_city = models.CharField(max_length=3)
+    abbrev_city = models.CharField(max_length=3,blank=True)
 
+    class Meta:
+        unique_together = ('city_name', 'country',)
     def __str__(self):
         return f"{self.cityName}: ({self.cLat}, {self.cLong})"
 
@@ -44,24 +47,24 @@ class User(AbstractUser):
     GENDER_CHOICES = (
         ('M', 'Male'),
         ('F', 'Female'),)
-    User_birthdate = models.DateField(null=True)
-    User_about_me = models.TextField(null=True)
-    User_job = models.CharField(max_length=100 , null=True)
-    User_education = models.CharField(max_length=100,null=True)
-    User_nationality = models.CharField(max_length=100, null=True)
+    User_birthdate = models.DateField(null=True , blank=True)
+    User_about_me = models.TextField(null=True , blank=True)
+    User_job = models.CharField(max_length=100 , null=True , blank=True)
+    User_education = models.CharField(max_length=100,null=True , blank=True)
+    User_nationality = models.CharField(max_length=100, null=True,blank=True)
     User_address = models.TextField(blank=True , null=True)
-    User_address_lat = models.FloatField(null=True)
-    User_address_long = models.FloatField(null = True)
-    User_gender = models.CharField(max_length=1, choices=GENDER_CHOICES , null=True)
-    User_country_code = models.CharField(max_length=2 , null=True)
-    User_country = models.CharField(max_length=100 , null=True)
-    User_city = models.ForeignKey(City,on_delete=models.CASCADE,default=None  ,null=True)
-    User_postal_code = models.CharField(max_length=10 , null=True)
-    User_phone_number = models.CharField(max_length=20 , null=True)
+    User_address_lat = models.FloatField(null=True,blank=True)
+    User_address_long = models.FloatField(null = True,blank=True)
+    User_gender = models.CharField(max_length=1, choices=GENDER_CHOICES , null=True,blank=True)
+    User_country_code = models.CharField(max_length=2 , null=True,blank=True)
+    User_country = models.CharField(max_length=100 , null=True,blank=True)
+    User_city = models.ForeignKey(City,on_delete=models.CASCADE,default=None  ,null=True,blank=True)
+    User_postal_code = models.CharField(max_length=10 , null=True,blank=True)
+    User_phone_number = models.CharField(max_length=20 , null=True,blank=True)
     # is_active = models.BooleanField(default=True)
-    profile_photo = models.ImageField(upload_to='customer_photos' , null=True)
+    profile_photo = models.ImageField(upload_to='customer_photos' , null=True,blank=True)
     image_code = models.TextField(null=True, blank=True)
-    ssn = models.CharField(max_length=20 , null=True)
+    ssn = models.CharField(max_length=20 , null=True,blank=True)
     first_name = models.CharField(max_length=255)
     last_name = models.CharField(max_length=255)
     email = models.EmailField(max_length=255 , unique=True)
