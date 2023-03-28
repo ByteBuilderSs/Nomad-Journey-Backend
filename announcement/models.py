@@ -55,3 +55,6 @@ class Announcement(models.Model):
 
     def __str__(self):
         return 'This is an announcement with ID ' + str(self.id) + '.'
+
+
+# test
