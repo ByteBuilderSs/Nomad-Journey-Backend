@@ -15,6 +15,13 @@ def GetAnnouncementList(request):
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
+def GetAnnouncementsForHost(request):
+    announcements = Announcement.objects.filter(anc_city=request.user.city).filter(anc_status='P')
+    serializer = AnnouncementSerializer(announcements, many=True)
+    return Response(serializer.data)
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
 def GetSingleAnnouncement(request, pk):
     announcement = Announcement.objects.get(id=pk)
     serializer = AnnouncementSerializer(announcement, many=False)
@@ -40,6 +47,7 @@ def EditAnnouncement(request, pk):
     return Response(serializer.data)
 
 @api_view(['DELETE'])
+@permission_classes([IsAuthenticated])
 def DeleteAnnouncement(request, pk):
     announcement = Announcement.objects.get(id=pk)
     announcement.delete()
