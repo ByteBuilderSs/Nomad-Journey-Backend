@@ -17,8 +17,7 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='City',
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('city_name', models.CharField(blank=True, max_length=100)),
+                ('city_name', models.CharField(blank=True, max_length=100, primary_key=True, serialize=False)),
                 ('country', models.CharField(blank=True, max_length=100)),
                 ('c_lat', models.FloatField()),
                 ('c_long', models.FloatField()),
@@ -47,6 +46,7 @@ class Migration(migrations.Migration):
                 ('User_gender', models.CharField(blank=True, choices=[('M', 'Male'), ('F', 'Female')], max_length=1, null=True)),
                 ('User_country_code', models.CharField(blank=True, max_length=2, null=True)),
                 ('User_country', models.CharField(blank=True, max_length=100, null=True)),
+                ('User_apt', models.CharField(blank=True, max_length=100, null=True)),
                 ('User_postal_code', models.CharField(blank=True, max_length=10, null=True)),
                 ('User_phone_number', models.CharField(blank=True, max_length=20, null=True)),
                 ('profile_photo', models.ImageField(blank=True, null=True, upload_to='customer_photos')),
