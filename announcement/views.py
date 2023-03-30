@@ -3,8 +3,14 @@ from rest_framework.decorators import api_view, permission_classes
 from .models import Announcement
 from .serializers import AnnouncementSerializer
 from rest_framework.permissions import IsAuthenticated
+from accounts.models import User
 
 
+@api_view(['GET'])
+def user_announcement(request, username):
+    announcement = Announcement.objects.get(announcer=User.objects.get(username=username))
+    serializer = AnnouncementSerializer(announcement, many=True)
+    return Response(serializer.data)
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
