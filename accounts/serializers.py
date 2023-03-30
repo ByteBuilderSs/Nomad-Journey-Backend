@@ -10,7 +10,8 @@ class UserSerializer(serializers.ModelSerializer):
         model = User
         fields = ['first_name', 'last_name', 'email', 'password', 'password_again', 'username']
         extra_kwargs = {
-            'password':{'write_only' : True}
+            'password':{'write_only' : True},
+            'password_again':{'write_only' : True}
         }
     
     def create(self, validated_data):
@@ -27,7 +28,18 @@ class UserCompeleteProfileSerializer(serializers.ModelSerializer):
         model = User
         fields = ("__all__")
         extra_kwargs = {
-            'password':{'write_only' : True}
+            'password':{'write_only' : True},
+            'password_again':{'write_only' : True}
         }
 
+class UserProfileEdit1Serializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ['first_name','last_name','username','User_birthdate','User_gender','User_phone_number']
+
+
+class UserProfileEdit2Serializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ['User_address','User_apt','User_city','User_country','User_postal_code']
 
