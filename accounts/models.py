@@ -32,7 +32,7 @@ class UserManager(BaseUserManager):
         return self._create_user(email, password, **extra_fields)
 
 class City(models.Model):
-    city_name = models.CharField(primary_key=True,max_length=100,blank=True)
+    city_name = models.CharField(max_length=100,blank=True)
     country = models.CharField(max_length=100,blank=True)
     c_lat = models.FloatField()
     c_long = models.FloatField()
