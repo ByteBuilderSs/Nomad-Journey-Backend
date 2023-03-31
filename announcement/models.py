@@ -59,8 +59,8 @@ class Announcement(models.Model):
     arrival_date = models.DateField()
     departure_date = models.DateField()
     anc_status = models.CharField(choices=STATUS_CHOICES, default='P', max_length=1)
-    arrival_date_is_flexible = models.BooleanField(null=True, blank=True)
-    departure_date_is_flexible = models.BooleanField(null=True, blank=True)
+    arrival_date_is_flexible = models.BooleanField(default= False, null=True, blank=True)
+    departure_date_is_flexible = models.BooleanField(default= False, null=True, blank=True)
     anc_description = models.TextField(max_length=500, null=True, blank=True)
     anc_timestamp_created = models.DateTimeField(auto_now_add=True)
     travelers_count = models.IntegerField(choices=TRAVELERS_COUNT_CHOICES, null=True, blank=True)
@@ -72,7 +72,8 @@ class Announcement(models.Model):
         User,
         on_delete=models.DO_NOTHING,
         default=None,
-        related_name='main_host_anc'
+        related_name='main_host_anc',
+        null= True
     )
 
     def __str__(self):
