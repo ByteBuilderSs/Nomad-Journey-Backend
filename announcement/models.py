@@ -3,7 +3,6 @@ from accounts.models import User, City
 from django.utils.translation import gettext as _
 
 
-
 class Announcement(models.Model):
     ONE_TR = 1
     TWO_TR = 2
@@ -37,7 +36,6 @@ class Announcement(models.Model):
         (FOURTEEN_TR, _('14')),
         (FIFTEEN_TR, _('15'))
     )
-
     STATUS_CHOICES = (
         ('P', _('Pending')),
         ('A', _('Accepted')),
@@ -52,13 +50,11 @@ class Announcement(models.Model):
         default=None,
         related_name='announcer_anc'
     )
-
     anc_city = models.ForeignKey(
         City,
         on_delete=models.DO_NOTHING,
         default=None
     )
-
     anc_country = models.CharField(max_length=100)
     arrival_date = models.DateField()
     departure_date = models.DateField()
@@ -68,12 +64,10 @@ class Announcement(models.Model):
     anc_description = models.TextField(max_length=500, null=True, blank=True)
     anc_timestamp_created = models.DateTimeField(auto_now_add=True)
     travelers_count = models.IntegerField(choices=TRAVELERS_COUNT_CHOICES, null=True, blank=True)
-    
     volunteer_hosts = models.ManyToManyField(
         User, 
         related_name='hosts_anc'
     )
-
     main_host = models.ForeignKey(
         User,
         on_delete=models.DO_NOTHING,
@@ -81,6 +75,5 @@ class Announcement(models.Model):
         related_name='main_host_anc'
     )
 
-
     def __str__(self):
-        return 'This is an announcement with ID ' + str(self.id) + ' from user with ID ' + str(self.announcer.id) + '.'
+        return 'This is an announcement with ID ' + str(self.id) + '.'
