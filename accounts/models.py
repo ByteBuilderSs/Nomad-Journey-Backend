@@ -1,4 +1,5 @@
 from django.db import models
+import uuid
 from django.contrib.auth.models import AbstractUser , BaseUserManager
 
 # Create your models here.
@@ -31,7 +32,7 @@ class UserManager(BaseUserManager):
         return self._create_user(email, password, **extra_fields)
 
 class City(models.Model):
-    city_name = models.CharField(max_length=100,blank=True)
+    city_name = models.CharField(primary_key=True,max_length=100,blank=True)
     country = models.CharField(max_length=100,blank=True)
     c_lat = models.FloatField()
     c_long = models.FloatField()
@@ -59,6 +60,7 @@ class User(AbstractUser):
     User_country_code = models.CharField(max_length=2 , null=True,blank=True)
     User_country = models.CharField(max_length=100 , null=True,blank=True)
     User_city = models.ForeignKey(City,on_delete=models.CASCADE,default=None  ,null=True,blank=True)
+    User_apt = models.CharField(max_length=100, null=True,blank=True)
     User_postal_code = models.CharField(max_length=10 , null=True,blank=True)
     User_phone_number = models.CharField(max_length=20 , null=True,blank=True)
     # is_active = models.BooleanField(default=True)
