@@ -3,7 +3,7 @@ from rest_framework import generics , status
 from rest_framework.response import Response
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.exceptions import AuthenticationFailed
-from .serializers import UserSerializer , UserCompeleteProfileSerializer , UserProfileEdit1Serializer,UserProfileEdit2Serializer
+from .serializers import UserSerializer , UserCompeleteProfileSerializer , UserProfileEdit1Serializer,UserProfileEdit2Serializer,GetUsernameAndUserImageByUserIdSerializer
 from .models import User
 from .permissions import IsOwner
 import jwt , datetime
@@ -217,3 +217,8 @@ class UserProfileEdit2(APIView):
                 'message':'something went wrong'
             }, status = status.HTTP_400_BAD_REQUEST )
 
+class GetUsernameAndUserImageByUserId(APIView):
+    def get(self,request , id):
+        user = get_object_or_404(User, id=id)
+        serializer = GetUsernameAndUserImageByUserIdSerializer(user)
+        return Response(serializer.data)
