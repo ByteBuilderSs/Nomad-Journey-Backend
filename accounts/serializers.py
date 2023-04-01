@@ -43,3 +43,7 @@ class UserProfileEdit2Serializer(serializers.ModelSerializer):
         model = User
         fields = ['User_address','User_apt','User_city','User_country','User_postal_code']
 
+class GetUsernameAndUserImageByUserIdSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ['username','profile_photo' , 'image_code']
