@@ -44,10 +44,25 @@ class City(models.Model):
         return f"{self.city_name}: ({self.c_lat}, {self.c_long})"
 
 
+class UserInterest(models.Model):
+    interest_name = models.CharField(max_length=100,null=True , blank=True)
+
+    def __str__(self):
+        return self.interest_name
+
+class Language(models.Model):
+    language_name = models.CharField(max_length=100 , null=True , blank=True)
+    def __str__(self):
+        return self.language_name
+
 class User(AbstractUser):
     GENDER_CHOICES = (
         ('M', 'Male'),
         ('F', 'Female'),)
+    HOSTING_AVAILABILITY_CHOICE = ( ('Accepting Guests' , 'Accepting Guests'),
+                                    ('Maybe Accepting Guests' , 'Maybe Accepting Guests'),
+                                    ('Not Accepting Guests' , 'Not Accepting Guests'),
+                                    ('Wants to Meet Up' , 'Wants to Meet Up'))
     User_birthdate = models.DateField(null=True , blank=True)
     User_about_me = models.TextField(null=True , blank=True)
     User_job = models.CharField(max_length=100 , null=True , blank=True)
@@ -74,6 +89,17 @@ class User(AbstractUser):
     password_again = models.CharField(max_length=255)
     username = models.CharField(max_length=255 , unique=True)
     date_joined = models.DateTimeField(auto_now_add=True)
+    hosting_availability = models.CharField(max_length=50, choices=HOSTING_AVAILABILITY_CHOICE , null=True,blank=True)
+    hometown = models.CharField(max_length=80 , null=True , blank=True)
+    why_Im_on_nomadjourney = models.TextField(blank=True , null=True)
+    favorite_music_movie_book = models.TextField(blank=True , null=True)
+    amazing_thing_done = models.TextField(blank=True , null=True)
+    teach_learn_share = models.TextField(blank=True , null=True)
+    what_Ican_share_with_host = models.TextField(blank=True , null=True)
+    interests = models.ManyToManyField(UserInterest ,default=None  ,null=True,blank=True )
+    langF = models.ForeignKey(Language ,on_delete=models.CASCADE,default=None  ,null=True,blank=True , related_name = 'langF' )
+    langL = models.ForeignKey(Language ,on_delete=models.CASCADE,default=None  ,null=True,blank=True , related_name= 'langL' )
+
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []
 
