@@ -41,7 +41,7 @@ class City(models.Model):
     class Meta:
         unique_together = ('city_name', 'country',)
     def __str__(self):
-        return f"{self.cityName}: ({self.cLat}, {self.cLong})"
+        return f"{self.city_name}: ({self.c_lat}, {self.c_long})"
 
 
 class UserInterest(models.Model):

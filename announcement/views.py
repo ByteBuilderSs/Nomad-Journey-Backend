@@ -4,12 +4,12 @@ from rest_framework.permissions import IsAuthenticated
 from .models import Announcement
 from .serializers import AnnouncementSerializer
 from rest_framework.permissions import IsAuthenticated
-from accounts.models import User
+from accounts.models import User, City
 
 
 @api_view(['GET'])
 def user_announcement(request, username):
-    announcement = Announcement.objects.get(announcer=User.objects.get(username=username))
+    announcement = Announcement.objects.filter(announcer=User.objects.get(username=username))
     serializer = AnnouncementSerializer(announcement, many=True)
     return Response(serializer.data)
 
