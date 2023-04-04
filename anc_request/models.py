@@ -14,7 +14,7 @@ class AncRequest(models.Model):
         on_delete=models.CASCADE,
         default=None
     )
-    req_description = models.TextField(max_length=500, null=True, blank=True)
+    # req_description = models.TextField(max_length=500, null=True, blank=True)
     req_timestamp_created = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):

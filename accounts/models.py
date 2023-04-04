@@ -97,7 +97,7 @@ class User(AbstractUser):
     amazing_thing_done = models.TextField(blank=True , null=True)
     teach_learn_share = models.TextField(blank=True , null=True)
     what_Ican_share_with_host = models.TextField(blank=True , null=True)
-    interests = models.ManyToManyField(UserInterest ,default=None  ,null=True,blank=True )
+    interests = models.ManyToManyField(UserInterest ,default=None  ,blank=True )
     langF = models.ForeignKey(Language ,on_delete=models.CASCADE,default=None  ,null=True,blank=True , related_name = 'langF' )
     langL = models.ForeignKey(Language ,on_delete=models.CASCADE,default=None  ,null=True,blank=True , related_name= 'langL' )
 
