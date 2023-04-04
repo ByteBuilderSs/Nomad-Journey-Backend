@@ -1,6 +1,7 @@
 from django.db import models
 import uuid
 from django.contrib.auth.models import AbstractUser , BaseUserManager
+from django.utils.translation import gettext as _
 
 # Create your models here.
 
@@ -56,9 +57,13 @@ class Language(models.Model):
         return self.language_name
 
 class User(AbstractUser):
+    MALE = 1
+    FEMALE = 2
+    OTHER = 3
     GENDER_CHOICES = (
-        ('M', 'Male'),
-        ('F', 'Female'),)
+        (MALE, _('Male')),
+        (FEMALE, _('Female')),
+        (OTHER , _('Other')))
     HOSTING_AVAILABILITY_CHOICE = ( ('Accepting Guests' , 'Accepting Guests'),
                                     ('Maybe Accepting Guests' , 'Maybe Accepting Guests'),
                                     ('Not Accepting Guests' , 'Not Accepting Guests'),

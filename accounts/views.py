@@ -3,7 +3,7 @@ from rest_framework import generics , status
 from rest_framework.response import Response
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.exceptions import AuthenticationFailed
-from .serializers import UserSerializer,UserCompeleteProfileSerializer,UserProfileEdit1Serializer,UserProfileEdit2Serializer,GetUsernameAndUserImageByUserIdSerializer,UserProfileEdit3Serializer
+from .serializers import *
 from .models import User
 from .permissions import IsOwner
 import jwt , datetime
@@ -251,6 +251,70 @@ class UserProfileEdit3(APIView):
                 'message':'something went wrong'
             }, status = status.HTTP_400_BAD_REQUEST )
 
+class UserProfileEdit4(APIView):
+    def patch(self , request , username):
+        try:
+            body = json.loads(request.body.decode('utf-8'))
+            user = User.objects.filter(username = username)
+            if len(user) == 0:
+                return Response({
+                    'data': {},
+                    'message':'invalid username'
+                }, status = status.HTTP_400_BAD_REQUEST )
+            if request.user.id != user[0].id:
+                return Response({
+                    'data': {},
+                    'message':'you are not authorized to do this'
+                }, status = status.HTTP_400_BAD_REQUEST )
+
+            serializer = UserProfileEdit4Serializer(user[0] , data = body , partial = True)
+            if not serializer.is_valid():
+                return Response({
+                    'data': serializer.errors,
+                    'message':'something went wrong'
+                } , status = status.HTTP_400_BAD_REQUEST)
+            serializer.save()
+            return Response({
+                'data': serializer.data,
+                'message' : 'user updated successfully'
+            } , status = status.HTTP_201_CREATED)
+        except Exception as e:
+            print(e) 
+            return Response({
+                'data': {},
+                'message':'something went wrong'
+            }, status = status.HTTP_400_BAD_REQUEST )
+
+    def delete(self , request , username):
+        try:
+            user = User.objects.get(username = username)
+            if user is None:
+                return Response({
+                    'data': {},
+                    'message':'invalid username'
+                }, status = status.HTTP_400_BAD_REQUEST )
+            if request.user.username != username:
+                return Response({
+                    'data': {},
+                    'message':'you are not authorized to do this'
+                }, status = status.HTTP_400_BAD_REQUEST )
+            if user.image_code is None:
+                return Response({
+                    'data': {},
+                    'message':'there is no image to be deleted'
+                }, status = status.HTTP_400_BAD_REQUEST )
+            user.image_code = None
+            user.save()
+            return Response({
+                'data':{},
+                'message' : 'image deleted successfully'
+            } , status = status.HTTP_201_CREATED)
+        except Exception as e:
+            print(e) 
+            return Response({
+                'data': {},
+                'message':'something went wrong'
+            }, status = status.HTTP_400_BAD_REQUEST )
 
 class GetUsernameAndUserImageByUserId(APIView):
     def get(self,request , id):
