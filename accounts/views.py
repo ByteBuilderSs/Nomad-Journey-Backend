@@ -97,7 +97,7 @@ class LogoutView(APIView):
             return Response({
                 'data': {},
                 'message': "logout successfully"
-            }, status=status.status.HTTP_200_OK)
+            }, status=status.HTTP_200_OK)
         except:
             return Response(status=status.HTTP_400_BAD_REQUEST)
     
@@ -184,11 +184,11 @@ class UserProfileEdit2(APIView):
                     'message':'you are not authorized to do this'
                 }, status = status.HTTP_400_BAD_REQUEST )
 
-            if body.get('User_city') is None:
-                return Response({
-                    'data': {},
-                    'message':'city field should not be null'
-                }, status = status.HTTP_400_BAD_REQUEST )
+            # if body.get('User_city') is None:
+            #     return Response({
+            #         'data': {},
+            #         'message':'city field should not be null'
+            #     }, status = status.HTTP_400_BAD_REQUEST )
             if body.get('User_country')  is None:
                 return Response({
                     'data': {},

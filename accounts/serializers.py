@@ -8,7 +8,7 @@ from NormandJourney.tools import hash_sha256
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ['first_name', 'last_name', 'email', 'password', 'password_again', 'username']
+        fields = ['first_name', 'last_name', 'email', 'password', 'password_again', 'username' , 'User_city']
         extra_kwargs = {
             'password':{'write_only' : True},
             'password_again':{'write_only' : True}
