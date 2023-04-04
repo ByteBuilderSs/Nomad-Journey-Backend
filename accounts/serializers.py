@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import User
+from .models import User , Language , UserInterest
 from django.contrib.auth import authenticate
 from django.contrib.auth.models import update_last_login
 from rest_framework import serializers
@@ -8,7 +8,7 @@ from NormandJourney.tools import hash_sha256
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ['first_name', 'last_name', 'email', 'password', 'password_again', 'username']
+        fields = ['first_name', 'last_name', 'email', 'password', 'password_again', 'username' , 'User_city']
         extra_kwargs = {
             'password':{'write_only' : True},
             'password_again':{'write_only' : True}
@@ -43,3 +43,19 @@ class UserProfileEdit2Serializer(serializers.ModelSerializer):
         model = User
         fields = ['User_address','User_apt','User_city','User_country','User_postal_code']
 
+class GetUsernameAndUserImageByUserIdSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ['username','profile_photo' , 'image_code']
+
+class UserProfileEdit3Serializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ['hosting_availability','hometown','User_job','User_education','User_about_me','why_Im_on_nomadjourney',
+                'favorite_music_movie_book','amazing_thing_done','teach_learn_share','what_Ican_share_with_host','interests',
+                'langF','langL']
+        
+class UserProfileEdit4Serializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ['image_code']
