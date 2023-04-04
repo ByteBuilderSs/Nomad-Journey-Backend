@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'accounts',
     'announcement',
     'blog',
+    'ticket',,
     'anc_request'
 ]
 
