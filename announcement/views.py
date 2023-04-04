@@ -1,38 +1,27 @@
 from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
-from .models import Announcement
 from .serializers import AnnouncementSerializer
-from rest_framework.permissions import IsAuthenticated
-from accounts.models import User, City
+from .models import Announcement
+from accounts.models import User
 
-
-@api_view(['GET'])
-def user_announcement(request, username):
-    announcement = Announcement.objects.filter(announcer=User.objects.get(username=username))
-    serializer = AnnouncementSerializer(announcement, many=True)
-    return Response(serializer.data)
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
-def GetAnnouncementList(request):
-    announcements = Announcement.objects.all()
+def UserAnnouncements(request, username):
+    user = User.objects.get(username=username)
+    announcements = Announcement.objects.filter(announcer=user.id)
     serializer = AnnouncementSerializer(announcements, many=True)
     return Response(serializer.data)
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def GetAnnouncementsForHost(request):
-    announcements = Announcement.objects.filter(anc_city=request.user.User_city).filter(anc_status='P')
+    announcements = Announcement.objects.filter(anc_city=request.user.User_city).filter(anc_status='P').exclude(announcer=request.user.id)
+    announcements = announcements.hosts_anc.all()
     serializer = AnnouncementSerializer(announcements, many=True)
     return Response(serializer.data)
 
-@api_view(['GET'])
-@permission_classes([IsAuthenticated])
-def GetSingleAnnouncement(request, pk):
-    announcement = Announcement.objects.get(id=pk)
-    serializer = AnnouncementSerializer(announcement, many=False)
-    return Response(serializer.data)
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
@@ -42,6 +31,7 @@ def CreateAnnouncement(request):
     if serializer.is_valid():
         serializer.save()
     return Response(serializer.data)
+
 
 @api_view(['PUT'])
 @permission_classes([IsAuthenticated])
@@ -53,10 +43,11 @@ def EditAnnouncement(request, pk):
         serializer.save()
     return Response(serializer.data)
 
+
 @api_view(['DELETE'])
 @permission_classes([IsAuthenticated])
 def DeleteAnnouncement(request, pk):
     announcement = Announcement.objects.get(id=pk)
     announcement.delete()
-    return Response('Item successfully deleted!')
+    return Response('Announcement deleted successfully!')
 
