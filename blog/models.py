@@ -18,6 +18,7 @@ class Blog(models.Model):
     author = models.ForeignKey(User , on_delete=models.CASCADE , related_name= "blogs")
     blog_title = models.CharField(max_length=500 , blank=True)
     blog_text = models.TextField(blank=True)
+    json_data = models.JSONField(default= dict , null=True , blank=True)
     # main_image = models.ImageField(upload_to="blogs_image" , null=True , blank= True)
     main_image_64 = models.TextField(null=True, blank=True)
     slug = AutoSlugField(populate_from='blog_title' , unique = True )
