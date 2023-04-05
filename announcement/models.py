@@ -55,10 +55,10 @@ class Announcement(models.Model):
     #     on_delete=models.DO_NOTHING,
     #     default=None
     # )
-    anc_city = models.CharField(max_length=100)
-    anc_country = models.CharField(max_length=100)
-    arrival_date = models.DateField()
-    departure_date = models.DateField()
+    anc_city = models.CharField(max_length=100, null=True, blank=True)
+    anc_country = models.CharField(max_length=100, null=True, blank=True)
+    arrival_date = models.DateField(null=True, blank=True)
+    departure_date = models.DateField(null=True, blank=True)
     anc_status = models.CharField(choices=STATUS_CHOICES, default='P', max_length=1)
     arrival_date_is_flexible = models.BooleanField(default= False, null=True, blank=True)
     departure_date_is_flexible = models.BooleanField(default= False, null=True, blank=True)
