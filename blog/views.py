@@ -7,6 +7,7 @@ from django.shortcuts import get_object_or_404
 from django.core.paginator import Paginator
 from .models import Blog , Tag
 from .serializers import BlogSerializer , TagSerializer
+import json
 
 class PublicBlogView(APIView):
     def get(self , request):
@@ -48,8 +49,9 @@ class BlogView(APIView):
 
     def post(self , request):
         try:
-            data = request.data
-            data._mutable = True
+            data = json.loads(request.body.decode('utf-8'))
+            # data = request.data
+            # data._mutable = True
             data['author'] = request.user.id
             serializer = BlogSerializer(data = data)
             if not serializer.is_valid():
@@ -72,7 +74,8 @@ class BlogView(APIView):
 
     def patch(self , request):
         try:
-            data = request.data
+            data = json.loads(request.body.decode('utf-8'))
+            # data = request.data
             blog = Blog.objects.filter(uid = data.get('uid'))
             if not blog.exists():
                 return Response({
@@ -107,7 +110,8 @@ class BlogView(APIView):
 
     def delete(self , request):
         try:
-            data = request.data
+            data = json.loads(request.body.decode('utf-8'))
+            # data = request.data
             blog = Blog.objects.filter(uid = data.get('uid'))
 
             if not blog.exists():
