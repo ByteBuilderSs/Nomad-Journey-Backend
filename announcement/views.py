@@ -27,7 +27,6 @@ def GetAnnouncementsForHost(request):
     serializer = AnnouncementSerializer(announcements, many=True)
     return Response(serializer.data)
 
-
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def CreateAnnouncement(request):
@@ -36,7 +35,6 @@ def CreateAnnouncement(request):
     if serializer.is_valid():
         serializer.save()
     return Response(serializer.data)
-
 
 @api_view(['PUT'])
 @permission_classes([IsAuthenticated])
@@ -47,7 +45,6 @@ def EditAnnouncement(request, pk):
     if serializer.is_valid():
         serializer.save()
     return Response(serializer.data)
-
 
 @api_view(['DELETE'])
 @permission_classes([IsAuthenticated])

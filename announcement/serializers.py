@@ -3,7 +3,6 @@ from .models import Announcement
 from accounts.models import User
 
 
-
 class AnnouncementSerializer(serializers.ModelSerializer):
     # city_name = serializers.SerializerMethodField()
     # city_country = serializers.SerializerMethodField() 
@@ -12,7 +11,7 @@ class AnnouncementSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = Announcement
-        fields = ['id','announcer', 'anc_city', 'anc_status', 'arrival_date', 'departure_date', 'arrival_date_is_flexible',
+        fields = ['id','announcer', 'anc_city', 'anc_country', 'anc_status', 'arrival_date', 'departure_date', 'arrival_date_is_flexible',
                    'departure_date_is_flexible', 'anc_description', 'travelers_count', 'announcer_username', 'announcer_image_code']
 
     def create(self, validated_data):
