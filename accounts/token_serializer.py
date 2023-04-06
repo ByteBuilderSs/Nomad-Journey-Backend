@@ -58,6 +58,7 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
         data['access'] = str(refresh.access_token)
         data.update({'username': self.user.username})
         data.update({'user_id': self.user.id})
+        data.update({'user_city': self.user.User_city})
         if api_settings.UPDATE_LAST_LOGIN:
             update_last_login(None, self.user)
 
