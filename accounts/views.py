@@ -325,13 +325,13 @@ class GetUsernameAndUserImageByUserId(APIView):
         return Response(serializer.data)
     
 class GetUserProfileForOverview(APIView):
-    def get(self , request):
+    def get(self , request,username):
         try:
-            information = User.objects.filter(username = request.user.username)
+            information = User.objects.filter(username = username)
             if  not information.exists():
                 return Response({
                     'data': {},
-                    'message':'you are not authorized to do this'
+                    'message':'invalid username'
                 }, status = status.HTTP_400_BAD_REQUEST )
             serializer = UserProfileForOverviewSerializer(information[0])
             return Response({
