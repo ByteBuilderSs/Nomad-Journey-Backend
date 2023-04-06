@@ -23,7 +23,8 @@ def GetRequestsOfHost(request, host_id):
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def CreateRequest(request, anc_id):
-    serializer = AncRequestSerializer(data=request.data, context={"request" : request, "anc_id" : anc_id})
+    announcement = Announcement.objects.get(id=anc_id)
+    serializer = AncRequestSerializer(data=request.data, context={"request" : request, "announcement" : announcement})
 
     if serializer.is_valid():
         serializer.save()

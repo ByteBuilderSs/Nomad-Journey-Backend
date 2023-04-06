@@ -9,7 +9,7 @@ class AncRequestSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         validated_data['host'] = self.context['request'].user
-        validated_data['req_anc'] = self.context['anc_id']
+        validated_data['req_anc'] = self.context['announcement']
         instance = self.Meta.model(**validated_data)
         instance.save()
         return instance
