@@ -105,7 +105,8 @@ class User(AbstractUser):
     interests = models.ManyToManyField(UserInterest ,default=None  ,blank=True )
     langF = models.ForeignKey(Language ,on_delete=models.CASCADE,default=None  ,null=True,blank=True , related_name = 'langF' )
     langL = models.ForeignKey(Language ,on_delete=models.CASCADE,default=None  ,null=True,blank=True , related_name= 'langL' )
-
+    # posts_count = models.IntegerField(default=0)
+    # announcements_count = models.IntegerField(default=0)
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []
 

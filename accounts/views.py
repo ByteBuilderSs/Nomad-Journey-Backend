@@ -5,6 +5,8 @@ from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.exceptions import AuthenticationFailed
 from .serializers import *
 from .models import User
+from announcement.models import Announcement
+from blog.models import Blog
 from .permissions import IsOwner
 import jwt , datetime
 from django.shortcuts import get_object_or_404
@@ -321,3 +323,24 @@ class GetUsernameAndUserImageByUserId(APIView):
         user = get_object_or_404(User, id=id)
         serializer = GetUsernameAndUserImageByUserIdSerializer(user)
         return Response(serializer.data)
+    
+class GetUserProfileForOverview(APIView):
+    def get(self , request):
+        try:
+            information = User.objects.filter(username = request.user.username)
+            if  not information.exists():
+                return Response({
+                    'data': {},
+                    'message':'you are not authorized to do this'
+                }, status = status.HTTP_400_BAD_REQUEST )
+            serializer = UserProfileForOverviewSerializer(information[0])
+            return Response({
+                'data':serializer.data,
+                'message' : 'user information fetched successfully'
+            } , status = status.HTTP_200_OK)
+        except Exception as e:
+            print(e) 
+            return Response({
+                'data': {},
+                'message':'something went wrong'
+            }, status = status.HTTP_400_BAD_REQUEST )

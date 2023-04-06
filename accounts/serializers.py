@@ -4,6 +4,9 @@ from django.contrib.auth import authenticate
 from django.contrib.auth.models import update_last_login
 from rest_framework import serializers
 from NormandJourney.tools import hash_sha256
+from datetime import date
+from announcement.models import Announcement
+from blog.models import Blog
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
@@ -59,3 +62,32 @@ class UserProfileEdit4Serializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ['image_code']
+
+class UserProfileForOverviewSerializer(serializers.ModelSerializer):
+    user_age = serializers.SerializerMethodField('get_user_age')
+    joined_since = serializers.SerializerMethodField('get_joined_since')
+    posts_count = serializers.SerializerMethodField('get_post_count')
+    announcements_count = serializers.SerializerMethodField('get_announcement_count')
+
+    class Meta:
+        model = User
+        fields = ['announcements_count','user_age','User_gender','User_job','joined_since', 'posts_count','User_city','User_education']
+    
+    def get_user_age(self,obj):
+        try:
+            today = date.today()
+            age = today.year - obj.User_birthdate.year - ((today.month, today.day) < (obj.User_birthdate.month, obj.User_birthdate.day))
+            return age
+        except:
+            return 0
+    
+    def get_joined_since(self,obj):
+        today = date.today()
+        joined_since = today.day - obj.date_joined.day
+        return joined_since
+    
+    def get_post_count(self , obj):
+        return Blog.objects.filter(author = obj.id).count()
+    
+    def get_announcement_count(self , obj):
+        return Announcement.objects.filter(announcer = obj.id).count()
