@@ -5,6 +5,7 @@ from .views import *
 urlpatterns = [
     path('get-announcements-for-host/', GetAnnouncementsForHost),
     path('get-user-announcements/<str:username>', UserAnnouncements),
+    path('user-announcements-more-details/', UserAnnouncementsMoreDetails),
     path('user-announcements-with-host-request/<str:user_id>', UserAnnouncementsWithHostRequest),
 
     path('create/', CreateAnnouncement),

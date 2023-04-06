@@ -1,18 +1,24 @@
 from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
-from .serializers import AnnouncementSerializer
+from .serializers import AnnouncementSerializer, UnAuthAnnouncementDetailsSerializer
 from .models import Announcement
 from accounts.models import User
 from anc_request.models import AncRequest
 
 
 @api_view(['GET'])
-@permission_classes([IsAuthenticated])
 def UserAnnouncements(request, username):
     user = User.objects.get(username=username)
     announcements = Announcement.objects.filter(announcer=user.id)
     serializer = AnnouncementSerializer(announcements, many=True)
+    return Response(serializer.data)
+
+@api_view(['GET'])
+def UserAnnouncementsMoreDetails(request, username):
+    user = User.objects.get(username=username)
+    announcements = Announcement.objects.filter(announcer=user.id)
+    serializer = UnAuthAnnouncementDetailsSerializer(announcements, many=True)
     return Response(serializer.data)
 
 @api_view(['GET'])
