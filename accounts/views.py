@@ -326,21 +326,21 @@ class GetUsernameAndUserImageByUserId(APIView):
     
 class GetUserProfileForOverview(APIView):
     def get(self , request,username):
-        try:
-            information = User.objects.filter(username = username)
-            if  not information.exists():
-                return Response({
-                    'data': {},
-                    'message':'invalid username'
-                }, status = status.HTTP_400_BAD_REQUEST )
-            serializer = UserProfileForOverviewSerializer(information[0])
-            return Response({
-                'data':serializer.data,
-                'message' : 'user information fetched successfully'
-            } , status = status.HTTP_200_OK)
-        except Exception as e:
-            print(e) 
+        # try:
+        information = User.objects.filter(username = username)
+        if  not information.exists():
             return Response({
                 'data': {},
-                'message':'something went wrong'
+                'message':'invalid username'
             }, status = status.HTTP_400_BAD_REQUEST )
+        serializer = UserProfileForOverviewSerializer(information[0])
+        return Response({
+            'data':serializer.data,
+            'message' : 'user information fetched successfully'
+        } , status = status.HTTP_200_OK)
+        # except Exception as e:
+        #     print(e) 
+        #     return Response({
+        #         'data': {},
+        #         'message':'something went wrong'
+        #     }, status = status.HTTP_400_BAD_REQUEST )
