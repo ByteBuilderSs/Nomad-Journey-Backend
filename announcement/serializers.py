@@ -8,11 +8,12 @@ class AnnouncementSerializer(serializers.ModelSerializer):
     # city_country = serializers.SerializerMethodField() 
     announcer_username = serializers.SerializerMethodField() 
     announcer_image_code = serializers.SerializerMethodField() 
+    announcer_name = serializers.SerializerMethodField()
     
     class Meta:
         model = Announcement
         fields = ['id','announcer', 'anc_city', 'anc_country', 'anc_status', 'arrival_date', 'departure_date', 'arrival_date_is_flexible',
-                   'departure_date_is_flexible', 'anc_description', 'travelers_count', 'announcer_username', 'announcer_image_code']
+                   'departure_date_is_flexible', 'anc_description', 'travelers_count', 'announcer_username', 'announcer_image_code', 'announcer_name']
 
     def create(self, validated_data):
         validated_data['announcer'] = self.context['request'].user
@@ -35,6 +36,10 @@ class AnnouncementSerializer(serializers.ModelSerializer):
     def get_announcer_image_code(self, obj):
         user = User.objects.get(id = obj.announcer.id)
         return user.image_code
+    
+    def get_announcer_name(self, obj):
+        user = User.objects.get(id=obj.announcer.id)
+        return user.first_name + ' ' + user.last_name
 
 
 class UnAuthAnnouncementDetailsSerializer(serializers.ModelSerializer):

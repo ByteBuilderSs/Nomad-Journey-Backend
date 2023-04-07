@@ -24,11 +24,10 @@ def UserAnnouncementsMoreDetails(request, username):
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def UserAnnouncementsWithHostRequest(request, user_id):
-    user = User.objects.get(username=user_id)
-    announcements = Announcement.objects.filter(announcer=user.id)
-    anc_ids = AncRequest.objects.filter(req_anc__in=announcements.values('id')).values('req_anc')
-    final_announcements = Announcement.objects.filter(id__in=anc_ids)
-    serializer = AnnouncementSerializer(final_announcements, many=True)
+    announcements = Announcement.objects.filter(announcer=user_id)
+    requests = AncRequest.objects.filter(req_anc__in=announcements.values('id'))
+    announcements_with_request = Announcement.objects.filter(id__in=requests.values('req_anc'))
+    serializer = AnnouncementSerializer(announcements_with_request, many=True)
     return Response(serializer.data)
 
 @api_view(['GET'])
