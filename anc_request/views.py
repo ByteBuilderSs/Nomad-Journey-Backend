@@ -37,7 +37,7 @@ def CreateRequest(request, anc_id):
 @permission_classes([IsAuthenticated])
 def AcceptRequest(request, req_id):
     req = AncRequest.objects.get(id=req_id)
-    base_announcement = Announcement.objects.get(id=req.req_anc)
+    base_announcement = Announcement.objects.get(id=req.req_anc.id)
     dest_announcement = base_announcement
     dest_announcement.anc_status = 'A'
     dest_announcement.main_host = req.host
