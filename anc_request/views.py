@@ -4,13 +4,16 @@ from rest_framework.permissions import IsAuthenticated
 from .models import AncRequest
 from .serializers import AncRequestSerializer
 from announcement.models import Announcement
+from accounts.models import User
+from accounts.serializers import UserSerializer
 
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
-def GetRequestsOnAnnouncement(request, anc_id):
+def GetHostsOfAnnouncement(request, anc_id):
     anc_requests = AncRequest.objects.filter(req_anc=anc_id)
-    serializer = AncRequestSerializer(anc_requests, many=True)
+    hosts = User.objects.filter(id__in=anc_requests.values('host'))
+    serializer = UserSerializer(hosts, many=True)
     return Response(serializer.data)
 
 @api_view(['GET'])
