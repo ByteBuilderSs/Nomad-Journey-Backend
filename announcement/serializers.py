@@ -8,12 +8,13 @@ class AnnouncementSerializer(serializers.ModelSerializer):
     # city_country = serializers.SerializerMethodField() 
     announcer_username = serializers.SerializerMethodField() 
     announcer_image_code = serializers.SerializerMethodField() 
-    announcer_name = serializers.SerializerMethodField()
+    main_host_name = serializers.SerializerMethodField()
+    main_host_username = serializers.SerializerMethodField()
     
     class Meta:
         model = Announcement
         fields = ['id','announcer', 'anc_city', 'anc_country', 'anc_status', 'arrival_date', 'departure_date', 'arrival_date_is_flexible',
-                   'departure_date_is_flexible', 'anc_description', 'travelers_count', 'announcer_username', 'announcer_image_code', 'announcer_name']
+                   'departure_date_is_flexible', 'anc_description', 'travelers_count', 'announcer_username', 'announcer_image_code', 'main_host_name', 'main_host_username']
 
     def create(self, validated_data):
         validated_data['announcer'] = self.context['request'].user
@@ -37,9 +38,13 @@ class AnnouncementSerializer(serializers.ModelSerializer):
         user = User.objects.get(id = obj.announcer.id)
         return user.image_code
     
-    def get_announcer_name(self, obj):
-        user = User.objects.get(id=obj.announcer.id)
+    def get_main_host_name(self, obj):
+        user = User.objects.get(id=obj.main_host.id)
         return user.first_name + ' ' + user.last_name
+    
+    def get_main_host_username(self, obj):
+        user = User.objects.get(id=obj.main_host.id)
+        return user.username
 
 
 class UnAuthAnnouncementDetailsSerializer(serializers.ModelSerializer):
