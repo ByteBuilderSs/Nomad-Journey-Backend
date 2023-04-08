@@ -27,8 +27,15 @@ def UserAnnouncementsWithHostRequest(request, user_id):
     announcements = Announcement.objects.filter(announcer=user_id)
     requests = AncRequest.objects.filter(req_anc__in=announcements.values('id'))
     announcements_with_request = Announcement.objects.filter(id__in=requests.values('req_anc'))
+    
+    for anc in announcements_with_request:
+        host_ids = AncRequest.objects.filter(req_anc=anc.id).values('host')
+        hosts = User.objects.filter(id__in=host_ids)
+        setattr(anc, 'hosts', hosts)
+    
     serializer = AnnouncementSerializer(announcements_with_request, many=True)
     return Response(serializer.data)
+
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
