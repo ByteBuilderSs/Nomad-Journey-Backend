@@ -11,7 +11,7 @@ class AnnouncementSerializer(serializers.ModelSerializer):
     announcer_image_code = serializers.SerializerMethodField() 
     main_host_name = serializers.SerializerMethodField()
     main_host_username = serializers.SerializerMethodField()
-    hosts = UserSerializer(many=True)
+    hosts = serializers.SerializerMethodField(User)
 
     class Meta:
         model = Announcement
@@ -41,12 +41,25 @@ class AnnouncementSerializer(serializers.ModelSerializer):
         return user.image_code
     
     def get_main_host_name(self, obj):
-        user = User.objects.get(id=obj.main_host.id)
-        return user.first_name + ' ' + user.last_name
+        main_host = obj.main_host
+        if main_host is not None:
+            user = User.objects.get(id=main_host.id)
+            return user.first_name + ' ' + user.last_name
+        return user
     
     def get_main_host_username(self, obj):
-        user = User.objects.get(id=obj.main_host.id)
-        return user.username
+        main_host = obj.main_host
+        if main_host is not None:
+            user = User.objects.get(id=main_host.id)
+            return user.username
+        return user
+
+    def get_hosts(self, obj):
+        hosts = obj.hosts
+        if hosts is not None:
+            serializer = UserSerializer(hosts, many=True)
+            return serializer.data
+        return hosts
 
 
 class UnAuthAnnouncementDetailsSerializer(serializers.ModelSerializer):
