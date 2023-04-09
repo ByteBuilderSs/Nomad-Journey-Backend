@@ -10,6 +10,7 @@ class Migration(migrations.Migration):
     initial = True
 
     dependencies = [
+        ('announcement', '0004_remove_announcement_volunteer_hosts'),
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
         ('announcement', '0001_initial'),
     ]
