@@ -6,6 +6,7 @@ from .serializers import AncRequestSerializer
 from announcement.models import Announcement
 from accounts.models import User
 from accounts.serializers import UserSerializer
+from announcement.serializers import AnnouncementSerializer
 
 
 @api_view(['GET'])
@@ -37,11 +38,10 @@ def CreateRequest(request, anc_id):
 @permission_classes([IsAuthenticated])
 def AcceptRequest(request, req_id):
     req = AncRequest.objects.get(id=req_id)
-    base_announcement = Announcement.objects.get(id=req.req_anc.id)
-    dest_announcement = base_announcement
-    dest_announcement.anc_status = 'A'
-    dest_announcement.main_host = req.host
-    serializer = AncRequestSerializer(instance=base_announcement, data=dest_announcement)
+    announcement = Announcement.objects.filter(id=req.req_anc.id)
+    announcement.update(anc_status='A')
+    announcement.update(main_host=req.host)
+    serializer = AnnouncementSerializer(data=announcement)
     if serializer.is_valid():
         serializer.save()
     return Response(serializer.data)
