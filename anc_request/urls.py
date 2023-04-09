@@ -3,7 +3,7 @@ from .views import *
 
 
 urlpatterns = [
-    path('get-requests-on-announcement/<str:anc_id>', GetRequestsOnAnnouncement),
+    path('get-hosts-of-announcement/<str:anc_id>', GetHostsOfAnnouncement),
     path('get-requests-of-host/<str:host_id>', GetRequestsOfHost),
 
     path('create-request/<str:anc_id>', CreateRequest),

@@ -1,14 +1,13 @@
 from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
-from .serializers import AnnouncementSerializer
+from .serializers import AnnouncementSerializer, UnAuthAnnouncementDetailsSerializer, FuckingAnnouncementSerializer
 from .models import Announcement
 from accounts.models import User
 from anc_request.models import AncRequest
 
 
 @api_view(['GET'])
-@permission_classes([IsAuthenticated])
 def UserAnnouncements(request, username):
     user = User.objects.get(username=username)
     announcements = Announcement.objects.filter(announcer=user.id)
@@ -16,14 +15,34 @@ def UserAnnouncements(request, username):
     return Response(serializer.data)
 
 @api_view(['GET'])
+def UserAnnouncementsMoreDetails(request, username):
+    user = User.objects.get(username=username)
+    announcements = Announcement.objects.filter(announcer=user.id)
+    serializer = UnAuthAnnouncementDetailsSerializer(announcements, many=True)
+    return Response(serializer.data)
+
+@api_view(['GET'])
+# @permission_classes([IsAuthenticated])
+def UserAnnouncementsWithHostRequest(request, user_id):
+    announcements = Announcement.objects.filter(announcer=user_id)
+    requests = AncRequest.objects.filter(req_anc__in=announcements.values('id'))
+    announcements_with_request = Announcement.objects.filter(id__in=requests.values('req_anc'))
+    
+    for anc in announcements_with_request:
+        host_ids = AncRequest.objects.filter(req_anc=anc.id).values('host')
+        hosts = User.objects.filter(id__in=host_ids)
+        setattr(anc, 'volunteer_hosts.set()', hosts[0])
+        anc.save()
+    
+    serializer = FuckingAnnouncementSerializer(announcements_with_request, many=True)
+    return Response(serializer.data)
+
+@api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def GetAnnouncementsForHost(request):
-    announcements = Announcement.objects.filter(anc_city=request.user.User_city).filter(anc_status='P').exclude(announcer=request.user.id)
-    
     request_ids = AncRequest.objects.filter(host=request.user.id).values('req_anc')
-    
-    announcements = announcements.exclude(id__in=request_ids)
-    
+    announcements = Announcement.objects.filter(anc_city=request.user.User_city).filter(anc_status='P')
+    announcements = announcements.exclude(id__in=request_ids).exclude(announcer=request.user.id)
     serializer = AnnouncementSerializer(announcements, many=True)
     return Response(serializer.data)
 
