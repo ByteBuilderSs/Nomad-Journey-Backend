@@ -65,10 +65,11 @@ class Announcement(models.Model):
     anc_description = models.TextField(max_length=500, null=True, blank=True)
     anc_timestamp_created = models.DateTimeField(auto_now_add=True)
     travelers_count = models.IntegerField(choices=TRAVELERS_COUNT_CHOICES, null=True, blank=True)
-    # volunteer_hosts = models.ManyToManyField(
-    #     User, 
-    #     related_name='hosts_anc'
-    # )
+    volunteer_hosts = models.ManyToManyField(
+        User, 
+        related_name='hosts_anc',
+        null=True,blank=True
+    )
     main_host = models.ForeignKey(
         User,
         on_delete=models.DO_NOTHING,
