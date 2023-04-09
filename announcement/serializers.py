@@ -5,13 +5,46 @@ from accounts.serializers import UserSerializer
 
 
 class AnnouncementSerializer(serializers.ModelSerializer):
+     
+    announcer_username = serializers.SerializerMethodField()
+    announcer_image_code = serializers.SerializerMethodField()
+   
+    class Meta:
+        model = Announcement
+        fields = ['id','announcer', 'anc_city', 'anc_country', 'anc_status', 'arrival_date', 'departure_date', 'arrival_date_is_flexible',
+                   'departure_date_is_flexible', 'anc_description', 'travelers_count', 'announcer_username', 'announcer_image_code']
+
+    def create(self, validated_data):
+        validated_data['announcer'] = self.context['request'].user
+        instance = self.Meta.model(**validated_data)
+        instance.save()
+        return instance
+   
+    # # def get_city_name(self, obj):
+    # #     city = City.objects.get(id = obj.anc_city.id)
+    # #     return city.city_name
+   
+    # # def get_city_country(self, obj):
+    # #     city = City.objects.get(id = obj.anc_city.id)
+    # #     return city.country
+   
+    def get_announcer_username(self, obj):
+        user = User.objects.get(id = obj.announcer.id)
+        return user.username
+   
+    def get_announcer_image_code(self, obj):
+        user = User.objects.get(id = obj.announcer.id)
+        return user.image_code
+
+
+class FuckingAnnouncementSerializer(serializers.ModelSerializer):
     # city_name = serializers.SerializerMethodField()
     # city_country = serializers.SerializerMethodField() 
     announcer_username = serializers.SerializerMethodField() 
     announcer_image_code = serializers.SerializerMethodField() 
     main_host_name = serializers.SerializerMethodField()
     main_host_username = serializers.SerializerMethodField()
-    hosts = serializers.SerializerMethodField(User)
+    hosts = serializers.SerializerMethodField()
 
     class Meta:
         model = Announcement
@@ -45,14 +78,14 @@ class AnnouncementSerializer(serializers.ModelSerializer):
         if main_host is not None:
             user = User.objects.get(id=main_host.id)
             return user.first_name + ' ' + user.last_name
-        return user
+        return main_host
     
     def get_main_host_username(self, obj):
         main_host = obj.main_host
         if main_host is not None:
             user = User.objects.get(id=main_host.id)
             return user.username
-        return user
+        return main_host
 
     def get_hosts(self, obj):
         hosts = obj.hosts

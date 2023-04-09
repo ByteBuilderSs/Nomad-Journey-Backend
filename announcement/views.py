@@ -1,7 +1,7 @@
 from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
-from .serializers import AnnouncementSerializer, UnAuthAnnouncementDetailsSerializer
+from .serializers import AnnouncementSerializer, UnAuthAnnouncementDetailsSerializer, FuckingAnnouncementSerializer
 from .models import Announcement
 from accounts.models import User
 from anc_request.models import AncRequest
@@ -22,7 +22,7 @@ def UserAnnouncementsMoreDetails(request, username):
     return Response(serializer.data)
 
 @api_view(['GET'])
-@permission_classes([IsAuthenticated])
+# @permission_classes([IsAuthenticated])
 def UserAnnouncementsWithHostRequest(request, user_id):
     announcements = Announcement.objects.filter(announcer=user_id)
     requests = AncRequest.objects.filter(req_anc__in=announcements.values('id'))
@@ -33,7 +33,7 @@ def UserAnnouncementsWithHostRequest(request, user_id):
         hosts = User.objects.filter(id__in=host_ids)
         setattr(anc, 'hosts', hosts)
     
-    serializer = AnnouncementSerializer(announcements_with_request, many=True)
+    serializer = FuckingAnnouncementSerializer(announcements_with_request, many=True)
     return Response(serializer.data)
 
 
