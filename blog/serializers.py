@@ -5,7 +5,7 @@ class BlogSerializer(serializers.ModelSerializer):
     tags_name = serializers.SerializerMethodField('get_tag_name') 
     class Meta:
         model = Blog
-        fields = ['uid','created_at','updated_at','author','blog_title','blog_text','json_data','main_image_64','slug','tags_name']
+        fields = ['uid','created_at','updated_at','author','blog_title','blog_text','json_data','main_image_64','slug','tags','tags_name']
     
     def get_tag_name(self,obj):
         tags_name_list = []
