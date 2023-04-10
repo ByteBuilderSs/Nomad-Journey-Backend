@@ -15,10 +15,9 @@ def UserAnnouncements(request, username):
     return Response(serializer.data)
 
 @api_view(['GET'])
-def UserAnnouncementsMoreDetails(request, username):
-    user = User.objects.get(username=username)
-    announcements = Announcement.objects.filter(announcer=user.id)
-    serializer = UnAuthAnnouncementDetailsSerializer(announcements, many=True)
+def UserAnnouncementsMoreDetails(request, pk):
+    announcements = Announcement.objects.get(id=pk)
+    serializer = UnAuthAnnouncementDetailsSerializer(announcements, many=False)
     return Response(serializer.data)
 
 @api_view(['GET'])
