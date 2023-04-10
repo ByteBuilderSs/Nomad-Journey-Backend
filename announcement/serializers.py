@@ -197,6 +197,7 @@ class UnAuthAnnouncementDetailsSerializer(serializers.ModelSerializer):
         request_announcements = AncRequest.objects.filter(req_anc = obj.id)
         for host in request_announcements:
             hosts.append({
+                "id":host.host.id,
                 "username" : host.host.username,
                 "first_name" : host.host.first_name,
                 "last_name" : host.host.last_name,

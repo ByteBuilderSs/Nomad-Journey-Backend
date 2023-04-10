@@ -8,6 +8,6 @@ urlpatterns = [
 
     path('create-request/<str:anc_id>', CreateRequest),
 
-    path('accept-request/<str:req_id>', AcceptRequest),
-    path('reject-request/<str:req_id>', RejectRequest)
+    path('accept-request/<str:req_id>/<str:host_id>', AcceptRequest),
+    path('reject-request/<str:req_id>/<str:host_id>', RejectRequest)
 ]
