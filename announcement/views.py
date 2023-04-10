@@ -15,10 +15,9 @@ def UserAnnouncements(request, username):
     return Response(serializer.data)
 
 @api_view(['GET'])
-def UserAnnouncementsMoreDetails(request, username):
-    user = User.objects.get(username=username)
-    announcements = Announcement.objects.filter(announcer=user.id)
-    serializer = UnAuthAnnouncementDetailsSerializer(announcements, many=True)
+def UserAnnouncementsMoreDetails(request, pk):
+    announcements = Announcement.objects.get(id=pk)
+    serializer = UnAuthAnnouncementDetailsSerializer(announcements, many=False)
     return Response(serializer.data)
 
 @api_view(['GET'])
@@ -31,9 +30,7 @@ def UserAnnouncementsWithHostRequest(request, user_id):
     for anc in announcements_with_request:
         host_ids = AncRequest.objects.filter(req_anc=anc.id).values('host')
         hosts = User.objects.filter(id__in=host_ids)
-        setattr(anc, 'volunteer_hosts.set()', hosts[0])
-        anc.save()
-    
+        setattr(anc, 'hosts', hosts)
     serializer = FuckingAnnouncementSerializer(announcements_with_request, many=True)
     return Response(serializer.data)
 
