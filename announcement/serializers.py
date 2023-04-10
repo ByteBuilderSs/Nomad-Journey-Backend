@@ -49,7 +49,7 @@ class FuckingAnnouncementSerializer(serializers.ModelSerializer):
     class Meta:
         model = Announcement
         fields = ['id','announcer', 'anc_city', 'anc_country', 'anc_status', 'arrival_date', 'departure_date', 'arrival_date_is_flexible',
-                   'departure_date_is_flexible', 'anc_description', 'travelers_count', 'announcer_username', 'announcer_image_code', 'main_host_name', 'main_host_username', 'volunteer_hosts']
+                   'departure_date_is_flexible', 'anc_description', 'travelers_count', 'announcer_username', 'announcer_image_code', 'main_host_name', 'main_host_username', 'hosts']
 
     def create(self, validated_data):
         validated_data['announcer'] = self.context['request'].user
@@ -74,12 +74,25 @@ class FuckingAnnouncementSerializer(serializers.ModelSerializer):
         return user.image_code
     
     def get_main_host_name(self, obj):
-        user = User.objects.get(id=obj.main_host.id)
-        return user.first_name + ' ' + user.last_name
+        main_host = obj.main_host
+        if main_host is not None:
+            user = User.objects.get(id=main_host.id)
+            return user.first_name + ' ' + user.last_name
+        return main_host
     
     def get_main_host_username(self, obj):
-        user = User.objects.get(id=obj.main_host.id)
-        return user.username
+        main_host = obj.main_host
+        if main_host is not None:
+            user = User.objects.get(id=main_host.id)
+            return user.username
+        return main_host
+
+    def get_hosts(self, obj):
+        hosts = obj.hosts
+        if hosts is not None:
+            serializer = UserSerializer(hosts, many=True)
+            return serializer.data
+        return hosts
 
 
 class UnAuthAnnouncementDetailsSerializer(serializers.ModelSerializer):
