@@ -36,9 +36,9 @@ def CreateRequest(request, anc_id):
 
 @api_view(['PUT'])
 @permission_classes([IsAuthenticated])
-def AcceptRequest(request, req_id):
-    req = AncRequest.objects.get(id=req_id)
-    announcement = Announcement.objects.filter(id=req.req_anc.id)
+def AcceptRequest(request, req_id, host_id):
+    req = AncRequest.objects.get(req_anc = req_id, host = host_id)
+    announcement = Announcement.objects.filter(id = req.req_anc.id)
     announcement.update(anc_status='A')
     announcement.update(main_host=req.host)
     serializer = AnnouncementSerializer(data=announcement)
@@ -48,7 +48,7 @@ def AcceptRequest(request, req_id):
 
 @api_view(['PUT'])
 @permission_classes([IsAuthenticated])
-def RejectRequest(request, req_id):
-    req = AncRequest.objects.get(id=req_id)
+def RejectRequest(request, req_id, host_id):
+    req = AncRequest.objects.get(req_anc = req_id, host = host_id)
     req.delete()
     return Response('Request deleted successfully!')
