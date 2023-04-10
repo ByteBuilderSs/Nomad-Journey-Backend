@@ -72,6 +72,7 @@ def DeleteAnnouncement(request, pk):
     announcement.delete()
     return Response('Announcement deleted successfully!')
 
+
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def GetAnnouncementDetailByAnnouncementId(request, ans_id):
