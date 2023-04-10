@@ -69,3 +69,10 @@ def DeleteAnnouncement(request, pk):
     announcement.delete()
     return Response('Announcement deleted successfully!')
 
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def GetAnnouncementDetailByAnnouncementId(request, ans_id):
+    annuncement = Announcement.objects.get(id = ans_id)
+    serializer = AnnouncementSerializer(annuncement)
+    return Response(serializer.data)
