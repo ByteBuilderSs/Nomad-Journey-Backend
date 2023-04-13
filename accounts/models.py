@@ -1,9 +1,8 @@
 from django.db import models
-import uuid
-from django.contrib.auth.models import AbstractUser , BaseUserManager
+from django.contrib.auth.models import AbstractUser, BaseUserManager
 from django.utils.translation import gettext as _
+from utils.models import City, Language, UserInterest
 
-# Create your models here.
 
 class UserManager(BaseUserManager):
     use_in_migrations = True
@@ -31,30 +30,6 @@ class UserManager(BaseUserManager):
             raise ValueError('Superuser must have is_superuser=True.')
 
         return self._create_user(email, password, **extra_fields)
-
-class City(models.Model):
-    city_name = models.CharField(max_length=100,blank=True)
-    country = models.CharField(max_length=100,blank=True)
-    c_lat = models.FloatField()
-    c_long = models.FloatField()
-    abbrev_city = models.CharField(max_length=3,blank=True)
-
-    class Meta:
-        unique_together = ('city_name', 'country',)
-    def __str__(self):
-        return f"{self.city_name}: ({self.c_lat}, {self.c_long})"
-
-
-class UserInterest(models.Model):
-    interest_name = models.CharField(max_length=100,null=True , blank=True)
-
-    def __str__(self):
-        return self.interest_name
-
-class Language(models.Model):
-    language_name = models.CharField(max_length=100 , null=True , blank=True)
-    def __str__(self):
-        return self.language_name
 
 class User(AbstractUser):
     MALE = 1
