@@ -43,6 +43,25 @@ def GetAnnouncementsForHost(request):
     serializer = AnnouncementSerializer(announcements, many=True)
     return Response(serializer.data)
 
+# order announcements
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def GetAnnouncementsForHost_OrderByTravelersCountAsc(request):
+    request_ids = AncRequest.objects.filter(host=request.user.id).values('req_anc')
+    announcements = Announcement.objects.filter(anc_city=request.user.User_city).filter(anc_status='P')
+    announcements = announcements.exclude(id__in=request_ids).exclude(announcer=request.user.id).order_by('travelers_count')
+    serializer = AnnouncementSerializer(announcements, many=True)
+    return Response(serializer.data)
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def GetAnnouncementsForHost_OrderByTravelersCountDesc(request):
+    request_ids = AncRequest.objects.filter(host=request.user.id).values('req_anc')
+    announcements = Announcement.objects.filter(anc_city=request.user.User_city).filter(anc_status='P')
+    announcements = announcements.exclude(id__in=request_ids).exclude(announcer=request.user.id).order_by('-travelers_count')
+    serializer = AnnouncementSerializer(announcements, many=True)
+    return Response(serializer.data)
+
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def CreateAnnouncement(request):
