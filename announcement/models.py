@@ -3,7 +3,6 @@ from accounts.models import User, City
 from django.utils.translation import gettext as _
 
 
-
 class Announcement(models.Model):
     ONE_TR = 1
     TWO_TR = 2
@@ -37,7 +36,6 @@ class Announcement(models.Model):
         (FOURTEEN_TR, _('14')),
         (FIFTEEN_TR, _('15'))
     )
-
     STATUS_CHOICES = (
         ('P', _('Pending')),
         ('A', _('Accepted')),
@@ -52,35 +50,33 @@ class Announcement(models.Model):
         default=None,
         related_name='announcer_anc'
     )
-
-    anc_city = models.ForeignKey(
-        City,
-        on_delete=models.DO_NOTHING,
-        default=None
-    )
-
-    anc_country = models.CharField(max_length=100)
-    arrival_date = models.DateField()
-    departure_date = models.DateField()
+    # anc_city = models.ForeignKey(
+    #     City,
+    #     on_delete=models.DO_NOTHING,
+    #     default=None
+    # )
+    anc_city = models.CharField(max_length=100, null=True, blank=True)
+    anc_country = models.CharField(max_length=100, null=True, blank=True)
+    arrival_date = models.DateField(null=True, blank=True)
+    departure_date = models.DateField(null=True, blank=True)
     anc_status = models.CharField(choices=STATUS_CHOICES, default='P', max_length=1)
-    arrival_date_is_flexible = models.BooleanField(null=True, blank=True)
-    departure_date_is_flexible = models.BooleanField(null=True, blank=True)
+    arrival_date_is_flexible = models.BooleanField(default= False, null=True, blank=True)
+    departure_date_is_flexible = models.BooleanField(default= False, null=True, blank=True)
     anc_description = models.TextField(max_length=500, null=True, blank=True)
     anc_timestamp_created = models.DateTimeField(auto_now_add=True)
     travelers_count = models.IntegerField(choices=TRAVELERS_COUNT_CHOICES, null=True, blank=True)
-    
     volunteer_hosts = models.ManyToManyField(
         User, 
-        related_name='hosts_anc'
+        related_name='hosts_anc',
+        null=True,blank=True
     )
-
     main_host = models.ForeignKey(
         User,
         on_delete=models.DO_NOTHING,
         default=None,
-        related_name='main_host_anc'
+        related_name='main_host_anc',
+        null= True
     )
 
-
     def __str__(self):
-        return 'This is an announcement with ID ' + str(self.id) + ' from user with ID ' + str(self.announcer.id) + '.'
+        return 'This is an announcement with ID ' + str(self.id) + '.'

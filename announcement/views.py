@@ -1,30 +1,46 @@
 from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes
-from .models import Announcement
-from .serializers import AnnouncementSerializer
 from rest_framework.permissions import IsAuthenticated
-
+from .serializers import AnnouncementSerializer, UnAuthAnnouncementDetailsSerializer, FuckingAnnouncementSerializer
+from .models import Announcement
+from accounts.models import User
+from anc_request.models import AncRequest
 
 
 @api_view(['GET'])
-@permission_classes([IsAuthenticated])
-def GetAnnouncementList(request):
-    announcements = Announcement.objects.all()
+def UserAnnouncements(request, username):
+    user = User.objects.get(username=username)
+    announcements = Announcement.objects.filter(announcer=user.id)
     serializer = AnnouncementSerializer(announcements, many=True)
+    return Response(serializer.data)
+
+@api_view(['GET'])
+def UserAnnouncementsMoreDetails(request, pk):
+    announcements = Announcement.objects.get(id=pk)
+    serializer = UnAuthAnnouncementDetailsSerializer(announcements, many=False)
+    return Response(serializer.data)
+
+@api_view(['GET'])
+# @permission_classes([IsAuthenticated])
+def UserAnnouncementsWithHostRequest(request, user_id):
+    announcements = Announcement.objects.filter(announcer=user_id)
+    requests = AncRequest.objects.filter(req_anc__in=announcements.values('id'))
+    announcements_with_request = Announcement.objects.filter(id__in=requests.values('req_anc'))
+    
+    for anc in announcements_with_request:
+        host_ids = AncRequest.objects.filter(req_anc=anc.id).values('host')
+        hosts = User.objects.filter(id__in=host_ids)
+        setattr(anc, 'hosts', hosts)
+    serializer = FuckingAnnouncementSerializer(announcements_with_request, many=True)
     return Response(serializer.data)
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def GetAnnouncementsForHost(request):
-    announcements = Announcement.objects.filter(anc_city=request.user.city).filter(anc_status='P')
+    request_ids = AncRequest.objects.filter(host=request.user.id).values('req_anc')
+    announcements = Announcement.objects.filter(anc_city=request.user.User_city).filter(anc_status='P')
+    announcements = announcements.exclude(id__in=request_ids).exclude(announcer=request.user.id)
     serializer = AnnouncementSerializer(announcements, many=True)
-    return Response(serializer.data)
-
-@api_view(['GET'])
-@permission_classes([IsAuthenticated])
-def GetSingleAnnouncement(request, pk):
-    announcement = Announcement.objects.get(id=pk)
-    serializer = AnnouncementSerializer(announcement, many=False)
     return Response(serializer.data)
 
 @api_view(['POST'])
@@ -51,5 +67,12 @@ def EditAnnouncement(request, pk):
 def DeleteAnnouncement(request, pk):
     announcement = Announcement.objects.get(id=pk)
     announcement.delete()
-    return Response('Item successfully deleted!')
+    return Response('Announcement deleted successfully!')
 
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def GetAnnouncementDetailByAnnouncementId(request, ans_id):
+    annuncement = Announcement.objects.get(id = ans_id)
+    serializer = AnnouncementSerializer(annuncement)
+    return Response(serializer.data)

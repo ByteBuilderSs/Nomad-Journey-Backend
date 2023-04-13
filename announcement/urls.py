@@ -3,10 +3,16 @@ from .views import *
 
 
 urlpatterns = [
-    path('get-list/', GetAnnouncementList),
     path('get-announcements-for-host/', GetAnnouncementsForHost),
-    path('get-single/<str:pk>/', GetSingleAnnouncement),
+    path('get-user-announcements/<str:username>', UserAnnouncements),
+    path('user-announcements-more-details/<str:pk>/', UserAnnouncementsMoreDetails),
+    path('user-announcements-with-host-request/<str:user_id>', UserAnnouncementsWithHostRequest),
+
     path('create/', CreateAnnouncement),
+
     path('edit/<str:pk>/', EditAnnouncement),
-    path('delete/<str:pk>/', DeleteAnnouncement)
+
+    path('delete/<str:pk>/', DeleteAnnouncement),
+    path('get-announcement-detail-by-id/<str:ans_id>' , GetAnnouncementDetailByAnnouncementId)
+
 ]

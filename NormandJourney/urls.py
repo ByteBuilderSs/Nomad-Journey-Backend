@@ -20,7 +20,9 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('accounts/' , include('accounts.urls')),
     path('announcement/', include('announcement.urls')),
-    path('blog/' , include('blog.urls'))
+    path('blog/', include('blog.urls')),
+    path('ticket/' , include('ticket.urls')),
+    path('anc_request/', include('anc_request.urls'))
 ]
 
 urlpatterns = [
