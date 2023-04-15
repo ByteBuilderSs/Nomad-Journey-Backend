@@ -6,7 +6,8 @@ from rest_framework.permissions import AllowAny, IsAuthenticated
 from django.shortcuts import get_object_or_404
 from django.core.paginator import Paginator
 from .models import Blog , Tag
-from .serializers import BlogSerializer , TagSerializer
+from announcement.models import Announcement
+from .serializers import *
 import json
 
 class PublicBlogView(APIView):
@@ -53,7 +54,19 @@ class BlogView(APIView):
             # data = request.data
             # data._mutable = True
             data['author'] = request.user.id
-            serializer = BlogSerializer(data = data)
+            ans = Announcement.objects.get(id = data['annoncement'] )
+            if ans.announcer.id != request.user.id :
+                return Response({
+                    'data': {},
+                    'message':'you are not authorized to do this'
+                } , status = status.HTTP_400_BAD_REQUEST)
+            print("ans status = " , ans.anc_status)
+            if ans.anc_status != 'D' :
+                return Response({
+                    'data': {},
+                    'message':'the announcement status is not Done'
+                } , status = status.HTTP_400_BAD_REQUEST)
+            serializer = BlogSerializerToPost(data = data)
             if not serializer.is_valid():
                 return Response({
                     'data': serializer.errors,
@@ -87,7 +100,6 @@ class BlogView(APIView):
                     'data': {},
                     'message':'you are not authorized to do this'
                 }, status = status.HTTP_400_BAD_REQUEST )
-
             serializer = BlogSerializer(blog[0] , data = data , partial = True)
 
             if not serializer.is_valid():
