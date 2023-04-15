@@ -100,7 +100,7 @@ class BlogView(APIView):
                     'data': {},
                     'message':'you are not authorized to do this'
                 }, status = status.HTTP_400_BAD_REQUEST )
-            serializer = BlogSerializer(blog[0] , data = data , partial = True)
+            serializer = BlogSerializerToUpdate(blog[0] , data = data , partial = True)
 
             if not serializer.is_valid():
                 return Response({
