@@ -5,6 +5,7 @@ from .serializers import AnnouncementSerializer, UnAuthAnnouncementDetailsSerial
 from .models import Announcement
 from accounts.models import User
 from anc_request.models import AncRequest
+from rest_framework.pagination import PageNumberPagination
 
 
 @api_view(['GET'])
@@ -37,11 +38,15 @@ def UserAnnouncementsWithHostRequest(request, user_id):
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def GetAnnouncementsForHost(request):
+    pagination = PageNumberPagination()
+
     request_ids = AncRequest.objects.filter(host=request.user.id).values('req_anc')
     announcements = Announcement.objects.filter(anc_city=request.user.User_city).filter(anc_status='P')
     announcements = announcements.exclude(id__in=request_ids).exclude(announcer=request.user.id)
-    serializer = AnnouncementSerializer(announcements, many=True)
-    return Response(serializer.data)
+    
+    page = pagination.paginate_queryset(announcements, request)
+    serializer = AnnouncementSerializer(page, many=True)
+    return pagination.get_paginated_response(serializer.data)
 
 # order announcements
 @api_view(['GET'])
