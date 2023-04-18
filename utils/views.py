@@ -19,3 +19,11 @@ def GetCitiesOfCountry(request, rec_id):
     cities = City.objects.filter(country=single_city.country)
     serializer = CitySerializer(cities, many=True)
     return Response(serializer.data)
+
+@api_view(['POST'])
+# @permission_classes([IsAuthenticated])
+def CreateCity(request):
+    serializer = CitySerializer(data=request.data)
+    if serializer.is_valid():
+        serializer.save()
+    return Response(serializer.data)

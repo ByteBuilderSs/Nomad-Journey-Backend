@@ -11,7 +11,7 @@ class AnnouncementSerializer(serializers.ModelSerializer):
    
     class Meta:
         model = Announcement
-        fields = ['id','announcer', 'anc_city', 'anc_country', 'anc_status', 'arrival_date', 'departure_date', 'arrival_date_is_flexible',
+        fields = ['id','announcer', 'anc_city', 'anc_status', 'arrival_date', 'departure_date', 'arrival_date_is_flexible',
                    'departure_date_is_flexible', 'anc_description', 'travelers_count', 'announcer_username', 'announcer_image_code']
 
     def create(self, validated_data):
@@ -48,7 +48,7 @@ class FuckingAnnouncementSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Announcement
-        fields = ['id','announcer', 'anc_city', 'anc_country', 'anc_status', 'arrival_date', 'departure_date', 'arrival_date_is_flexible',
+        fields = ['id','announcer', 'anc_city', 'anc_status', 'arrival_date', 'departure_date', 'arrival_date_is_flexible',
                    'departure_date_is_flexible', 'anc_description', 'travelers_count', 'announcer_username', 'announcer_image_code', 'main_host_name', 'main_host_username', 'hosts']
 
     def create(self, validated_data):
@@ -114,7 +114,7 @@ class UnAuthAnnouncementDetailsSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Announcement
-        fields = ['id', 'announcer', 'anc_city', 'anc_country', 'anc_status', 'arrival_date', 'departure_date', 'arrival_date_is_flexible',
+        fields = ['id', 'announcer', 'anc_city', 'anc_status', 'arrival_date', 'departure_date', 'arrival_date_is_flexible',
                     'departure_date_is_flexible', 'anc_description', 'travelers_count',
                     'host_firstName', 'host_lastName', 'host_username', 'host_nationality', 'host_birthdate',
                     'announcer_firstName', 'announcer_lastName', 'announcer_username', 'announcer_nationality', 'announcer_birthdate', 'volunteers']

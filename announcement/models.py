@@ -1,6 +1,7 @@
 from django.db import models
-from accounts.models import User, City
+from accounts.models import User
 from django.utils.translation import gettext as _
+from utils.models import City
 
 
 class Announcement(models.Model):
@@ -50,13 +51,14 @@ class Announcement(models.Model):
         default=None,
         related_name='announcer_anc'
     )
-    # anc_city = models.ForeignKey(
-    #     City,
-    #     on_delete=models.DO_NOTHING,
-    #     default=None
-    # )
-    anc_city = models.CharField(max_length=100, null=True, blank=True)
-    anc_country = models.CharField(max_length=100, null=True, blank=True)
+    anc_city = models.ForeignKey(
+        City,
+        on_delete=models.DO_NOTHING,
+        default=None,
+        null=True
+    )
+    # anc_city = models.CharField(max_length=100, null=True, blank=True)
+    # anc_country = models.CharField(max_length=100, null=True, blank=True)
     arrival_date = models.DateField(null=True, blank=True)
     departure_date = models.DateField(null=True, blank=True)
     anc_status = models.CharField(choices=STATUS_CHOICES, default='P', max_length=1)
@@ -68,7 +70,7 @@ class Announcement(models.Model):
     volunteer_hosts = models.ManyToManyField(
         User, 
         related_name='hosts_anc',
-        null=True,blank=True
+        blank=True
     )
     main_host = models.ForeignKey(
         User,

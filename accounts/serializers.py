@@ -44,7 +44,7 @@ class UserProfileEdit1Serializer(serializers.ModelSerializer):
 class UserProfileEdit2Serializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ['User_address','User_apt','User_city','User_country','User_postal_code']
+        fields = ['User_address','User_apt','User_city','User_postal_code']
 
 class GetUsernameAndUserImageByUserIdSerializer(serializers.ModelSerializer):
     class Meta:
@@ -72,7 +72,7 @@ class UserProfileForOverviewSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ['user_age','joined_since','posts_count','announcements_count','User_birthdate','User_about_me','User_job','User_education',
-                'User_nationality','User_address','User_address_lat','User_address_long','User_gender','User_country_code','User_country',
+                'User_nationality','User_address','User_address_lat','User_address_long','User_gender','User_country_code',
                 'User_city','User_apt','User_postal_code','User_phone_number','image_code','profile_photo','ssn','first_name','last_name',
                 'email','username','date_joined','hosting_availability','hometown','why_Im_on_nomadjourney','favorite_music_movie_book',
                 'amazing_thing_done','teach_learn_share','what_Ican_share_with_host','interests','langF','langL']
