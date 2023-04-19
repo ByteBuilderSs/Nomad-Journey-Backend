@@ -6,6 +6,8 @@ from .models import Announcement
 from accounts.models import User
 from anc_request.models import AncRequest
 from rest_framework.pagination import PageNumberPagination
+from rest_framework.settings import api_settings
+import math
 
 
 @api_view(['GET'])
@@ -46,7 +48,10 @@ def GetAnnouncementsForHost(request):
     
     page = pagination.paginate_queryset(announcements, request)
     serializer = AnnouncementSerializer(page, many=True)
-    return pagination.get_paginated_response(serializer.data)
+    result = pagination.get_paginated_response(serializer.data)
+    result.data['page_count'] = math.ceil(len(announcements) / api_settings.PAGE_SIZE)
+    # pagination.get_page_number(request, pagination)
+    return result
 
 # order announcements
 # @api_view(['GET'])
@@ -100,3 +105,6 @@ def GetAnnouncementDetailByAnnouncementId(request, ans_id):
     annuncement = Announcement.objects.get(id = ans_id)
     serializer = AnnouncementSerializer(annuncement)
     return Response(serializer.data)
+
+
+
