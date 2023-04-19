@@ -5,6 +5,7 @@ from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.exceptions import AuthenticationFailed
 from .serializers import *
 from .models import User
+from utils.models import *
 from announcement.models import Announcement
 from blog.models import Blog
 from .permissions import IsOwner
@@ -224,6 +225,11 @@ class UserProfileEdit3(APIView):
         try:
             body = json.loads(request.body.decode('utf-8'))
             user = User.objects.filter(username = username)
+            if body.get('interests') is not None:
+                for i in body['interests']:
+                    interst_id = UserInterest.objects.filter(interest_name = i.lower())
+                    if len(interst_id) == 0:
+                        UserInterest.objects.create(interest_name = i.lower())
             if len(user) == 0:
                 return Response({
                     'data': {},

@@ -4,6 +4,7 @@ from django.utils.translation import gettext as _
 from utils.models import City, Language, UserInterest
 
 
+
 class UserManager(BaseUserManager):
     use_in_migrations = True
     def _create_user(self, email, password, **extra_fields):
@@ -77,11 +78,9 @@ class User(AbstractUser):
     amazing_thing_done = models.TextField(blank=True , null=True)
     teach_learn_share = models.TextField(blank=True , null=True)
     what_Ican_share_with_host = models.TextField(blank=True , null=True)
-    interests = models.ManyToManyField(UserInterest ,default=None  ,blank=True )
-    langF = models.ForeignKey(Language ,on_delete=models.CASCADE,default=None  ,null=True,blank=True , related_name = 'langF' )
-    langL = models.ForeignKey(Language ,on_delete=models.CASCADE,default=None  ,null=True,blank=True , related_name= 'langL' )
-    # posts_count = models.IntegerField(default=0)
-    # announcements_count = models.IntegerField(default=0)
+    interests = models.ManyToManyField(UserInterest ,default=None,blank=True)
+    langF = models.ManyToManyField(Language ,default=None  ,blank=True , related_name = 'langF' )
+    langL = models.ManyToManyField(Language ,default=None  ,blank=True , related_name= 'langL' )
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []
 
