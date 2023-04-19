@@ -6,14 +6,12 @@ from .serializers import CountrySerializer, CitySerializer
 
 
 @api_view(['GET'])
-@permission_classes([IsAuthenticated])
 def GetCountries(request):
     countries = City.objects.all().distinct('country')
     serializer = CountrySerializer(countries, many=True)
     return Response(serializer.data)
 
 @api_view(['GET'])
-@permission_classes([IsAuthenticated])
 def GetCitiesOfCountry(request, rec_id):
     single_city = City.objects.get(id=rec_id)
     cities = City.objects.filter(country=single_city.country)
@@ -21,7 +19,6 @@ def GetCitiesOfCountry(request, rec_id):
     return Response(serializer.data)
 
 @api_view(['POST'])
-# @permission_classes([IsAuthenticated])
 def CreateCity(request):
     serializer = CitySerializer(data=request.data)
     if serializer.is_valid():
