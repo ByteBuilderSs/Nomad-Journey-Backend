@@ -15,13 +15,13 @@ class City(models.Model):
         return f'{self.city_name}: ({self.c_lat}, {self.c_long})'
 
 class Language(models.Model):
-    language_name = models.CharField(max_length=100, null=True, blank=True)
+    language_name = models.CharField(max_length=100, null=True, blank=True , unique=True)
 
     def __str__(self):
         return self.language_name
 
 class UserInterest(models.Model):
-    interest_name = models.CharField(max_length=100, null=True, blank=True)
+    interest_name = models.CharField(max_length=100, null=True, blank=True , unique=True)
 
     def __str__(self):
         return self.interest_name
