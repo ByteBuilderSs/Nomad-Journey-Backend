@@ -10,7 +10,8 @@ class AnnouncementSerializer(serializers.ModelSerializer):
     announcer_username = serializers.SerializerMethodField()
     announcer_image_code = serializers.SerializerMethodField()
     city_name = serializers.SerializerMethodField()
-    city_country = serializers.SerializerMethodField() 
+    city_country = serializers.SerializerMethodField()
+    anc_status = serializers.SerializerMethodField()
 
    
     class Meta:
@@ -23,6 +24,9 @@ class AnnouncementSerializer(serializers.ModelSerializer):
         instance = self.Meta.model(**validated_data)
         instance.save()
         return instance
+    
+    def get_anc_status(self, obj):
+        
    
     def get_city_name(self, obj):
         city = City.objects.get(id = obj.anc_city.id)

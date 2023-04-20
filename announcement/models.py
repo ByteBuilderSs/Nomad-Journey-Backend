@@ -38,10 +38,10 @@ class Announcement(models.Model):
         (FIFTEEN_TR, _('15'))
     )
     STATUS_CHOICES = (
-        ('P', _('Pending')),
-        ('A', _('Accepted')),
-        ('D', _('Done')),
-        ('E', _('Expired'))
+        ('P', 'Pending'),
+        ('A', 'Accepted'),
+        ('D', 'Done'),
+        ('E', 'Expired')
     )
 
 
@@ -57,8 +57,6 @@ class Announcement(models.Model):
         default=None,
         null=True
     )
-    # anc_city = models.CharField(max_length=100, null=True, blank=True)
-    # anc_country = models.CharField(max_length=100, null=True, blank=True)
     arrival_date = models.DateField(null=True, blank=True)
     departure_date = models.DateField(null=True, blank=True)
     anc_status = models.CharField(choices=STATUS_CHOICES, default='P', max_length=1)
