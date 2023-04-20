@@ -30,13 +30,43 @@ class UserSerializer(serializers.ModelSerializer):
         return instance
 
 class UserCompeleteProfileSerializer(serializers.ModelSerializer):
+    intrest_name = serializers.SerializerMethodField('get_intrest_name') 
+    langL_name = serializers.SerializerMethodField('get_langL_name') 
+    langF_name = serializers.SerializerMethodField('get_langF_name') 
+    city_name = serializers.SerializerMethodField('get_city_name') 
+
     class Meta:
         model = User
-        fields = ("__all__")
+        fields = ['User_birthdate','User_about_me','User_job','User_education','password',
+                'User_nationality','User_address','User_address_lat','User_address_long','User_gender','User_country_code',
+                'User_city','User_apt','User_postal_code','User_phone_number','image_code','profile_photo','ssn','first_name','last_name',
+                'email','username','date_joined','hosting_availability','hometown','why_Im_on_nomadjourney','favorite_music_movie_book',
+                'amazing_thing_done','teach_learn_share','what_Ican_share_with_host','interests','langF','langL' , 'city_name' , 'intrest_name',
+                'langL_name' , 'langF_name']
         extra_kwargs = {
             'password':{'write_only' : True},
             'password_again':{'write_only' : True}
         }
+    def get_intrest_name(self,obj):
+        intrest_name_list = []
+        for i in obj.interests.all():
+            intrest_name_list.append(i.interest_name)
+        return intrest_name_list
+
+    def get_langL_name(self,obj):
+        langL_name_list = []
+        for t in obj.langL.all():
+            langL_name_list.append(t.language_name)
+        return langL_name_list
+
+    def get_langF_name(self,obj):
+        langF_name_list = []
+        for t in obj.langF.all():
+            langF_name_list.append(t.language_name)
+        return langF_name_list
+
+    def get_city_name(self,obj):
+        return obj.User_city.city_name
 
 class UserProfileEdit1Serializer(serializers.ModelSerializer):
     class Meta:
