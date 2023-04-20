@@ -50,7 +50,6 @@ def GetAnnouncementsForHost(request):
     serializer = AnnouncementSerializer(page, many=True)
     result = pagination.get_paginated_response(serializer.data)
     result.data['page_count'] = math.ceil(len(announcements) / api_settings.PAGE_SIZE)
-    # pagination.get_page_number(request, pagination)
     return result
 
 # order announcements
