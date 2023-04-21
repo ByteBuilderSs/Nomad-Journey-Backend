@@ -23,7 +23,7 @@ class BlogSerializer(serializers.ModelSerializer):
         return f"{obj.annoncement.main_host.first_name} {obj.annoncement.main_host.last_name}"
     
     def get_ans_city(self,obj):
-        return obj.annoncement.anc_city
+        return obj.annoncement.anc_city.city_name
     
     def get_trip_duration(self,obj):
         return obj.annoncement.departure_date.day - obj.annoncement.arrival_date.day
