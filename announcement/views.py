@@ -1,7 +1,7 @@
 from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
-from .serializers import AnnouncementSerializer, UnAuthAnnouncementDetailsSerializer, FuckingAnnouncementSerializer
+from .serializers import AnnouncementSerializer, UnAuthAnnouncementDetailsSerializer, FuckingAnnouncementSerializer,DoneStatusAnnouncementsSerializer
 from .models import Announcement
 from accounts.models import User
 from anc_request.models import AncRequest
@@ -106,4 +106,9 @@ def GetAnnouncementDetailByAnnouncementId(request, ans_id):
     return Response(serializer.data)
 
 
-
+@api_view(['GET'])
+def GetDoneStatusAnnouncements(request, username):
+    user = User.objects.get(username=username)
+    announcements = Announcement.objects.filter(announcer=user.id , anc_status = 'D')
+    serializer = DoneStatusAnnouncementsSerializer(announcements, many=True)
+    return Response(serializer.data)

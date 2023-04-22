@@ -13,6 +13,7 @@ urlpatterns = [
     path('edit/<str:pk>/', EditAnnouncement),
 
     path('delete/<str:pk>/', DeleteAnnouncement),
-    path('get-announcement-detail-by-id/<str:ans_id>' , GetAnnouncementDetailByAnnouncementId)
+    path('get-announcement-detail-by-id/<str:ans_id>' , GetAnnouncementDetailByAnnouncementId),
+    path( 'get-announcement-done-deatil-by-each-user/<str:username>', GetDoneStatusAnnouncements)
 
 ]

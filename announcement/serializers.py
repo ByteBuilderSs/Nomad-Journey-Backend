@@ -211,3 +211,35 @@ class UnAuthAnnouncementDetailsSerializer(serializers.ModelSerializer):
                 "last_name" : host.host.last_name,
             })
         return hosts
+    
+
+class DoneStatusAnnouncementsSerializer(serializers.ModelSerializer):
+    city_name = serializers.SerializerMethodField()
+    city_country = serializers.SerializerMethodField()
+    main_host_name = serializers.SerializerMethodField()
+    main_host_username = serializers.SerializerMethodField()
+    class Meta:
+        model = Announcement
+        fields = ['city_name', 'city_country', 'main_host_name', 'main_host_username']
+
+    def get_city_name(self, obj):
+        city = City.objects.get(id = obj.anc_city.id)
+        return city.city_name
+    
+    def get_city_country(self, obj):
+        city = City.objects.get(id = obj.anc_city.id)
+        return city.country
+    
+    def get_main_host_name(self, obj):
+        main_host = obj.main_host
+        if main_host is not None:
+            user = User.objects.get(id=main_host.id)
+            return user.first_name + ' ' + user.last_name
+        return main_host
+    
+    def get_main_host_username(self, obj):
+        main_host = obj.main_host
+        if main_host is not None:
+            user = User.objects.get(id=main_host.id)
+            return user.username
+        return main_host
