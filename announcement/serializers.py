@@ -17,7 +17,7 @@ class AnnouncementSerializer(serializers.ModelSerializer):
     class Meta:
         model = Announcement
         fields = ['id','announcer', 'city_name', 'city_country', 'anc_status', 'arrival_date', 'departure_date', 'arrival_date_is_flexible',
-                   'departure_date_is_flexible', 'anc_description', 'travelers_count', 'announcer_username', 'announcer_image_code']
+                   'departure_date_is_flexible', 'anc_description', 'travelers_count', 'announcer_username', 'announcer_image_code', 'anc_timestamp_created']
 
     def create(self, validated_data):
         validated_data['announcer'] = self.context['request'].user
@@ -57,7 +57,7 @@ class FuckingAnnouncementSerializer(serializers.ModelSerializer):
     class Meta:
         model = Announcement
         fields = ['id','announcer', 'city_name', 'city_country', 'anc_status', 'arrival_date', 'departure_date', 'arrival_date_is_flexible',
-                   'departure_date_is_flexible', 'anc_description', 'travelers_count', 'announcer_username', 'announcer_image_code', 'main_host_name', 'main_host_username', 'hosts']
+                   'departure_date_is_flexible', 'anc_description', 'travelers_count', 'announcer_username', 'announcer_image_code', 'anc_timestamp_created', 'main_host_name', 'main_host_username', 'hosts']
 
     def create(self, validated_data):
         validated_data['announcer'] = self.context['request'].user
@@ -123,7 +123,7 @@ class UnAuthAnnouncementDetailsSerializer(serializers.ModelSerializer):
     class Meta:
         model = Announcement
         fields = ['id', 'announcer', 'anc_city', 'city_name', 'city_country', 'anc_status', 'arrival_date', 'departure_date', 'arrival_date_is_flexible',
-                    'departure_date_is_flexible', 'anc_description', 'travelers_count',
+                    'departure_date_is_flexible', 'anc_description', 'travelers_count', 'anc_timestamp_created',
                     'host_firstName', 'host_lastName', 'host_username', 'host_nationality', 'host_birthdate',
                     'announcer_firstName', 'announcer_lastName', 'announcer_username', 'announcer_nationality', 'announcer_birthdate', 'volunteers']
 
