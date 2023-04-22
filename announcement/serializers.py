@@ -11,7 +11,7 @@ class AnnouncementSerializer(serializers.ModelSerializer):
     announcer_image_code = serializers.SerializerMethodField()
     city_name = serializers.SerializerMethodField()
     city_country = serializers.SerializerMethodField()
-    anc_status = serializers.SerializerMethodField()
+    # anc_status = serializers.SerializerMethodField()
 
    
     class Meta:

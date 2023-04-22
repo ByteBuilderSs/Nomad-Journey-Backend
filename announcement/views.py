@@ -10,6 +10,26 @@ from rest_framework.settings import api_settings
 import math
 
 
+def SortData(data, sort_by, descending=False):
+    if sort_by == 'anc_timestamp_created':
+        if descending:
+            return data.order_by('-anc_timestamp_created')
+        else:
+            return data.order_by('anc_timestamp_created')
+    elif sort_by == 'arrival_date':
+        if descending:
+            return data.order_by('-arrival_date')
+        else:
+            return data.order_by('arrival_date')
+    elif sort_by == 'travelers_count':
+        if descending:
+            return data.order_by('-travelers_count')
+        else:
+            return data.order_by('travelers_count')
+    else:
+        return 'Invalid sort request!'
+
+
 @api_view(['GET'])
 def UserAnnouncements(request, username):
     user = User.objects.get(username=username)
@@ -42,10 +62,18 @@ def UserAnnouncementsWithHostRequest(request, user_id):
 def GetAnnouncementsForHost(request):
     pagination = PageNumberPagination()
 
+    # initial objects
     request_ids = AncRequest.objects.filter(host=request.user.id).values('req_anc')
     announcements = Announcement.objects.filter(anc_city=request.user.User_city).filter(anc_status='P')
     announcements = announcements.exclude(id__in=request_ids).exclude(announcer=request.user.id)
-    
+
+    # sorting
+    sort_by = request.GET.get('sort_by', None)
+    descending = request.GET.get('descending', False)
+    if sort_by:
+        announcements = SortData(announcements, sort_by, descending)
+
+    # pagination
     page = pagination.paginate_queryset(announcements, request)
     serializer = AnnouncementSerializer(page, many=True)
     result = pagination.get_paginated_response(serializer.data)
