@@ -48,7 +48,7 @@ class User(AbstractUser):
     User_about_me = models.TextField(null=True , blank=True)
     User_job = models.CharField(max_length=100 , null=True , blank=True)
     User_education = models.CharField(max_length=100,null=True , blank=True)
-    User_nationality = models.CharField(max_length=100, null=True,blank=True)
+    s = models.CharField(max_length=100, null=True,blank=True)
     User_address = models.TextField(blank=True , null=True)
     User_address_lat = models.FloatField(null=True,blank=True)
     User_address_long = models.FloatField(null = True,blank=True)

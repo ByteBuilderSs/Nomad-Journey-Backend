@@ -227,9 +227,9 @@ class UserProfileEdit3(APIView):
             user = User.objects.filter(username = username)
             if body.get('interests') is not None:
                 for i in body['interests']:
-                    interst_id = UserInterest.objects.filter(interest_name = i.lower())
+                    interst_id = UserInterest.objects.filter(interest_name = i)
                     if len(interst_id) == 0:
-                        UserInterest.objects.create(interest_name = i.lower())
+                        UserInterest.objects.create(interest_name = i)
             if len(user) == 0:
                 return Response({
                     'data': {},
