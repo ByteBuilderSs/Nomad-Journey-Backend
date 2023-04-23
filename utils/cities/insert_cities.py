@@ -8,7 +8,7 @@ df = pd.read_csv(r"world_cities.csv")
 # print(len(df))
 
 for data in range(0, len(df)):
-    connection = psycopg2.connect(user="postgres", password="aysa1380", host="localhost", port="5432", dbname="nomadjourney")
+    connection = psycopg2.connect(user="admin", password="sin2023", host="localhost", port="5432", dbname="nomadjourney")
     cursor = connection.cursor()
     query_select = """SELECT * FROM utils_city WHERE city_name = %s"""    
     cursor.execute(query_select, (df['city'][data],))
