@@ -4,6 +4,7 @@ from accounts.models import User
 from accounts.serializers import UserSerializer
 from anc_request.models import AncRequest
 from utils.models import City
+import datetime
 
 
 class AnnouncementSerializer(serializers.ModelSerializer):
@@ -11,8 +12,7 @@ class AnnouncementSerializer(serializers.ModelSerializer):
     announcer_image_code = serializers.SerializerMethodField()
     city_name = serializers.SerializerMethodField()
     city_country = serializers.SerializerMethodField()
-    # anc_status = serializers.SerializerMethodField()
-
+    anc_status = serializers.SerializerMethodField()
    
     class Meta:
         model = Announcement
@@ -25,7 +25,14 @@ class AnnouncementSerializer(serializers.ModelSerializer):
         instance.save()
         return instance
     
-    # def get_anc_status(self, obj):
+    def get_anc_status(self, obj):
+        current_time = datetime.datetime.now().date()
+        if obj.anc_status == 'P' and current_time > obj.arrival_date:
+            return 'E'
+        elif obj.anc_status == 'A' and current_time > obj.departure_date:
+            return 'D'
+        else:
+            return obj.anc_status
         
    
     def get_city_name(self, obj):
@@ -53,6 +60,7 @@ class FuckingAnnouncementSerializer(serializers.ModelSerializer):
     main_host_name = serializers.SerializerMethodField()
     main_host_username = serializers.SerializerMethodField()
     hosts = serializers.SerializerMethodField()
+    anc_status = serializers.SerializerMethodField()
 
     class Meta:
         model = Announcement
@@ -64,6 +72,15 @@ class FuckingAnnouncementSerializer(serializers.ModelSerializer):
         instance = self.Meta.model(**validated_data)
         instance.save()
         return instance
+    
+    def get_anc_status(self, obj):
+        current_time = datetime.datetime.now().date()
+        if obj.anc_status == 'P' and current_time > obj.arrival_date:
+            return 'E'
+        elif obj.anc_status == 'A' and current_time > obj.departure_date:
+            return 'D'
+        else:
+            return obj.anc_status
     
     def get_city_name(self, obj):
         city = City.objects.get(id = obj.anc_city.id)
@@ -119,6 +136,7 @@ class UnAuthAnnouncementDetailsSerializer(serializers.ModelSerializer):
     announcer_nationality = serializers.SerializerMethodField()
     announcer_birthdate = serializers.SerializerMethodField()
     volunteers = serializers.SerializerMethodField()
+    anc_status = serializers.SerializerMethodField()
 
     class Meta:
         model = Announcement
@@ -126,6 +144,15 @@ class UnAuthAnnouncementDetailsSerializer(serializers.ModelSerializer):
                     'departure_date_is_flexible', 'anc_description', 'travelers_count', 'anc_timestamp_created',
                     'host_firstName', 'host_lastName', 'host_username', 'host_nationality', 'host_birthdate',
                     'announcer_firstName', 'announcer_lastName', 'announcer_username', 'announcer_nationality', 'announcer_birthdate', 'volunteers']
+
+    def get_anc_status(self, obj):
+        current_time = datetime.datetime.now().date()
+        if obj.anc_status == 'P' and current_time > obj.arrival_date:
+            return 'E'
+        elif obj.anc_status == 'A' and current_time > obj.departure_date:
+            return 'D'
+        else:
+            return obj.anc_status
 
     def get_city_name(self, obj):
         city = City.objects.get(id = obj.anc_city.id)
