@@ -350,3 +350,19 @@ class GetUserProfileForOverview(APIView):
         #         'data': {},
         #         'message':'something went wrong'
         #     }, status = status.HTTP_400_BAD_REQUEST )
+
+class LanguageView(APIView):
+    def get(self , request):
+        try:
+            language = Language.objects.all()
+            serializer = LanguageSerializer(language , many = True)
+            return Response({
+                'data':serializer.data,
+                'message' : 'language fetched successfully'
+            } , status = status.HTTP_201_CREATED)
+        except Exception as e:
+            print(e) 
+            return Response({
+                'data': {},
+                'message':'something went wrong'
+            }, status = status.HTTP_400_BAD_REQUEST )

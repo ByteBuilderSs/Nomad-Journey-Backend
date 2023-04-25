@@ -202,3 +202,7 @@ class UserProfileForOverviewSerializer(serializers.ModelSerializer):
             langF_name_list.append(t.language_name)
         return langF_name_list
 
+class LanguageSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Language
+        fields = ("__all__")

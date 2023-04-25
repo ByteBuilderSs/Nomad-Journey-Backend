@@ -20,4 +20,5 @@ urlpatterns = [
     path('UserProfileEdit4/<str:username>' , UserProfileEdit4.as_view()),
     path('GetUsernameAndUserImageByUserId/<str:id>' , GetUsernameAndUserImageByUserId.as_view()),
     path('GetUserProfileForOverview/<str:username>', GetUserProfileForOverview.as_view()),
+    path('GetLanguages', LanguageView.as_view())
 ]

@@ -172,7 +172,7 @@ class TagView(APIView):
                 'data': {},
                 'message':'something went wrong'
             }, status = status.HTTP_400_BAD_REQUEST )
-        
+
 class TagViewByUid(APIView):
     def get(self , request , uid):
         tag = get_object_or_404(Tag, uid=uid)

@@ -20,7 +20,9 @@ class BlogSerializer(serializers.ModelSerializer):
         return tags_name_list
     
     def get_host_name(self,obj):
-        return f"{obj.annoncement.main_host.first_name} {obj.annoncement.main_host.last_name}"
+        if obj.annoncement.main_host is not None:
+            return f"{obj.annoncement.main_host.first_name} {obj.annoncement.main_host.last_name}"
+        return None
     
     def get_ans_city(self,obj):
         return obj.annoncement.anc_city.city_name
@@ -29,7 +31,9 @@ class BlogSerializer(serializers.ModelSerializer):
         return obj.annoncement.departure_date.day - obj.annoncement.arrival_date.day
     
     def get_host_username(self,obj):
-        return obj.annoncement.main_host.username
+        if obj.annoncement.main_host is not None:
+            return obj.annoncement.main_host.username
+        return None
 
 class BlogSerializerToPost(serializers.ModelSerializer):
     tags_name = serializers.SerializerMethodField('get_tag_name') 
