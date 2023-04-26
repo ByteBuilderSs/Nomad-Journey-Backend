@@ -8,6 +8,7 @@ from anc_request.models import AncRequest
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.settings import api_settings
 import math
+from django.db.models import F
 
 
 def SortData(data, sort_by, descending=False):
@@ -16,11 +17,11 @@ def SortData(data, sort_by, descending=False):
             return data.order_by('-anc_timestamp_created')
         else:
             return data.order_by('anc_timestamp_created')
-    elif sort_by == 'arrival_date':
+    elif sort_by == 'time_range':
         if descending:
-            return data.order_by('-arrival_date')
+            return data.annotate(diff=F('departure_date') - F('arrival_date')).order_by('-diff')
         else:
-            return data.order_by('arrival_date')
+            return data.annotate(diff=F('departure_date') - F('arrival_date')).order_by('diff')
     elif sort_by == 'travelers_count':
         if descending:
             return data.order_by('-travelers_count')

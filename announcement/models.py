@@ -59,6 +59,11 @@ class Announcement(models.Model):
     )
     arrival_date = models.DateField(null=True, blank=True)
     departure_date = models.DateField(null=True, blank=True)
+
+    @property
+    def stay_duration(self):
+        return (self.departure_date - self.arrival_date).days
+
     anc_status = models.CharField(choices=STATUS_CHOICES, default='P', max_length=1)
     arrival_date_is_flexible = models.BooleanField(default= False, null=True, blank=True)
     departure_date_is_flexible = models.BooleanField(default= False, null=True, blank=True)
