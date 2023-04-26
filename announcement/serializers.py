@@ -27,9 +27,9 @@ class AnnouncementSerializer(serializers.ModelSerializer):
     
     def get_anc_status(self, obj):
         current_time = datetime.datetime.now().date()
-        if obj.anc_status == 'P' and current_time > obj.arrival_date:
+        if obj.anc_status == 'P' and current_time >= obj.arrival_date:
             return 'E'
-        elif obj.anc_status == 'A' and current_time > obj.departure_date:
+        elif obj.anc_status == 'A' and current_time >= obj.departure_date:
             return 'D'
         else:
             return obj.anc_status
