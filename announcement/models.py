@@ -1,6 +1,7 @@
 from django.db import models
-from accounts.models import User, City
+from accounts.models import User
 from django.utils.translation import gettext as _
+from utils.models import City
 
 
 class Announcement(models.Model):
@@ -37,10 +38,10 @@ class Announcement(models.Model):
         (FIFTEEN_TR, _('15'))
     )
     STATUS_CHOICES = (
-        ('P', _('Pending')),
-        ('A', _('Accepted')),
-        ('D', _('Done')),
-        ('E', _('Expired'))
+        ('P', 'Pending'),
+        ('A', 'Accepted'),
+        ('D', 'Done'),
+        ('E', 'Expired')
     )
 
 
@@ -50,15 +51,19 @@ class Announcement(models.Model):
         default=None,
         related_name='announcer_anc'
     )
-    # anc_city = models.ForeignKey(
-    #     City,
-    #     on_delete=models.DO_NOTHING,
-    #     default=None
-    # )
-    anc_city = models.CharField(max_length=100, null=True, blank=True)
-    anc_country = models.CharField(max_length=100, null=True, blank=True)
+    anc_city = models.ForeignKey(
+        City,
+        on_delete=models.DO_NOTHING,
+        default=None,
+        null=True
+    )
     arrival_date = models.DateField(null=True, blank=True)
     departure_date = models.DateField(null=True, blank=True)
+
+    @property
+    def stay_duration(self):
+        return (self.departure_date - self.arrival_date).days
+
     anc_status = models.CharField(choices=STATUS_CHOICES, default='P', max_length=1)
     arrival_date_is_flexible = models.BooleanField(default= False, null=True, blank=True)
     departure_date_is_flexible = models.BooleanField(default= False, null=True, blank=True)
@@ -68,7 +73,7 @@ class Announcement(models.Model):
     volunteer_hosts = models.ManyToManyField(
         User, 
         related_name='hosts_anc',
-        null=True,blank=True
+        blank=True
     )
     main_host = models.ForeignKey(
         User,

@@ -1,9 +1,9 @@
 from django.db import models
-import uuid
-from django.contrib.auth.models import AbstractUser , BaseUserManager
+from django.contrib.auth.models import AbstractUser, BaseUserManager
 from django.utils.translation import gettext as _
+from utils.models import City, Language, UserInterest
 
-# Create your models here.
+
 
 class UserManager(BaseUserManager):
     use_in_migrations = True
@@ -32,30 +32,6 @@ class UserManager(BaseUserManager):
 
         return self._create_user(email, password, **extra_fields)
 
-class City(models.Model):
-    city_name = models.CharField(max_length=100,blank=True)
-    country = models.CharField(max_length=100,blank=True)
-    c_lat = models.FloatField()
-    c_long = models.FloatField()
-    abbrev_city = models.CharField(max_length=3,blank=True)
-
-    class Meta:
-        unique_together = ('city_name', 'country',)
-    def __str__(self):
-        return f"{self.city_name}: ({self.c_lat}, {self.c_long})"
-
-
-class UserInterest(models.Model):
-    interest_name = models.CharField(max_length=100,null=True , blank=True)
-
-    def __str__(self):
-        return self.interest_name
-
-class Language(models.Model):
-    language_name = models.CharField(max_length=100 , null=True , blank=True)
-    def __str__(self):
-        return self.language_name
-
 class User(AbstractUser):
     MALE = 1
     FEMALE = 2
@@ -78,9 +54,9 @@ class User(AbstractUser):
     User_address_long = models.FloatField(null = True,blank=True)
     User_gender = models.CharField(max_length=1, choices=GENDER_CHOICES , null=True,blank=True)
     User_country_code = models.CharField(max_length=2 , null=True,blank=True)
-    User_country = models.CharField(max_length=100 , null=True,blank=True)
-    # User_city = models.ForeignKey(City,on_delete=models.CASCADE,default=None  ,null=True,blank=True)
-    User_city = models.CharField(max_length=100)
+    # User_country = models.CharField(max_length=100 , null=True,blank=True)
+    User_city = models.ForeignKey(City,on_delete=models.CASCADE,default=None  ,null=True,blank=True)
+    # User_city = models.CharField(max_length=100)
     User_apt = models.CharField(max_length=100, null=True,blank=True)
     User_postal_code = models.CharField(max_length=10 , null=True,blank=True)
     User_phone_number = models.CharField(max_length=20 , null=True,blank=True)
@@ -102,11 +78,9 @@ class User(AbstractUser):
     amazing_thing_done = models.TextField(blank=True , null=True)
     teach_learn_share = models.TextField(blank=True , null=True)
     what_Ican_share_with_host = models.TextField(blank=True , null=True)
-    interests = models.ManyToManyField(UserInterest ,default=None  ,blank=True )
-    langF = models.ForeignKey(Language ,on_delete=models.CASCADE,default=None  ,null=True,blank=True , related_name = 'langF' )
-    langL = models.ForeignKey(Language ,on_delete=models.CASCADE,default=None  ,null=True,blank=True , related_name= 'langL' )
-    # posts_count = models.IntegerField(default=0)
-    # announcements_count = models.IntegerField(default=0)
+    interests = models.ManyToManyField(UserInterest ,default=None,blank=True)
+    langF = models.ManyToManyField(Language ,default=None  ,blank=True , related_name = 'langF' )
+    langL = models.ManyToManyField(Language ,default=None  ,blank=True , related_name= 'langL' )
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []
 

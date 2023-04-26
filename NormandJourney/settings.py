@@ -46,7 +46,8 @@ INSTALLED_APPS = [
     'announcement',
     'blog',
     'ticket',
-    'anc_request'
+    'anc_request',
+    'utils'
 ]
 
 MIDDLEWARE = [
@@ -132,7 +133,9 @@ REST_FRAMEWORK = {
     ],
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework_simplejwt.authentication.JWTAuthentication',
-    ]
+    ],
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    'PAGE_SIZE': 4
 }
 
 # Internationalization
@@ -140,7 +143,7 @@ REST_FRAMEWORK = {
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Asia/Tehran'
 
 USE_I18N = True
 
