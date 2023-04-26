@@ -9,6 +9,7 @@ from rest_framework.pagination import PageNumberPagination
 from rest_framework.settings import api_settings
 import math
 from django.db.models import F
+import datetime
 
 
 def SortData(data, sort_by, descending=False):
@@ -35,6 +36,16 @@ def SortData(data, sort_by, descending=False):
 def UserAnnouncements(request, username):
     user = User.objects.get(username=username)
     announcements = Announcement.objects.filter(announcer=user.id)
+    current_time = datetime.datetime.now().date()
+    for a in announcements:
+        if a.anc_status == 'P' and current_time > a.arrival_date:
+            setattr(a , 'anc_status' , 'E')
+            a.save()
+        elif a.anc_status == 'A' and current_time >= a.departure_date:
+            setattr(a , 'anc_status' , 'D')
+            a.save()
+        else:
+            print(a.anc_status)
     serializer = AnnouncementSerializer(announcements, many=True)
     return Response(serializer.data)
 
