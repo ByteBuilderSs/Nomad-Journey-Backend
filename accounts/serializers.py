@@ -161,21 +161,38 @@ class UserProfileForOverviewSerializer(serializers.ModelSerializer):
             return 0
     
     def get_joined_since(self,obj):
-        today = datetime.today()
-        joined_since = abs(today.day - obj.date_joined.day)
-        if joined_since == 0:
-            joined_since = abs(today.hour - obj.date_joined.hour)
-            if joined_since == 0:
-                joined_since = abs(today.minute - obj.date_joined.minute)
-                if joined_since == 0:
-                    joined_since = abs(today.second - obj.date_joined.second)
-                    return f"{joined_since} seconds"
-                else:
-                    return f"{joined_since} minutes"
-            else:
-                return f"{joined_since} hours"
+        now = datetime.now(obj.date_joined.tzinfo)
+        joined_time = obj.date_joined.astimezone(None)
+        delta = now - joined_time
+
+        days = delta.days
+        seconds = delta.seconds
+        hours, remainder = divmod(seconds, 3600)
+        minutes, seconds = divmod(remainder, 60)
+
+        if days > 0:
+            return f"{days} day{'s' if days > 1 else ''}, {hours} hour{'s' if hours > 1 else ''}, {minutes} minute{'s' if minutes > 1 else ''}, {seconds} second{'s' if seconds > 1 else ''}"
+        elif hours > 0:
+            return f"{hours} hour{'s' if hours > 1 else ''}, {minutes} minute{'s' if minutes > 1 else ''}, {seconds} second{'s' if seconds > 1 else ''}"
+        elif minutes > 0:
+            return f"{minutes} minute{'s' if minutes > 1 else ''}, {seconds} second{'s' if seconds > 1 else ''}"
         else:
-            return f"{joined_since} days"
+            return f"{seconds} second{'s' if seconds > 1 else ''}"
+        # today = datetime.today()
+        # joined_since = abs(today.day - obj.date_joined.day)
+        # if joined_since == 0:
+        #     joined_since = abs(today.hour - obj.date_joined.hour)
+        #     if joined_since == 0:
+        #         joined_since = abs(today.minute - obj.date_joined.minute)
+        #         if joined_since == 0:
+        #             joined_since = abs(today.second - obj.date_joined.second)
+        #             return f"{joined_since} seconds"
+        #         else:
+        #             return f"{joined_since} minutes"
+        #     else:
+        #         return f"{joined_since} hours"
+        # else:
+        #     return f"{joined_since} days"
 
 
     def get_post_count(self , obj):
