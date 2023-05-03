@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import BlogView , BlogDetailView , TagView , PublicBlogView ,  TagViewByUid
+from .views import BlogView , BlogDetailView , TagView , PublicBlogView ,  TagViewByUid , BlogViewUserForView
 
 
 urlpatterns = [
@@ -8,4 +8,5 @@ urlpatterns = [
     path('post/<str:slug>' , BlogDetailView.as_view()),
     path('tags/' , TagView.as_view()),
     path('tagdetail/<uid>' , TagViewByUid.as_view()),
+    path('others-profile-post/<str:username>' , BlogViewUserForView.as_view())
 ]
