@@ -162,13 +162,13 @@ class UserProfileForOverviewSerializer(serializers.ModelSerializer):
     
     def get_joined_since(self,obj):
         today = datetime.today()
-        joined_since = today.day - obj.date_joined.day
+        joined_since = abs(today.day - obj.date_joined.day)
         if joined_since == 0:
-            joined_since = today.hour - obj.date_joined.hour
+            joined_since = abs(today.hour - obj.date_joined.hour)
             if joined_since == 0:
-                joined_since = today.minute - obj.date_joined.minute
+                joined_since = abs(today.minute - obj.date_joined.minute)
                 if joined_since == 0:
-                    joined_since = today.second - obj.date_joined.second
+                    joined_since = abs(today.second - obj.date_joined.second)
                     return f"{joined_since} seconds"
                 else:
                     return f"{joined_since} minutes"
