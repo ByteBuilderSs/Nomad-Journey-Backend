@@ -9,6 +9,7 @@ from .models import Blog , Tag
 from announcement.models import Announcement
 from .serializers import *
 import json
+from accounts.models import User
 
 class PublicBlogView(APIView):
     def get(self , request):
@@ -28,13 +29,29 @@ class PublicBlogView(APIView):
                 'message':'something went wrong'
             }, status = status.HTTP_400_BAD_REQUEST )
 
-
 class BlogView(APIView):
     permission_classes = (IsAuthenticated,)
     # Authentication_classes = []
     def get(self , request):
         try:
             blogs = Blog.objects.filter(author = request.user)
+            serializer = BlogSerializer(blogs , many = True)
+            return Response({
+                'data':serializer.data,
+                'message' : 'blogs fetched successfully'
+            } , status = status.HTTP_201_CREATED)
+        except Exception as e:
+            print(e) 
+            return Response({
+                'data': {},
+                'message':'something went wrong'
+            }, status = status.HTTP_400_BAD_REQUEST )
+
+class BlogViewUserForView(APIView):
+    def get(self , request , username):
+        try:
+            user_id = User.objects.get(username = username).id
+            blogs = Blog.objects.filter(author = user_id)
             serializer = BlogSerializer(blogs , many = True)
             return Response({
                 'data':serializer.data,
