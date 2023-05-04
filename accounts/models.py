@@ -61,8 +61,11 @@ class User(AbstractUser):
     User_postal_code = models.CharField(max_length=10 , null=True,blank=True)
     User_phone_number = models.CharField(max_length=20 , null=True,blank=True)
     # is_active = models.BooleanField(default=True)
-    profile_photo = models.ImageField(upload_to='customer_photos' , null=True,blank=True)
-    image_code = models.TextField(null=True, blank=True)
+
+    # start
+    profile_photo = models.ImageField(upload_to='img_profile', null=True, blank=True)
+    # end
+
     ssn = models.CharField(max_length=20 , null=True,blank=True)
     first_name = models.CharField(max_length=255)
     last_name = models.CharField(max_length=255)

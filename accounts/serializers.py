@@ -7,6 +7,7 @@ from NormandJourney.tools import hash_sha256
 from datetime import datetime
 from announcement.models import Announcement
 from blog.models import Blog
+import base64
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -128,9 +129,19 @@ class UserProfileEdit3Serializer(serializers.ModelSerializer):
         return langF_name_list
 
 class UserProfileEdit4Serializer(serializers.ModelSerializer):
+    profile_photo_base64 = serializers.SerializerMethodField()
+
     class Meta:
         model = User
-        fields = ['image_code']
+        fields = ['profile_photo', 'profile_photo_base64']
+
+    def get_profile_photo_base64(self, obj):
+        if obj.profile_photo:
+            with open(obj.profile_photo.path, "rb") as image_file:
+                encoded_string = base64.b64encode(image_file.read()).decode('utf-8')
+                return encoded_string
+        else:
+            return None
 
 class UserProfileEdit5Serializer(serializers.ModelSerializer):
     class Meta:
