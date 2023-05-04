@@ -319,12 +319,12 @@ class UserProfileEdit4(generics.UpdateAPIView):
                     'data': {},
                     'message':'you are not authorized to do this'
                 }, status = status.HTTP_400_BAD_REQUEST )
-            if user.image_code is None:
+            if user.profile_photo is None:
                 return Response({
                     'data': {},
                     'message':'there is no image to be deleted'
                 }, status = status.HTTP_400_BAD_REQUEST )
-            user.image_code = None
+            user.profile_photo = None
             user.save()
             return Response({
                 'data':{},
