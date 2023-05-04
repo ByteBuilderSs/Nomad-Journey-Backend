@@ -18,6 +18,7 @@ urlpatterns = [
     path('UserProfileEdit2/<str:username>' , UserProfileEdit2.as_view()),
     path('UserProfileEdit3/<str:username>' , UserProfileEdit3.as_view()),
     path('UserProfileEdit4/<str:username>' , UserProfileEdit4.as_view()),
+    path('UserProfileEdit5/<str:username>' , UserProfileEdit5.as_view()),
     path('GetUsernameAndUserImageByUserId/<str:id>' , GetUsernameAndUserImageByUserId.as_view()),
     path('GetUserProfileForOverview/<str:username>', GetUserProfileForOverview.as_view()),
     path('GetLanguages', LanguageView.as_view())
