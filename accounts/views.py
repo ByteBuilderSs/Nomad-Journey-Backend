@@ -14,6 +14,7 @@ from django.shortcuts import get_object_or_404
 import json
 from NormandJourney.tools import hash_sha256
 from rest_framework_simplejwt.tokens import RefreshToken
+from rest_framework.parsers import MultiPartParser
 
 
 class RegisterView(APIView):
@@ -259,39 +260,51 @@ class UserProfileEdit3(APIView):
                 'message':'something went wrong'
             }, status = status.HTTP_400_BAD_REQUEST )
 
-class UserProfileEdit4(APIView):
-    def patch(self , request , username):
-        try:
-            body = json.loads(request.body.decode('utf-8'))
-            user = User.objects.filter(username = username)
-            if len(user) == 0:
-                return Response({
-                    'data': {},
-                    'message':'invalid username'
-                }, status = status.HTTP_400_BAD_REQUEST )
-            if request.user.id != user[0].id:
-                return Response({
-                    'data': {},
-                    'message':'you are not authorized to do this'
-                }, status = status.HTTP_400_BAD_REQUEST )
+class UserProfileEdit4(generics.UpdateAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserProfileEdit4Serializer
+    parser_classes = [MultiPartParser]
 
-            serializer = UserProfileEdit4Serializer(user[0] , data = body , partial = True)
-            if not serializer.is_valid():
-                return Response({
-                    'data': serializer.errors,
-                    'message':'something went wrong'
-                } , status = status.HTTP_400_BAD_REQUEST)
-            serializer.save()
-            return Response({
-                'data': serializer.data,
-                'message' : 'user updated successfully'
-            } , status = status.HTTP_201_CREATED)
-        except Exception as e:
-            print(e) 
-            return Response({
-                'data': {},
-                'message':'something went wrong'
-            }, status = status.HTTP_400_BAD_REQUEST )
+    def patch(self, request, username):
+        user = User.objects.get(username=username)
+
+        serializer = self.get_serializer(user, data=request.data, partial=True)
+        serializer.is_valid(raise_exception=True)
+        self.perform_update(serializer)
+
+        return Response(serializer.data)
+
+        # try:
+        #     body = json.loads(request.body.decode('utf-8'))
+        #     user = User.objects.filter(username = username)
+        #     if len(user) == 0:
+        #         return Response({
+        #             'data': {},
+        #             'message':'invalid username'
+        #         }, status = status.HTTP_400_BAD_REQUEST )
+        #     if request.user.id != user[0].id:
+        #         return Response({
+        #             'data': {},
+        #             'message':'you are not authorized to do this'
+        #         }, status = status.HTTP_400_BAD_REQUEST )
+
+        #     serializer = UserProfileEdit4Serializer(user[0] , data = body , partial = True)
+        #     if not serializer.is_valid():
+        #         return Response({
+        #             'data': serializer.errors,
+        #             'message':'something went wrong'
+        #         } , status = status.HTTP_400_BAD_REQUEST)
+        #     serializer.save()
+        #     return Response({
+        #         'data': serializer.data,
+        #         'message' : 'user updated successfully'
+        #     } , status = status.HTTP_201_CREATED)
+        # except Exception as e:
+        #     print(e) 
+        #     return Response({
+        #         'data': {},
+        #         'message':'something went wrong'
+        #     }, status = status.HTTP_400_BAD_REQUEST )
 
     def delete(self , request , username):
         try:
@@ -306,12 +319,12 @@ class UserProfileEdit4(APIView):
                     'data': {},
                     'message':'you are not authorized to do this'
                 }, status = status.HTTP_400_BAD_REQUEST )
-            if user.image_code is None:
+            if user.profile_photo is None:
                 return Response({
                     'data': {},
                     'message':'there is no image to be deleted'
                 }, status = status.HTTP_400_BAD_REQUEST )
-            user.image_code = None
+            user.profile_photo = None
             user.save()
             return Response({
                 'data':{},
