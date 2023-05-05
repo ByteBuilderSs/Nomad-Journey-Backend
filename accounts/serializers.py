@@ -153,7 +153,7 @@ class UserProfileEdit4Serializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ['profile_photo_base64']
+        fields = ['profile_photo', 'profile_photo_base64']
 
     def get_profile_photo_base64(self, obj):
         if obj.profile_photo:
