@@ -1,5 +1,4 @@
 from django.db import models
-from blog.models import Blog
 
 class Feedback(models.Model):
     integer_choice = (
@@ -9,7 +8,6 @@ class Feedback(models.Model):
         (4, 'Four'),
         (5, 'Five'),
     )
-    blog_id = models.ForeignKey(Blog , on_delete=models.SET_NULL)
     question_1 = models.IntegerField(choices=integer_choice)
     question_2 = models.IntegerField(choices=integer_choice)
     question_3 = models.IntegerField(choices=integer_choice)

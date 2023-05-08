@@ -47,7 +47,8 @@ INSTALLED_APPS = [
     'blog',
     'ticket',
     'anc_request',
-    'utils'
+    'utils',
+    'feedback'
 ]
 
 MIDDLEWARE = [
