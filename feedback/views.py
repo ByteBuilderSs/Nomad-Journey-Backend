@@ -16,7 +16,7 @@ class FeedbackView(APIView):
     def get(self , request , username):
         try:
             user_id = User.objects.get(username = username).id
-            feedback_id = Blog.objects.get(author = user_id).feedback_id
+            feedback_id = Blog.objects.get(author = user_id).feedback_id.id
             feedback = Feedback.objects.get(id = feedback_id)
             serializer = FeedbackSerializer(feedback)
             return Response({
@@ -31,23 +31,23 @@ class FeedbackView(APIView):
             }, status = status.HTTP_400_BAD_REQUEST )
 
 
-    def post(self , request):
-        # try:
-        data = json.loads(request.body.decode('utf-8'))
-        serializer = FeedbackSerializer(data = data)
-        if not serializer.is_valid():
+    def post(self , request , username):
+        try:
+            data = json.loads(request.body.decode('utf-8'))
+            serializer = FeedbackSerializer(data = data)
+            if not serializer.is_valid():
+                return Response({
+                    'data': serializer.errors,
+                    'message':'something went wrong'
+                } , status = status.HTTP_400_BAD_REQUEST)
+            serializer.save()
             return Response({
-                'data': serializer.errors,
+                'data':serializer.data,
+                'message' : 'feedback created successfully'
+            } , status = status.HTTP_201_CREATED)
+        except Exception as e:
+            print(e) 
+            return Response({
+                'data': {},
                 'message':'something went wrong'
-            } , status = status.HTTP_400_BAD_REQUEST)
-        serializer.save()
-        return Response({
-            'data':serializer.data,
-            'message' : 'feedback created successfully'
-        } , status = status.HTTP_201_CREATED)
-        # except Exception as e:
-        #     print(e) 
-        #     return Response({
-        #         'data': {},
-        #         'message':'something went wrong'
-        #     }, status = status.HTTP_400_BAD_REQUEST )
+            }, status = status.HTTP_400_BAD_REQUEST )
