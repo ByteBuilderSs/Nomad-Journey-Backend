@@ -356,6 +356,20 @@ class UserProfileEdit5(APIView):
                 'data': {},
                 'message':'something went wrong'
             }, status = status.HTTP_400_BAD_REQUEST )
+    def get(self , request , username):
+        try:
+            user= User.objects.get(username = username)
+            serializer = UserProfileEdit5Serializer(user)
+            return Response({
+                'data':serializer.data,
+                'message' : 'user info fetched successfully'
+            } , status = status.HTTP_201_CREATED)
+        except Exception as e:
+            print(e) 
+            return Response({
+                'data': {},
+                'message':'something went wrong'
+            }, status = status.HTTP_400_BAD_REQUEST )
 
 class GetUsernameAndUserImageByUserId(APIView):
     def get(self,request , id):

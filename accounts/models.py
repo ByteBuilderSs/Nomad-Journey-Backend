@@ -104,7 +104,7 @@ class User(AbstractUser):
     THIRTEEN_TR = 13
     FOURTEEN_TR = 14
     FIFTEEN_TR = 15
-    maximum_number_of_guests = (
+    maximum_number_of_guests_choice = (
         (ONE_TR, _('1')),
         (TWO_TR, _('2')),
         (THREE_TR, _('3')),
@@ -121,13 +121,15 @@ class User(AbstractUser):
         (FOURTEEN_TR, _('14')),
         (FIFTEEN_TR, _('15'))
     )
+    maximum_number_of_guests = models.CharField(max_length=20, choices=maximum_number_of_guests_choice , null=True,blank=True)
     ANY = 1
     MALE = 2
     FEMALE = 3
-    prefered_gender_to_host = (
+    prefered_gender_to_host_choice = (
         (ANY, _('Any')),
         (MALE, _('Male')),
         (FEMALE , _('Female')))
+    prefered_gender_to_host = models.CharField(max_length=20, choices=prefered_gender_to_host_choice , null=True,blank=True)
     is_pet_friendly = models.BooleanField(null=True , blank=True)
     is_kid_friendly = models.BooleanField(null=True , blank=True)
     is_smoking_allowed = models.BooleanField(null=True , blank=True)
@@ -135,11 +137,12 @@ class User(AbstractUser):
     SHARED_ROOM = 2
     PRIVATE_ROOM = 3
     PUBLIC_ROOM = 4
-    sleeping_arrangments = (
+    sleeping_arrangments_choice = (
         (SHARED_BED, _('shared_bed')),
         (SHARED_ROOM, _('shared_room')),
         (PRIVATE_ROOM , _('private_room')),
         (PUBLIC_ROOM , _('public_room')))
+    sleeping_arrangments = models.CharField(max_length=20, choices=sleeping_arrangments_choice , null=True,blank=True)
     description_of_sleeping_arrangement = models.TextField(max_length=3000 , null=True , blank=True)
     roommate_situation = models.TextField(max_length=3000 , null=True , blank=True)
     additional_information = models.TextField(max_length=3000 ,null=True , blank=True)
