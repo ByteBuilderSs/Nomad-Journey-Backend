@@ -9,7 +9,7 @@ import datetime
 
 class AnnouncementSerializer(serializers.ModelSerializer):
     announcer_username = serializers.SerializerMethodField()
-    announcer_image_code = serializers.SerializerMethodField()
+    # announcer_image_code = serializers.SerializerMethodField()
     city_name = serializers.SerializerMethodField()
     city_country = serializers.SerializerMethodField()
     anc_status = serializers.SerializerMethodField()
@@ -17,7 +17,7 @@ class AnnouncementSerializer(serializers.ModelSerializer):
     class Meta:
         model = Announcement
         fields = ['id','announcer', 'anc_city', 'city_name', 'city_country', 'anc_status', 'arrival_date', 'departure_date', 'stay_duration', 'arrival_date_is_flexible',
-                   'departure_date_is_flexible', 'anc_description', 'travelers_count', 'announcer_username', 'announcer_image_code', 'anc_timestamp_created']
+                   'departure_date_is_flexible', 'anc_description', 'travelers_count', 'announcer_username', 'anc_timestamp_created']
 
     def create(self, validated_data):
         validated_data['announcer'] = self.context['request'].user
@@ -47,16 +47,16 @@ class AnnouncementSerializer(serializers.ModelSerializer):
         user = User.objects.get(id = obj.announcer.id)
         return user.username
    
-    def get_announcer_image_code(self, obj):
-        user = User.objects.get(id = obj.announcer.id)
-        return user.image_code
+    # def get_announcer_image_code(self, obj):
+    #     user = User.objects.get(id = obj.announcer.id)
+    #     return user.image_code
 
 
 class FuckingAnnouncementSerializer(serializers.ModelSerializer):
     city_name = serializers.SerializerMethodField()
     city_country = serializers.SerializerMethodField() 
     announcer_username = serializers.SerializerMethodField() 
-    announcer_image_code = serializers.SerializerMethodField() 
+    # announcer_image_code = serializers.SerializerMethodField() 
     main_host_name = serializers.SerializerMethodField()
     main_host_username = serializers.SerializerMethodField()
     hosts = serializers.SerializerMethodField()
@@ -65,7 +65,7 @@ class FuckingAnnouncementSerializer(serializers.ModelSerializer):
     class Meta:
         model = Announcement
         fields = ['id','announcer', 'anc_city', 'city_name', 'city_country', 'anc_status', 'arrival_date', 'departure_date', 'stay_duration', 'arrival_date_is_flexible',
-                   'departure_date_is_flexible', 'anc_description', 'travelers_count', 'anc_timestamp_created', 'announcer_username', 'announcer_image_code', 'main_host_name', 'main_host_username', 'hosts']
+                   'departure_date_is_flexible', 'anc_description', 'travelers_count', 'anc_timestamp_created', 'announcer_username', 'main_host_name', 'main_host_username', 'hosts']
 
     def create(self, validated_data):
         validated_data['announcer'] = self.context['request'].user
@@ -94,9 +94,9 @@ class FuckingAnnouncementSerializer(serializers.ModelSerializer):
         user = User.objects.get(id = obj.announcer.id)
         return user.username
     
-    def get_announcer_image_code(self, obj):
-        user = User.objects.get(id = obj.announcer.id)
-        return user.image_code
+    # def get_announcer_image_code(self, obj):
+    #     user = User.objects.get(id = obj.announcer.id)
+    #     return user.image_code
     
     def get_main_host_name(self, obj):
         main_host = obj.main_host
