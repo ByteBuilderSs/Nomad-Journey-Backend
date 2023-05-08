@@ -23,7 +23,8 @@ urlpatterns = [
     path('blog/', include('blog.urls')),
     path('ticket/' , include('ticket.urls')),
     path('anc_request/', include('anc_request.urls')),
-    path('utils/', include('utils.urls'))
+    path('utils/', include('utils.urls')),
+    path('feedback/', include('feedback.urls'))
 ]
 
 urlpatterns = [
