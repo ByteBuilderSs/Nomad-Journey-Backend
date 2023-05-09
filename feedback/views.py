@@ -16,9 +16,8 @@ class FeedbackView(APIView):
     def get(self , request , username):
         try:
             user_id = User.objects.get(username = username).id
-            feedback_id = Blog.objects.get(author = user_id).feedback_id.id
-            feedback = Feedback.objects.get(id = feedback_id)
-            serializer = FeedbackSerializer(feedback)
+            feedback= Feedback.objects.get(user_id = user_id)
+            serializer = FeedbackSerializerToGet(feedback)
             return Response({
                 'data':serializer.data,
                 'message' : 'feedback fetched successfully'
@@ -34,7 +33,7 @@ class FeedbackView(APIView):
     def post(self , request , username):
         try:
             data = json.loads(request.body.decode('utf-8'))
-            serializer = FeedbackSerializer(data = data)
+            serializer = FeedbackSerializerToPost(data = data)
             if not serializer.is_valid():
                 return Response({
                     'data': serializer.errors,
