@@ -76,7 +76,7 @@ def GetAnnouncementsForHost(request):
 
     # initial objects
     request_ids = AncRequest.objects.filter(host=request.user.id).values('req_anc')
-    announcements = Announcement.objects.filter(anc_city=request.user.User_city).filter(anc_status='P')
+    announcements = Announcement.objects.filter(anc_status='P')
     announcements = announcements.exclude(id__in=request_ids).exclude(announcer=request.user.id)
 
     # sorting
@@ -84,6 +84,16 @@ def GetAnnouncementsForHost(request):
     descending = request.GET.get('descending', False)
     if sort_by:
         announcements = SortData(announcements, sort_by, descending)
+
+    # filter
+    city_filter_values = request.query_params.get('city', '').split(',')
+    # country_filter = request.query_params.get('country', '').split(',')
+    # time_range_filter
+    # language_filter = request.query_params.get('language', '').split(',')
+    if city_filter_values is None:
+        announcements = announcements.filter(anc_city=request.user.User_city)
+    else:
+        announcements = announcements.filter(anc_city__in=city_filter_values)
 
     # pagination
     page = pagination.paginate_queryset(announcements, request)
