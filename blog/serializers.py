@@ -40,7 +40,7 @@ class BlogSerializerToPost(serializers.ModelSerializer):
     class Meta:
         model = Blog
         fields = ['uid','created_at','updated_at','author','blog_title','blog_text','json_data','main_image_64','slug','tags','tags_name',
-                'annoncement', 'description' , 'secondary_image']
+                'annoncement', 'description' , 'secondary_image','feedback_id']
     
     def get_tag_name(self,obj):
         tags_name_list = []

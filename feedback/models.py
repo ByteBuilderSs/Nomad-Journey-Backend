@@ -1,17 +1,12 @@
 from django.db import models
+from django.core.validators import MaxValueValidator, MinValueValidator
+from accounts.models import User
 
 class Feedback(models.Model):
-    integer_choice = (
-        (1, 'One'),
-        (2, 'Two'),
-        (3, 'Three'),
-        (4, 'Four'),
-        (5, 'Five'),
-    )
-    question_1 = models.IntegerField(choices=integer_choice)
-    question_2 = models.IntegerField(choices=integer_choice)
-    question_3 = models.IntegerField(choices=integer_choice)
-    question_4 = models.IntegerField(choices=integer_choice)
-    question_5 = models.IntegerField(choices=integer_choice)
+    question_1 = models.FloatField(validators=[MinValueValidator(1.0),MaxValueValidator(5.0)])
+    question_2 = models.FloatField(validators=[MinValueValidator(1.0),MaxValueValidator(5.0)])
+    question_3 = models.FloatField(validators=[MinValueValidator(1.0),MaxValueValidator(5.0)])
+    question_4 = models.FloatField(validators=[MinValueValidator(1.0),MaxValueValidator(5.0)])
+    question_5 = models.FloatField(validators=[MinValueValidator(1.0),MaxValueValidator(5.0)])
+    user_id = models.ForeignKey(User , on_delete=models.CASCADE)
 
-# Create your models here.
