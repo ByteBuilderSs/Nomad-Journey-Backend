@@ -190,8 +190,6 @@ class UnAuthAnnouncementDetailsSerializer(serializers.ModelSerializer):
         announcer = User.objects.get(id = obj.announcer.id)
         return announcer.User_birthdate
 
-
-
     def get_host_firstName(self, obj):
         host = obj.main_host
         if host is not None:
@@ -224,7 +222,18 @@ class UnAuthAnnouncementDetailsSerializer(serializers.ModelSerializer):
         host = obj.main_host
         if host is not None:
             host = User.objects.get
-    
+
+    def get_volunteers(self, obj):
+        hosts = []
+        request_announcements = AncRequest.objects.filter(req_anc = obj.id)
+        for host in request_announcements:
+            hosts.append({
+                "id":host.host.id,
+                "username" : host.host.username,
+                "first_name" : host.host.first_name,
+                "last_name" : host.host.last_name,
+            })
+        return hosts
 
 class DoneStatusAnnouncementsSerializer(serializers.ModelSerializer):
     city_name = serializers.SerializerMethodField()
