@@ -66,7 +66,7 @@ class BlogViewUserForView(APIView):
             }, status = status.HTTP_400_BAD_REQUEST )
 
 
-    def post(self , request):
+    def post(self , request,username):
         try:
             data = json.loads(request.body.decode('utf-8'))
             # data = request.data
