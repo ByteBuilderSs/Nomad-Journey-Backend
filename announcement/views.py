@@ -90,6 +90,7 @@ def GetAnnouncementsForHost(request):
     # country_filter = request.query_params.get('country', '').split(',')
     # time_range_filter
     # language_filter = request.query_params.get('language', '').split(',')
+    print(city_filter_values)
     if city_filter_values is None:
         announcements = announcements.filter(anc_city=request.user.User_city)
         print(1)
