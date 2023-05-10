@@ -48,7 +48,8 @@ INSTALLED_APPS = [
     'ticket',
     'anc_request',
     'utils',
-    'feedback'
+    'feedback',
+    'like_post'
 ]
 
 MIDDLEWARE = [
