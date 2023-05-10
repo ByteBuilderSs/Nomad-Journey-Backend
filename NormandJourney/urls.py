@@ -24,7 +24,8 @@ urlpatterns = [
     path('ticket/' , include('ticket.urls')),
     path('anc_request/', include('anc_request.urls')),
     path('utils/', include('utils.urls')),
-    path('feedback/', include('feedback.urls'))
+    path('feedback/', include('feedback.urls')),
+    path('like_post/', include('like_post.urls'))
 ]
 
 urlpatterns = [
