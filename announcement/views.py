@@ -86,19 +86,15 @@ def GetAnnouncementsForHost(request):
         announcements = SortData(announcements, sort_by, descending)
 
     # filter
-    city_filter_values = request.GET.get('city', None).split(',')
+    city_filter_values = request.GET.get('city', None)
     # country_filter = request.query_params.get('country', '').split(',')
     # time_range_filter
     # language_filter = request.query_params.get('language', '').split(',')
-    print(city_filter_values)
-    print(announcements)
+
     if city_filter_values is None:
         announcements = announcements.filter(anc_city=request.user.User_city)
-        print(1)
     else:
-        announcements = announcements.filter(anc_city__in=city_filter_values)
-        print(2)
-    print(announcements)
+        announcements = announcements.filter(anc_city__in=city_filter_values.split(','))
 
     # pagination
     page = pagination.paginate_queryset(announcements, request)
