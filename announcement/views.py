@@ -86,7 +86,7 @@ def GetAnnouncementsForHost(request):
         announcements = SortData(announcements, sort_by, descending)
 
     # filter
-    city_filter_values = request.GET.get('city', '').split(',')
+    city_filter_values = request.GET.get('city', None).split(',')
     # country_filter = request.query_params.get('country', '').split(',')
     # time_range_filter
     # language_filter = request.query_params.get('language', '').split(',')
