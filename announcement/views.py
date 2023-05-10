@@ -93,9 +93,6 @@ def GetAnnouncementsForHost(request):
     end_time = request.GET.get('end_time', None)
     language_filter_values = request.GET.get('language', None)
 
-    start_date = datetime.datetime.strptime(start_time, '%Y-%m-%d').date()
-    end_date = datetime.datetime.strptime(end_time, '%Y-%m-%d').date()
-
     if city_filter_values is None and country_filter_values is None:
         announcements = announcements.filter(anc_city=request.user.User_city)
     else:
@@ -104,6 +101,8 @@ def GetAnnouncementsForHost(request):
         if country_filter_values:
             announcements = announcements.filter(city_country__in=country_filter_values)
     if start_time and end_time:
+        start_date = datetime.datetime.strptime(start_time, '%Y-%m-%d').date()
+        end_date = datetime.datetime.strptime(end_time, '%Y-%m-%d').date()
         announcements = announcements.filter(arrival_date__range=(start_date, end_date))
     if language_filter_values:
         announcements = announcements.filter(announcer_langs__in=language_filter_values)
