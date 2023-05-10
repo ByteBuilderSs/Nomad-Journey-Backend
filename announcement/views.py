@@ -91,12 +91,14 @@ def GetAnnouncementsForHost(request):
     # time_range_filter
     # language_filter = request.query_params.get('language', '').split(',')
     print(city_filter_values)
+    print(announcements)
     if city_filter_values is None:
         announcements = announcements.filter(anc_city=request.user.User_city)
         print(1)
     else:
         announcements = announcements.filter(anc_city__in=city_filter_values)
         print(2)
+    print(announcements)
 
     # pagination
     page = pagination.paginate_queryset(announcements, request)
