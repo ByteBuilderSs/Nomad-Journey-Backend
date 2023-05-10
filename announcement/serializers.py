@@ -9,22 +9,22 @@ import datetime
 
 class AnnouncementSerializer(serializers.ModelSerializer):
     announcer_username = serializers.SerializerMethodField()
-    # announcer_image_code = serializers.SerializerMethodField()
     city_name = serializers.SerializerMethodField()
     city_country = serializers.SerializerMethodField()
     anc_status = serializers.SerializerMethodField()
-   
+    announcer_langs = serializers.SerializerMethodField()
+
     class Meta:
         model = Announcement
         fields = ['id','announcer', 'anc_city', 'city_name', 'city_country', 'anc_status', 'arrival_date', 'departure_date', 'stay_duration', 'arrival_date_is_flexible',
-                   'departure_date_is_flexible', 'anc_description', 'travelers_count', 'announcer_username', 'anc_timestamp_created']
+                    'departure_date_is_flexible', 'anc_description', 'travelers_count', 'announcer_username', 'anc_timestamp_created', 'announcer_langs']
 
     def create(self, validated_data):
         validated_data['announcer'] = self.context['request'].user
         instance = self.Meta.model(**validated_data)
         instance.save()
         return instance
-    
+
     def get_anc_status(self, obj):
         current_time = datetime.datetime.now().date()
         if obj.anc_status == 'P' and current_time >= obj.arrival_date:
@@ -33,30 +33,27 @@ class AnnouncementSerializer(serializers.ModelSerializer):
             return 'D'
         else:
             return obj.anc_status
-        
-   
+
     def get_city_name(self, obj):
         city = City.objects.get(id = obj.anc_city.id)
         return city.city_name
-   
+
     def get_city_country(self, obj):
         city = City.objects.get(id = obj.anc_city.id)
         return city.country
-   
+
     def get_announcer_username(self, obj):
         user = User.objects.get(id = obj.announcer.id)
         return user.username
-   
-    # def get_announcer_image_code(self, obj):
-    #     user = User.objects.get(id = obj.announcer.id)
-    #     return user.image_code
 
+    def get_announcer_langs(self, obj):
+        user = User.objects.get(id = obj.announcer.id)
+        return list(user.langF.values_list('id', flat=True)) + list(user.langL.values_list('id', flat=True))
 
 class FuckingAnnouncementSerializer(serializers.ModelSerializer):
     city_name = serializers.SerializerMethodField()
     city_country = serializers.SerializerMethodField() 
     announcer_username = serializers.SerializerMethodField() 
-    # announcer_image_code = serializers.SerializerMethodField() 
     main_host_name = serializers.SerializerMethodField()
     main_host_username = serializers.SerializerMethodField()
     hosts = serializers.SerializerMethodField()
@@ -65,14 +62,14 @@ class FuckingAnnouncementSerializer(serializers.ModelSerializer):
     class Meta:
         model = Announcement
         fields = ['id','announcer', 'anc_city', 'city_name', 'city_country', 'anc_status', 'arrival_date', 'departure_date', 'stay_duration', 'arrival_date_is_flexible',
-                   'departure_date_is_flexible', 'anc_description', 'travelers_count', 'anc_timestamp_created', 'announcer_username', 'main_host_name', 'main_host_username', 'hosts']
+                    'departure_date_is_flexible', 'anc_description', 'travelers_count', 'anc_timestamp_created', 'announcer_username', 'main_host_name', 'main_host_username', 'hosts']
 
     def create(self, validated_data):
         validated_data['announcer'] = self.context['request'].user
         instance = self.Meta.model(**validated_data)
         instance.save()
         return instance
-    
+
     def get_anc_status(self, obj):
         current_time = datetime.datetime.now().date()
         if obj.anc_status == 'P' and current_time > obj.arrival_date:
@@ -81,7 +78,7 @@ class FuckingAnnouncementSerializer(serializers.ModelSerializer):
             return 'D'
         else:
             return obj.anc_status
-    
+
     def get_city_name(self, obj):
         city = City.objects.get(id = obj.anc_city.id)
         return city.city_name
@@ -93,11 +90,7 @@ class FuckingAnnouncementSerializer(serializers.ModelSerializer):
     def get_announcer_username(self, obj):
         user = User.objects.get(id = obj.announcer.id)
         return user.username
-    
-    # def get_announcer_image_code(self, obj):
-    #     user = User.objects.get(id = obj.announcer.id)
-    #     return user.image_code
-    
+
     def get_main_host_name(self, obj):
         main_host = obj.main_host
         if main_host is not None:
