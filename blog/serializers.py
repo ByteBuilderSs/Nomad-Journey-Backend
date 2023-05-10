@@ -11,7 +11,7 @@ class BlogSerializer(serializers.ModelSerializer):
         model = Blog
         fields = ['uid','created_at','updated_at','author','blog_title','blog_text',
                 'json_data','main_image_64','slug','tags','tags_name' ,'host_name',
-                'ans_city','trip_duration' , 'host_username']
+                'ans_city','trip_duration' , 'host_username' , 'description' , 'secondary_image']
     
     def get_tag_name(self,obj):
         tags_name_list = []
@@ -40,7 +40,7 @@ class BlogSerializerToPost(serializers.ModelSerializer):
     class Meta:
         model = Blog
         fields = ['uid','created_at','updated_at','author','blog_title','blog_text','json_data','main_image_64','slug','tags','tags_name',
-                'annoncement']
+                'annoncement', 'description' , 'secondary_image','feedback_id']
     
     def get_tag_name(self,obj):
         tags_name_list = []
@@ -54,7 +54,7 @@ class BlogSerializerToUpdate(serializers.ModelSerializer):
     class Meta:
         model = Blog
         fields = ['uid','created_at','updated_at','author','blog_title','blog_text',
-                'json_data','main_image_64','slug','tags','tags_name']
+                'json_data','main_image_64','slug','tags','tags_name' , 'description' , 'secondary_image']
     
     def get_tag_name(self,obj):
         tags_name_list = []

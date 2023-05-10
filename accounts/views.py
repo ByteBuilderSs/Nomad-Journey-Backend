@@ -14,6 +14,7 @@ from django.shortcuts import get_object_or_404
 import json
 from NormandJourney.tools import hash_sha256
 from rest_framework_simplejwt.tokens import RefreshToken
+from rest_framework.parsers import MultiPartParser
 
 
 class RegisterView(APIView):
@@ -259,7 +260,84 @@ class UserProfileEdit3(APIView):
                 'message':'something went wrong'
             }, status = status.HTTP_400_BAD_REQUEST )
 
-class UserProfileEdit4(APIView):
+class UserProfileEdit4(generics.UpdateAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserProfileEdit4Serializer
+    parser_classes = [MultiPartParser]
+
+    def patch(self, request, username):
+        user = User.objects.get(username=username)
+
+        serializer = self.get_serializer(user, data=request.data, partial=True)
+        serializer.is_valid(raise_exception=True)
+        self.perform_update(serializer)
+
+        return Response(serializer.data)
+
+        # try:
+        #     body = json.loads(request.body.decode('utf-8'))
+        #     user = User.objects.filter(username = username)
+        #     if len(user) == 0:
+        #         return Response({
+        #             'data': {},
+        #             'message':'invalid username'
+        #         }, status = status.HTTP_400_BAD_REQUEST )
+        #     if request.user.id != user[0].id:
+        #         return Response({
+        #             'data': {},
+        #             'message':'you are not authorized to do this'
+        #         }, status = status.HTTP_400_BAD_REQUEST )
+
+        #     serializer = UserProfileEdit4Serializer(user[0] , data = body , partial = True)
+        #     if not serializer.is_valid():
+        #         return Response({
+        #             'data': serializer.errors,
+        #             'message':'something went wrong'
+        #         } , status = status.HTTP_400_BAD_REQUEST)
+        #     serializer.save()
+        #     return Response({
+        #         'data': serializer.data,
+        #         'message' : 'user updated successfully'
+        #     } , status = status.HTTP_201_CREATED)
+        # except Exception as e:
+        #     print(e) 
+        #     return Response({
+        #         'data': {},
+        #         'message':'something went wrong'
+        #     }, status = status.HTTP_400_BAD_REQUEST )
+
+    def delete(self , request , username):
+        try:
+            user = User.objects.get(username = username)
+            if user is None:
+                return Response({
+                    'data': {},
+                    'message':'invalid username'
+                }, status = status.HTTP_400_BAD_REQUEST )
+            if request.user.username != username:
+                return Response({
+                    'data': {},
+                    'message':'you are not authorized to do this'
+                }, status = status.HTTP_400_BAD_REQUEST )
+            if user.profile_photo is None:
+                return Response({
+                    'data': {},
+                    'message':'there is no image to be deleted'
+                }, status = status.HTTP_400_BAD_REQUEST )
+            user.profile_photo = None
+            user.save()
+            return Response({
+                'data':{},
+                'message' : 'image deleted successfully'
+            } , status = status.HTTP_201_CREATED)
+        except Exception as e:
+            print(e) 
+            return Response({
+                'data': {},
+                'message':'something went wrong'
+            }, status = status.HTTP_400_BAD_REQUEST )
+
+class UserProfileEdit5(APIView):
     def patch(self , request , username):
         try:
             body = json.loads(request.body.decode('utf-8'))
@@ -274,8 +352,7 @@ class UserProfileEdit4(APIView):
                     'data': {},
                     'message':'you are not authorized to do this'
                 }, status = status.HTTP_400_BAD_REQUEST )
-
-            serializer = UserProfileEdit4Serializer(user[0] , data = body , partial = True)
+            serializer = UserProfileEdit5Serializer(user[0] , data = body , partial = True)
             if not serializer.is_valid():
                 return Response({
                     'data': serializer.errors,
@@ -292,30 +369,13 @@ class UserProfileEdit4(APIView):
                 'data': {},
                 'message':'something went wrong'
             }, status = status.HTTP_400_BAD_REQUEST )
-
-    def delete(self , request , username):
+    def get(self , request , username):
         try:
-            user = User.objects.get(username = username)
-            if user is None:
-                return Response({
-                    'data': {},
-                    'message':'invalid username'
-                }, status = status.HTTP_400_BAD_REQUEST )
-            if request.user.username != username:
-                return Response({
-                    'data': {},
-                    'message':'you are not authorized to do this'
-                }, status = status.HTTP_400_BAD_REQUEST )
-            if user.image_code is None:
-                return Response({
-                    'data': {},
-                    'message':'there is no image to be deleted'
-                }, status = status.HTTP_400_BAD_REQUEST )
-            user.image_code = None
-            user.save()
+            user= User.objects.get(username = username)
+            serializer = UserProfileEdit5Serializer(user)
             return Response({
-                'data':{},
-                'message' : 'image deleted successfully'
+                'data':serializer.data,
+                'message' : 'user info fetched successfully'
             } , status = status.HTTP_201_CREATED)
         except Exception as e:
             print(e) 
@@ -324,12 +384,12 @@ class UserProfileEdit4(APIView):
                 'message':'something went wrong'
             }, status = status.HTTP_400_BAD_REQUEST )
 
-class GetUsernameAndUserImageByUserId(APIView):
-    def get(self,request , id):
-        user = get_object_or_404(User, id=id)
-        serializer = GetUsernameAndUserImageByUserIdSerializer(user)
-        return Response(serializer.data)
-    
+# class GetUsernameAndUserImageByUserId(APIView):
+#     def get(self,request , id):
+#         user = get_object_or_404(User, id=id)
+#         serializer = GetUsernameAndUserImageByUserIdSerializer(user)
+#         return Response(serializer.data)
+
 class GetUserProfileForOverview(APIView):
     def get(self , request,username):
         # try:
@@ -366,3 +426,13 @@ class LanguageView(APIView):
                 'data': {},
                 'message':'something went wrong'
             }, status = status.HTTP_400_BAD_REQUEST )
+
+class ProfilePhoto(APIView):
+    def get(self, request, user_id):
+        user = User.objects.get(id=user_id)
+
+        serializer = UserProfilePhotoSerializer(user)
+
+        if serializer.is_valid():
+            serializer.save()
+        return Response(serializer.data)

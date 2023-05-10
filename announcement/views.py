@@ -10,6 +10,7 @@ from rest_framework.settings import api_settings
 import math
 from django.db.models import F
 import datetime
+from utils.views import *
 
 
 def SortData(data, sort_by, descending=False):
@@ -76,7 +77,7 @@ def GetAnnouncementsForHost(request):
 
     # initial objects
     request_ids = AncRequest.objects.filter(host=request.user.id).values('req_anc')
-    announcements = Announcement.objects.filter(anc_city=request.user.User_city).filter(anc_status='P')
+    announcements = Announcement.objects.filter(anc_status='P')
     announcements = announcements.exclude(id__in=request_ids).exclude(announcer=request.user.id)
 
     # sorting
@@ -84,6 +85,27 @@ def GetAnnouncementsForHost(request):
     descending = request.GET.get('descending', False)
     if sort_by:
         announcements = SortData(announcements, sort_by, descending)
+
+    # filter
+    city_filter_values = request.GET.get('city', None)
+    country_filter_values = request.GET.get('country', None)
+    start_time = request.GET.get('start_time', None)
+    end_time = request.GET.get('end_time', None)
+    language_filter_values = request.GET.get('language', None)
+
+    if city_filter_values is None and country_filter_values is None:
+        announcements = announcements.filter(anc_city=request.user.User_city)
+    else:
+        if city_filter_values:
+            announcements = announcements.filter(anc_city__in=city_filter_values.split(','))
+        if country_filter_values:
+            announcements = announcements.filter(city_country__in=country_filter_values)
+    if start_time and end_time:
+        start_date = datetime.datetime.strptime(start_time, '%Y-%m-%d').date()
+        end_date = datetime.datetime.strptime(end_time, '%Y-%m-%d').date()
+        announcements = announcements.filter(arrival_date__range=(start_date, end_date))
+    if language_filter_values:
+        announcements = announcements.filter(announcer_langs__in=language_filter_values)
 
     # pagination
     page = pagination.paginate_queryset(announcements, request)

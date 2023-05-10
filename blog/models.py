@@ -4,6 +4,7 @@ from accounts.models import User
 from autoslug import AutoSlugField
 from django.utils.text import slugify 
 from announcement.models import Announcement
+from feedback.models import Feedback
 
 class Tag(models.Model):
     uid = models.UUIDField(primary_key=True , editable=False , default=uuid.uuid4)
@@ -14,6 +15,7 @@ class Tag(models.Model):
 
 
 class Blog(models.Model):
+    feedback_id =models.ForeignKey(Feedback , null=True, on_delete=models.SET_NULL)
     uid = models.UUIDField(primary_key=True , editable=False , default=uuid.uuid4)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -21,8 +23,10 @@ class Blog(models.Model):
     blog_title = models.CharField(max_length=500 , blank=True)
     blog_text = models.TextField(blank=True)
     json_data = models.JSONField(default= dict , null=True , blank=True)
+    description = models.TextField(null=True, blank=True , max_length=3000)
     # main_image = models.ImageField(upload_to="blogs_image" , null=True , blank= True)
     main_image_64 = models.TextField(null=True, blank=True)
+    secondary_image = models.TextField(null=True, blank=True)
     # slug = AutoSlugField(populate_from='blog_title' , unique = True )
     slug = models.SlugField(default='',editable=False, null=True,blank=True,max_length=250) 
     tags = models.ManyToManyField(Tag, related_name='TaggedModel' , blank=True)

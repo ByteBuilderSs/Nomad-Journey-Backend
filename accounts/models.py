@@ -61,8 +61,11 @@ class User(AbstractUser):
     User_postal_code = models.CharField(max_length=10 , null=True,blank=True)
     User_phone_number = models.CharField(max_length=20 , null=True,blank=True)
     # is_active = models.BooleanField(default=True)
-    profile_photo = models.ImageField(upload_to='customer_photos' , null=True,blank=True)
-    image_code = models.TextField(null=True, blank=True)
+
+    # start
+    profile_photo = models.ImageField(upload_to='img_profile', null=True, blank=True)
+    # end
+
     ssn = models.CharField(max_length=20 , null=True,blank=True)
     first_name = models.CharField(max_length=255)
     last_name = models.CharField(max_length=255)
@@ -81,6 +84,75 @@ class User(AbstractUser):
     interests = models.ManyToManyField(UserInterest ,default=None,blank=True)
     langF = models.ManyToManyField(Language ,default=None  ,blank=True , related_name = 'langF' )
     langL = models.ManyToManyField(Language ,default=None  ,blank=True , related_name= 'langL' )
+
+    is_sun = models.BooleanField(default=False)
+    is_sat = models.BooleanField(default=False)
+    is_mon = models.BooleanField(default=False)
+    is_tue = models.BooleanField(default=False)
+    is_wed = models.BooleanField(default=False)
+    is_thu = models.BooleanField(default=False)
+    is_fri = models.BooleanField(default=False)
+    ONE_TR = 1
+    TWO_TR = 2
+    THREE_TR = 3
+    FOUR_TR = 4
+    FIVE_TR = 5
+    SIX_TR = 6
+    SEVENT_TR = 7
+    EIGHT_TR = 8
+    NINE_TR = 9
+    TEN_TR = 10
+    ELEVEN_TR = 11
+    TWELVE_TR = 12
+    THIRTEEN_TR = 13
+    FOURTEEN_TR = 14
+    FIFTEEN_TR = 15
+    maximum_number_of_guests_choice = (
+        (ONE_TR, _('1')),
+        (TWO_TR, _('2')),
+        (THREE_TR, _('3')),
+        (FOUR_TR, _('4')),
+        (FIVE_TR, _('5')),
+        (SIX_TR, _('6')),
+        (SEVENT_TR, _('7')),
+        (EIGHT_TR, _('8')),
+        (NINE_TR, _('9')),
+        (TEN_TR, _('10')),
+        (ELEVEN_TR, _('11')),
+        (TWELVE_TR, _('12')),
+        (THIRTEEN_TR, _('13')),
+        (FOURTEEN_TR, _('14')),
+        (FIFTEEN_TR, _('15'))
+    )
+    maximum_number_of_guests = models.CharField(max_length=20, choices=maximum_number_of_guests_choice , null=True,blank=True)
+    ANY = 1
+    MALE = 2
+    FEMALE = 3
+    prefered_gender_to_host_choice = (
+        (ANY, _('Any')),
+        (MALE, _('Male')),
+        (FEMALE , _('Female')))
+    prefered_gender_to_host = models.CharField(max_length=20, choices=prefered_gender_to_host_choice , null=True,blank=True)
+    is_pet_friendly = models.BooleanField(null=True , blank=True)
+    is_kid_friendly = models.BooleanField(null=True , blank=True)
+    is_smoking_allowed = models.BooleanField(null=True , blank=True)
+    SHARED_BED= 1
+    SHARED_ROOM = 2
+    PRIVATE_ROOM = 3
+    PUBLIC_ROOM = 4
+    sleeping_arrangments_choice = (
+        (SHARED_BED, _('shared_bed')),
+        (SHARED_ROOM, _('shared_room')),
+        (PRIVATE_ROOM , _('private_room')),
+        (PUBLIC_ROOM , _('public_room')))
+    sleeping_arrangments = models.CharField(max_length=20, choices=sleeping_arrangments_choice , null=True,blank=True)
+    description_of_sleeping_arrangement = models.TextField(max_length=3000 , null=True , blank=True)
+    roommate_situation = models.TextField(max_length=3000 , null=True , blank=True)
+    additional_information = models.TextField(max_length=3000 ,null=True , blank=True)
+    i_have_pet = models.BooleanField(null=True , blank=True)
+    kids_at_home = models.BooleanField(null=True , blank=True)
+    smoking_at_home = models.BooleanField(null=True , blank=True)
+    wheelchair_accessible = models.BooleanField(null=True , blank=True)
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []
 

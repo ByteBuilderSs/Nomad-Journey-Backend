@@ -7,8 +7,10 @@ from django.shortcuts import get_object_or_404
 from django.core.paginator import Paginator
 from .models import Blog , Tag
 from announcement.models import Announcement
+from feedback.models import Feedback
 from .serializers import *
 import json
+from accounts.models import User
 
 class PublicBlogView(APIView):
     def get(self , request):
@@ -28,7 +30,6 @@ class PublicBlogView(APIView):
                 'message':'something went wrong'
             }, status = status.HTTP_400_BAD_REQUEST )
 
-
 class BlogView(APIView):
     permission_classes = (IsAuthenticated,)
     # Authentication_classes = []
@@ -47,14 +48,37 @@ class BlogView(APIView):
                 'message':'something went wrong'
             }, status = status.HTTP_400_BAD_REQUEST )
 
+class BlogViewUserForView(APIView):
+    def get(self , request , username):
+        try:
+            user_id = User.objects.get(username = username).id
+            blogs = Blog.objects.filter(author = user_id)
+            serializer = BlogSerializer(blogs , many = True)
+            return Response({
+                'data':serializer.data,
+                'message' : 'blogs fetched successfully'
+            } , status = status.HTTP_201_CREATED)
+        except Exception as e:
+            print(e) 
+            return Response({
+                'data': {},
+                'message':'something went wrong'
+            }, status = status.HTTP_400_BAD_REQUEST )
 
-    def post(self , request):
+
+    def post(self , request,username):
         try:
             data = json.loads(request.body.decode('utf-8'))
             # data = request.data
             # data._mutable = True
             data['author'] = request.user.id
             ans = Announcement.objects.get(id = data['annoncement'] )
+            feedback = Feedback.objects.filter(id =data['feedback_id'] )
+            if len(feedback) == 0:
+                return Response({
+                    'data': {},
+                    'message':'you should complete feedback form first'
+                } , status = status.HTTP_400_BAD_REQUEST)
             if ans.announcer.id != request.user.id :
                 return Response({
                     'data': {},
