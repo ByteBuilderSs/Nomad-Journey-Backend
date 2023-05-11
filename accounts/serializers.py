@@ -38,7 +38,7 @@ class UserCompeleteProfileSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ['User_birthdate','User_about_me','User_job','User_education','password',
+        fields = ['id', 'User_birthdate','User_about_me','User_job','User_education','password',
                 'User_nationality','User_address','User_address_lat','User_address_long','User_gender','User_country_code',
                 'User_city','User_apt','User_postal_code','User_phone_number', 'ssn','first_name','last_name',
                 'email','username','date_joined','hosting_availability','hometown','why_Im_on_nomadjourney','favorite_music_movie_book',
