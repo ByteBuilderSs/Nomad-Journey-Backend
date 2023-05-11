@@ -9,7 +9,7 @@ from accounts.models import User
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def CreateLike(request, post_id):
-    post = Blog.objects.get(id=post_id)
+    post = Blog.objects.get(uid=post_id)
     serializer = LikePostSerializer(data=request.data, context={"request" : request, "post" : post})
 
     if serializer.is_valid():
@@ -19,7 +19,7 @@ def CreateLike(request, post_id):
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def GetPostsWithLike(request, post_id):
-    post = Blog.objects.get(id=post_id)
+    post = Blog.objects.get(uid=post_id)
     likers_ids = Like.objects.filter(post=post_id).values('liker')
     likers_objs = User.objects.filter(id__in=likers_ids)
 
