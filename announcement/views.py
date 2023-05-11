@@ -97,9 +97,9 @@ def GetAnnouncementsForHost(request):
         announcements = announcements.filter(anc_city=request.user.User_city)
     else:
         if city_filter_values:
-            announcements_1 = announcements.filter(anc_city__city_name__in=city_filter_values.split(','))
+            announcements = announcements.filter(anc_city__city_name__in=city_filter_values.split(','))
         if country_filter_values:
-            announcements_2 = announcements.filter(anc_city__country__in=country_filter_values.split(','))
+            announcements = announcements.filter(anc_city__country__in=country_filter_values.split(','))
         # if announcements_1 + announcements_2 != None:
 
     if start_time and end_time:
