@@ -116,6 +116,8 @@ def GetAnnouncementsForHost(request):
     if start_time and end_time:
         start_date = datetime.datetime.strptime(start_time, '%Y-%m-%d').date()
         end_date = datetime.datetime.strptime(end_time, '%Y-%m-%d').date()
+        print(start_date)
+        print(end_date)
         announcements = announcements.filter(arrival_date__date__range=[start_date, end_date])
     # if language_filter_values:
     #     announcements = announcements.filter(announcer_langs__overlap=language_filter_values.split(','))
