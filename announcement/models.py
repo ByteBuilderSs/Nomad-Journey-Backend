@@ -64,6 +64,18 @@ class Announcement(models.Model):
     def stay_duration(self):
         return (self.departure_date - self.arrival_date).days
 
+    @property
+    def city_name(self):
+        return self.anc_city.city_name
+
+    @property
+    def city_country(self):
+        return self.anc_city.country
+
+    @property
+    def announcer_langs(self):
+        return list(self.announcer.langF.values_list('id', flat=True)) + list(self.announcer.langL.values_list('id', flat=True))
+
     anc_status = models.CharField(choices=STATUS_CHOICES, default='P', max_length=1)
     arrival_date_is_flexible = models.BooleanField(default= False, null=True, blank=True)
     departure_date_is_flexible = models.BooleanField(default= False, null=True, blank=True)

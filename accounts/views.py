@@ -369,13 +369,27 @@ class UserProfileEdit5(APIView):
                 'data': {},
                 'message':'something went wrong'
             }, status = status.HTTP_400_BAD_REQUEST )
+    def get(self , request , username):
+        try:
+            user= User.objects.get(username = username)
+            serializer = UserProfileEdit5Serializer(user)
+            return Response({
+                'data':serializer.data,
+                'message' : 'user info fetched successfully'
+            } , status = status.HTTP_201_CREATED)
+        except Exception as e:
+            print(e) 
+            return Response({
+                'data': {},
+                'message':'something went wrong'
+            }, status = status.HTTP_400_BAD_REQUEST )
 
-class GetUsernameAndUserImageByUserId(APIView):
-    def get(self,request , id):
-        user = get_object_or_404(User, id=id)
-        serializer = GetUsernameAndUserImageByUserIdSerializer(user)
-        return Response(serializer.data)
-    
+# class GetUsernameAndUserImageByUserId(APIView):
+#     def get(self,request , id):
+#         user = get_object_or_404(User, id=id)
+#         serializer = GetUsernameAndUserImageByUserIdSerializer(user)
+#         return Response(serializer.data)
+
 class GetUserProfileForOverview(APIView):
     def get(self , request,username):
         # try:
@@ -412,3 +426,9 @@ class LanguageView(APIView):
                 'data': {},
                 'message':'something went wrong'
             }, status = status.HTTP_400_BAD_REQUEST )
+
+class ProfilePhoto(APIView):
+    def get(self, request, user_id):
+        user = User.objects.get(id=user_id)
+        serializer = UserProfilePhotoSerializer(user)
+        return Response(serializer.data)

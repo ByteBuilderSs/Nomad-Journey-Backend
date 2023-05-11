@@ -4,6 +4,7 @@ from accounts.models import User
 from autoslug import AutoSlugField
 from django.utils.text import slugify 
 from announcement.models import Announcement
+from feedback.models import Feedback
 
 class Tag(models.Model):
     uid = models.UUIDField(primary_key=True , editable=False , default=uuid.uuid4)
@@ -14,6 +15,7 @@ class Tag(models.Model):
 
 
 class Blog(models.Model):
+    feedback_id =models.ForeignKey(Feedback , null=True, on_delete=models.SET_NULL)
     uid = models.UUIDField(primary_key=True , editable=False , default=uuid.uuid4)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
