@@ -96,6 +96,8 @@ def GetAnnouncementsForHost(request):
     if city_filter_values is None and country_filter_values is None:
         announcements = announcements.filter(anc_city=request.user.User_city)
     else:
+        announcements_1 = None
+        announcements_2 = None
         if city_filter_values:
             announcements_1 = announcements.filter(anc_city__city_name__in=city_filter_values.split(','))
         if country_filter_values:
