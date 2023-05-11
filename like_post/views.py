@@ -20,10 +20,10 @@ def CreateLike(request, post_id):
 @permission_classes([IsAuthenticated])
 def GetPostsWithLike(request, post_id):
     post = Blog.objects.get(uid=post_id)
-    likers_ids = Like.objects.filter(post=post_id).values('liker')
+    likers_ids = Like.objects.filter(liked_post=post_id).values('liker')
     likers_objs = User.objects.filter(id__in=likers_ids)
 
-    ref = Like.objects.filter(post=post_id).first()
+    ref = Like.objects.filter(liked_post=post_id).first()
 
     setattr(ref, 'post', post)
     setattr(ref, 'likers', likers_objs)
