@@ -98,11 +98,20 @@ def GetAnnouncementsForHost(request):
     else:
         announcements_1 = None
         announcements_2 = None
+        
         if city_filter_values:
             announcements_1 = announcements.filter(anc_city__city_name__in=city_filter_values.split(','))
         if country_filter_values:
             announcements_2 = announcements.filter(anc_city__country__in=country_filter_values.split(','))
-        announcements = announcements_1 | announcements_2
+        
+        if announcements_1 is not None and announcements_2 is not None:
+            announcements = announcements_1 | announcements_2
+        elif announcements_1 is None and announcements_2 is None:
+            announcements = None
+        elif announcements_1 is None:
+            announcements = announcements_2
+        elif announcements_2 is None:
+            announcements = announcements_1
     # if start_time and end_time:
     #     start_date = datetime.datetime.strptime(start_time, '%Y-%m-%d').date()
     #     end_date = datetime.datetime.strptime(end_time, '%Y-%m-%d').date()
