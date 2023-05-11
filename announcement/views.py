@@ -97,15 +97,15 @@ def GetAnnouncementsForHost(request):
         announcements = announcements.filter(anc_city=request.user.User_city)
     else:
         if city_filter_values:
-            announcements = announcements.filter(anc_city__in=city_filter_values.split(','))
+            announcements = announcements.filter(city_name__in=city_filter_values.split(','))
         if country_filter_values:
-            announcements = announcements.filter(city_country__in=country_filter_values)
+            announcements = announcements.filter(city_country__in=country_filter_values.split(','))
     if start_time and end_time:
         start_date = datetime.datetime.strptime(start_time, '%Y-%m-%d').date()
         end_date = datetime.datetime.strptime(end_time, '%Y-%m-%d').date()
         announcements = announcements.filter(arrival_date__range=(start_date, end_date))
     if language_filter_values:
-        announcements = announcements.filter(announcer_langs__in=language_filter_values)
+        announcements = announcements.filter(announcer_langs__overlap=language_filter_values.split(','))
 
     # pagination
     page = pagination.paginate_queryset(announcements, request)
