@@ -33,6 +33,7 @@ class FeedbackView(APIView):
     def post(self , request , username):
         try:
             data = json.loads(request.body.decode('utf-8'))
+            data['user_id'] = request.user.id
             serializer = FeedbackSerializerToPost(data = data)
             if not serializer.is_valid():
                 return Response({
