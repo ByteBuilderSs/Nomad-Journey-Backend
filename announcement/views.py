@@ -93,6 +93,9 @@ def GetAnnouncementsForHost(request):
     end_time = request.GET.get('end_time', None)
     language_filter_values = request.GET.get('language', None)
 
+    print(announcements)
+    print(list(announcements[0]))
+
     if city_filter_values is None and country_filter_values is None:
         announcements = announcements.filter(anc_city=request.user.User_city)
     else:
