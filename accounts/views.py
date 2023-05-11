@@ -430,9 +430,5 @@ class LanguageView(APIView):
 class ProfilePhoto(APIView):
     def get(self, request, user_id):
         user = User.objects.get(id=user_id)
-
         serializer = UserProfilePhotoSerializer(user)
-
-        if serializer.is_valid():
-            serializer.save()
         return Response(serializer.data)
