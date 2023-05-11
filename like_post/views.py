@@ -30,3 +30,10 @@ def GetPostsWithLike(request, post_id):
 
     serializer = PostWithLikesSerializer(ref)
     return Response(serializer.data)
+
+@api_view(['DELETE'])
+@permission_classes([IsAuthenticated])
+def DeleteLike(request, like_id):
+    like = Like.objects.get(id=like_id)
+    like.delete()
+    return Response('Like deleted successfully!')
