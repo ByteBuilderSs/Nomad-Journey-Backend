@@ -12,7 +12,7 @@ class FeedbackSerializerToGet(serializers.ModelSerializer):
     class Meta:
         model = Feedback
         fields = ['username','question_1','question_2','question_3','question_4','question_5','average_rate' , 'host_name' , 'ans_city',
-                'trip_duration' , 'host_username']
+                'trip_duration' , 'host_username' ,'id']
 
     def get_average_rate(self,obj):
         return float(obj.question_1 + obj.question_2 + obj.question_3 + obj.question_4 + obj.question_5)/5

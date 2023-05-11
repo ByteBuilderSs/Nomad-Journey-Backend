@@ -104,11 +104,12 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2', 
         'NAME': 'nomadjourney',        
-        'USER': 'sina',        
-        'PASSWORD': 'sin2023',        
+        'USER': 'postgres',        
+        'PASSWORD': 'aysa1380',        
         'HOST': 'localhost',        
         'PORT': '5432',}
 }
+
 
 
 # Password validation
