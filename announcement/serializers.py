@@ -123,6 +123,7 @@ class UnAuthAnnouncementDetailsSerializer(serializers.ModelSerializer):
     host_username = serializers.SerializerMethodField()
     host_nationality = serializers.SerializerMethodField()
     host_birthdate = serializers.SerializerMethodField()
+    host_id = serializers.SerializerMethodField()
     announcer_firstName = serializers.SerializerMethodField()
     announcer_lastName = serializers.SerializerMethodField()
     announcer_username = serializers.SerializerMethodField()
@@ -136,7 +137,7 @@ class UnAuthAnnouncementDetailsSerializer(serializers.ModelSerializer):
         fields = ['id', 'announcer', 'anc_city', 'city_name', 'city_country', 'city_lat', 'city_long', 'anc_status', 'arrival_date', 'departure_date', 'stay_duration', 'arrival_date_is_flexible',
                     'departure_date_is_flexible', 'anc_description', 'travelers_count', 'anc_timestamp_created',
                     'host_firstName', 'host_lastName', 'host_username', 'host_nationality', 'host_birthdate',
-                    'announcer_firstName', 'announcer_lastName', 'announcer_username', 'announcer_nationality', 'announcer_birthdate', 'volunteers']
+                    'announcer_firstName', 'announcer_lastName', 'announcer_username', 'announcer_nationality', 'announcer_birthdate', 'volunteers','host_id']
 
     def get_anc_status(self, obj):
         current_time = datetime.datetime.now().date()
@@ -227,6 +228,11 @@ class UnAuthAnnouncementDetailsSerializer(serializers.ModelSerializer):
                 "last_name" : host.host.last_name,
             })
         return hosts
+    def get_host_id(self , obj):
+        host = obj.main_host
+        if host is not None:
+            return host.id
+        return host
 
 class DoneStatusAnnouncementsSerializer(serializers.ModelSerializer):
     city_name = serializers.SerializerMethodField()
