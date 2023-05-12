@@ -123,8 +123,8 @@ def GetAnnouncementsForHost(request):
         announcements_1 = None
         announcements_2 = None
 
-        announcements_1 = announcements.filter(announcer__langL__overlap=language_filter_values.split(','))
-        announcements_2 = announcements.filter(announcer__langF__overlap=language_filter_values.split(','))
+        announcements_1 = announcements.filter(announcer__langL__language_name__overlap=language_filter_values.split(','))
+        announcements_2 = announcements.filter(announcer__langF__language_name__overlap=language_filter_values.split(','))
 
         if announcements_1 is not None and announcements_2 is not None:
             announcements = announcements_1 | announcements_2
