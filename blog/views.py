@@ -74,11 +74,11 @@ class BlogViewUserForView(APIView):
             data['author'] = request.user.id
             ans = Announcement.objects.get(id = data['annoncement'] )
             feedback = Feedback.objects.filter(id =data['feedback_id'] )
-            if len(feedback) == 0:
-                return Response({
-                    'data': {},
-                    'message':'you should complete feedback form first'
-                } , status = status.HTTP_400_BAD_REQUEST)
+            # if len(feedback) == 0:
+            #     return Response({
+            #         'data': {},
+            #         'message':'you should complete feedback form first'
+            #     } , status = status.HTTP_400_BAD_REQUEST)
             if ans.announcer.id != request.user.id :
                 return Response({
                     'data': {},
