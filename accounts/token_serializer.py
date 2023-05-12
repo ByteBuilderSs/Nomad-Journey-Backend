@@ -59,7 +59,8 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
         data.update({'username': self.user.username})
         data.update({'user_id': self.user.id})
         data.update({'user_city': self.user.User_city.id})
-        data.update({'user_profile_photo' : self.user.profile_photo.url})
+        if self.user.profile_photo.url:
+            data.update({'user_profile_photo' : self.user.profile_photo.url})
         if api_settings.UPDATE_LAST_LOGIN:
             update_last_login(None, self.user)
 
