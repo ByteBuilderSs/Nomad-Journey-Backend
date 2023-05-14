@@ -118,6 +118,7 @@ class UnAuthAnnouncementDetailsSerializer(serializers.ModelSerializer):
     city_country = serializers.SerializerMethodField()
     city_lat = serializers.SerializerMethodField()
     city_long = serializers.SerializerMethodField()
+    host_id = serializers.SerializerMethodField()
     host_firstName = serializers.SerializerMethodField()
     host_lastName = serializers.SerializerMethodField()
     host_username = serializers.SerializerMethodField()
@@ -137,7 +138,7 @@ class UnAuthAnnouncementDetailsSerializer(serializers.ModelSerializer):
         model = Announcement
         fields = ['id', 'announcer', 'anc_city', 'city_name', 'city_country', 'city_lat', 'city_long', 'anc_status', 'arrival_date', 'departure_date', 'stay_duration', 'arrival_date_is_flexible',
                     'departure_date_is_flexible', 'anc_description', 'travelers_count', 'anc_timestamp_created',
-                    'host_firstName', 'host_lastName', 'host_username', 'host_nationality', 'host_birthdate', 'host_latitude', 'host_longitude',
+                    'host_id', 'host_firstName', 'host_lastName', 'host_username', 'host_nationality', 'host_birthdate', 'host_latitude', 'host_longitude',
                     'announcer_firstName', 'announcer_lastName', 'announcer_username', 'announcer_nationality', 'announcer_birthdate', 'volunteers']
 
     def get_anc_status(self, obj):
@@ -184,6 +185,13 @@ class UnAuthAnnouncementDetailsSerializer(serializers.ModelSerializer):
     def get_announcer_birthdate(self, obj):
         announcer = User.objects.get(id = obj.announcer.id)
         return announcer.User_birthdate
+
+
+    def get_host_id(self, obj):
+        host = obj.main_host
+        if host is not None:
+            return host.id
+        return host
 
     def get_host_firstName(self, obj):
         host = obj.main_host
@@ -247,6 +255,7 @@ class UnAuthAnnouncementDetailsSerializer(serializers.ModelSerializer):
                 "host_long": host.host.User_address_long
             })
         return hosts
+
 
 
 class DoneStatusAnnouncementsSerializer(serializers.ModelSerializer):
