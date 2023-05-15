@@ -264,15 +264,15 @@ class UserProfileEdit4(generics.UpdateAPIView):
     queryset = User.objects.all()
     serializer_class = UserProfileEdit4Serializer
     parser_classes = [MultiPartParser]
+    lookup_field = 'username'
 
-    def patch(self, request, username):
-        user = User.objects.get(username=username)
+    # def patch(self, request, username):
+    #     user = User.objects.get(username=username)
+    #     serializer = self.get_serializer(user, data=request.data, partial=True)
+    #     serializer.is_valid(raise_exception=True)
+    #     self.perform_update(serializer)
 
-        serializer = self.get_serializer(user, data=request.data, partial=True)
-        serializer.is_valid(raise_exception=True)
-        self.perform_update(serializer)
-
-        return Response(serializer.data)
+    #     return Response(serializer.data)
 
         # try:
         #     body = json.loads(request.body.decode('utf-8'))
@@ -430,5 +430,7 @@ class LanguageView(APIView):
 class ProfilePhoto(APIView):
     def get(self, request, user_id):
         user = User.objects.get(id=user_id)
+        if user.profile_photo is None:
+            return Response("aysa")
         serializer = UserProfilePhotoSerializer(user)
         return Response(serializer.data)
