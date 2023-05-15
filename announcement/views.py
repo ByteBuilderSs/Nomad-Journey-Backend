@@ -137,7 +137,7 @@ def GetAnnouncementsForHost(request):
             related_announcments.append(Announcement.objects.filter(announcer=related_user['id']))
             traversed_users.append(related_user)
         print(traversed_users)
-        announcements = traversed_users
+        announcements = related_announcments
 
     # pagination
     page = pagination.paginate_queryset(announcements, request)
