@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from .models import Blog , Tag
 from like_post.models import Like
+from feedback.models import Feedback
 
 class GeneralBlogSerializer(serializers.ModelSerializer):
     tags_name = serializers.SerializerMethodField('get_tag_name') 
@@ -69,8 +70,9 @@ class GeneralBlogSerializer(serializers.ModelSerializer):
         return None
     
     def get_feedback_average(self, obj):
-        if obj.feedback_id is not None:
-            return float(obj.feedback_id.question_1 + obj.feedback_id.question_2 + obj.feedback_id.feedback_id.question_3 + obj.feedback_id.question_4 + obj.feedback_id.question_5)/5
+        feedbacks = Feedback.objects.get(id = obj.feedback_id)
+        if feedbacks is not None:
+            return float(feedbacks.question_1 + feedbacks.question_2 + feedbacks.question_3 + feedbacks.question_4 + feedbacks.question_5)/5
         return None
 
 class BlogSerializer(serializers.ModelSerializer):
