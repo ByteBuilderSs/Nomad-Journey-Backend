@@ -132,6 +132,8 @@ def GetAnnouncementsForHost(request):
         traversed_users = []
         for related_user in related_users_to_langs:
             print(related_user)
+            print(list(related_user))
+            print(list(related_user)[0])
             if related_user in traversed_users:
                 continue
             related_announcments.append(Announcement.objects.get(announcer=list(related_user)[0].id))
