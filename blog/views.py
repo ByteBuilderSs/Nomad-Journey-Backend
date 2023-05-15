@@ -110,7 +110,7 @@ class BlogViewUserForView(APIView):
         #     }, status = status.HTTP_400_BAD_REQUEST )
 
 
-    def patch(self , request):
+    def patch(self , request, username):
         try:
             data = json.loads(request.body.decode('utf-8'))
             # data = request.data
@@ -145,7 +145,7 @@ class BlogViewUserForView(APIView):
             }, status = status.HTTP_400_BAD_REQUEST )
 
 
-    def delete(self , request):
+    def delete(self , request, username):
         try:
             data = json.loads(request.body.decode('utf-8'))
             # data = request.data
