@@ -11,6 +11,13 @@ from feedback.models import Feedback
 from .serializers import *
 import json
 from accounts.models import User
+from rest_framework.decorators import api_view
+
+@api_view(['GET'])
+def GeneralBlogView(request):
+    blogs = Blog.objects.all()
+    serializer = GeneralBlogSerializer(blogs , many = True)
+    return Response(serializer.data)     
 
 class PublicBlogView(APIView):
     def get(self , request):
