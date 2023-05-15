@@ -123,7 +123,7 @@ def GetAnnouncementsForHost(request):
         related_users_to_langs = []
         for lang in language_filter_values.split(','):
             print(lang)
-            lang_obj = str(Language.objects.get(language_name=lang).id)
+            lang_obj = Language.objects.get(language_name=lang)
             print(lang_obj)
             related_users_to_langs += lang_obj.langF.all().values('id')
             related_users_to_langs += lang_obj.langL.all().values('id')
