@@ -143,6 +143,18 @@ class UserProfileEdit4Serializer(serializers.ModelSerializer):
         model = User
         fields = ['profile_photo']
 
+    def update(self, instance, validated_data):
+        print(instance)
+        print(validated_data)
+        print(validated_data['profile_photo'] is None)
+        if validated_data['profile_photo'] is None:
+            validated_data['profile_photo'] = ""
+        # instance.profile_photo = validated_data.get('profile_photo', instance.profile_photo)
+        # print(validated_data)
+        # instance.save()
+        # return instance
+        return super().update(instance, validated_data)
+
 class UserProfileEdit5Serializer(serializers.ModelSerializer):
     class Meta:
         model = User
