@@ -21,7 +21,7 @@ def GetCitiesOfCountry(request, rec_id):
 @api_view(['GET'])
 def GetAllCities(request):
     cities = City.objects.all()
-    serializer = CitySerializer(cities[:1000], many=True)
+    serializer = CitySerializer(cities, many=True)
     return Response(serializer.data)
 
 @api_view(['POST'])
