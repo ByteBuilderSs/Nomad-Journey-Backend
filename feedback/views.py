@@ -17,7 +17,7 @@ class FeedbackView(APIView):
         # try:
         user_id = User.objects.get(username = username).id
         feedback= Feedback.objects.get(user_id = user_id)
-        serializer = FeedbackSerializerToGet(feedback)
+        serializer = FeedbackSerializerToGet(feedback , many = True )
         return Response({
             'data':serializer.data,
             'message' : 'feedback fetched successfully'
