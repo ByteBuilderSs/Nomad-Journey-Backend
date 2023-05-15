@@ -67,46 +67,46 @@ class BlogViewUserForView(APIView):
 
 
     def post(self , request,username):
-        try:
-            data = json.loads(request.body.decode('utf-8'))
-            # data = request.data
-            # data._mutable = True
-            data['author'] = request.user.id
-            ans = Announcement.objects.get(id = data['annoncement'] )
-            feedback = Feedback.objects.filter(id =data['feedback_id'] )
-            if len(feedback) == 0:
-                return Response({
-                    'data': {},
-                    'message':'you should complete feedback form first'
-                } , status = status.HTTP_400_BAD_REQUEST)
-            if ans.announcer.id != request.user.id :
-                return Response({
-                    'data': {},
-                    'message':'you are not authorized to do this'
-                } , status = status.HTTP_400_BAD_REQUEST)
-            print("ans status = " , ans.anc_status)
-            if ans.anc_status != 'D' :
-                return Response({
-                    'data': {},
-                    'message':'the announcement status is not Done'
-                } , status = status.HTTP_400_BAD_REQUEST)
-            serializer = BlogSerializerToPost(data = data)
-            if not serializer.is_valid():
-                return Response({
-                    'data': serializer.errors,
-                    'message':'something went wrong'
-                } , status = status.HTTP_400_BAD_REQUEST)
-            serializer.save()
-            return Response({
-                'data':serializer.data,
-                'message' : 'blog created successfully'
-            } , status = status.HTTP_201_CREATED)
-        except Exception as e:
-            print(e) 
+        # try:
+        data = json.loads(request.body.decode('utf-8'))
+        # data = request.data
+        # data._mutable = True
+        data['author'] = request.user.id
+        ans = Announcement.objects.get(id = data['annoncement'] )
+        feedback = Feedback.objects.filter(id =data['feedback_id'] )
+        if len(feedback) == 0:
             return Response({
                 'data': {},
+                'message':'you should complete feedback form first'
+            } , status = status.HTTP_400_BAD_REQUEST)
+        if ans.announcer.id != request.user.id :
+            return Response({
+                'data': {},
+                'message':'you are not authorized to do this'
+            } , status = status.HTTP_400_BAD_REQUEST)
+        print("ans status = " , ans.anc_status)
+        if ans.anc_status != 'D' :
+            return Response({
+                'data': {},
+                'message':'the announcement status is not Done'
+            } , status = status.HTTP_400_BAD_REQUEST)
+        serializer = BlogSerializerToPost(data = data)
+        if not serializer.is_valid():
+            return Response({
+                'data': serializer.errors,
                 'message':'something went wrong'
-            }, status = status.HTTP_400_BAD_REQUEST )
+            } , status = status.HTTP_400_BAD_REQUEST)
+        serializer.save()
+        return Response({
+            'data':serializer.data,
+            'message' : 'blog created successfully'
+        } , status = status.HTTP_201_CREATED)
+        # except Exception as e:
+        #     print(e) 
+        #     return Response({
+        #         'data': {},
+        #         'message':'something went wrong'
+        #     }, status = status.HTTP_400_BAD_REQUEST )
 
 
     def patch(self , request):
