@@ -125,15 +125,13 @@ def GetAnnouncementsForHost(request):
             print(lang)
             lang_obj = Language.objects.get(id=lang)
             print(lang_obj)
-            related_users_to_langs.append(lang_obj.langF.all())
-            related_users_to_langs.append(lang_obj.langL.all())
+            related_users_to_langs += lang_obj.langF.all().values('id')
+            related_users_to_langs += lang_obj.langL.all().values('id')
         print(related_users_to_langs)
         related_announcments = []
         traversed_users = []
         for related_user in related_users_to_langs:
             print(related_user)
-            print(list(related_user))
-            print(list(related_user)[0])
             if related_user in traversed_users:
                 continue
             related_announcments.append(Announcement.objects.get(announcer=list(related_user)[0].id))
