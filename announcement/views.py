@@ -121,23 +121,21 @@ def GetAnnouncementsForHost(request):
 
     if language_filter_values:
         related_users_to_langs = []
+
         for lang in language_filter_values.split(','):
-            print(lang)
             lang_obj = Language.objects.get(language_name=lang)
-            print(lang_obj)
             related_users_to_langs += lang_obj.langF.all().values('id')
             related_users_to_langs += lang_obj.langL.all().values('id')
-        print(related_users_to_langs)
+
         related_announcments = []
         traversed_users = []
         for related_user in related_users_to_langs:
-            print(related_user)
             if related_user in traversed_users:
                 continue
-            related_announcments += list(Announcement.objects.filter(announcer=related_user['id']))
+
+            related_announcments += list(announcements.filter(announcer=related_user['id']))
             traversed_users.append(related_user)
-        print(traversed_users)
-        print(related_announcments)
+
         announcements = related_announcments
 
     # pagination
