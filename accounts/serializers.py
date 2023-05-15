@@ -143,6 +143,18 @@ class UserProfileEdit4Serializer(serializers.ModelSerializer):
         model = User
         fields = ['profile_photo']
 
+    def update(self, instance, validated_data):
+        print(instance)
+        print(validated_data)
+        print(validated_data['profile_photo'] is None)
+        if validated_data['profile_photo'] is None:
+            validated_data['profile_photo'] = ""
+        # instance.profile_photo = validated_data.get('profile_photo', instance.profile_photo)
+        # print(validated_data)
+        # instance.save()
+        # return instance
+        return super().update(instance, validated_data)
+
 class UserProfileEdit5Serializer(serializers.ModelSerializer):
     class Meta:
         model = User
@@ -168,7 +180,7 @@ class UserProfileForOverviewSerializer(serializers.ModelSerializer):
                 'User_city','User_apt','User_postal_code','User_phone_number', 'ssn','first_name','last_name',
                 'email','username','date_joined','hosting_availability','hometown','why_Im_on_nomadjourney','favorite_music_movie_book',
                 'amazing_thing_done','teach_learn_share','what_Ican_share_with_host','interests','langF','langL' , 'city_name' , 'intrest_name',
-                'langL_name' , 'langF_name']
+                'langL_name' , 'langF_name' , 'id']
     def get_city_name(self,obj):
         return obj.User_city.city_name
     def get_user_age(self,obj):
