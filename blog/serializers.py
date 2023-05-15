@@ -81,7 +81,6 @@ class BlogSerializer(serializers.ModelSerializer):
     ans_city = serializers.SerializerMethodField('get_ans_city')
     trip_duration = serializers.SerializerMethodField('get_trip_duration')
     host_username = serializers.SerializerMethodField('get_host_username')
-    feedback_average = serializers.SerializerMethodField('get_feedback_average')
     class Meta:
         model = Blog
         fields = ['uid','created_at','updated_at','author','blog_title','blog_text',
@@ -108,11 +107,6 @@ class BlogSerializer(serializers.ModelSerializer):
     def get_host_username(self,obj):
         if obj.annoncement.main_host is not None:
             return obj.annoncement.main_host.username
-        return None
-    def get_feedback_average(self, obj):
-        if obj.feedback_id is not None:
-            feedbacks = Feedback.objects.get(id = obj.feedback_id.id)
-            return float(feedbacks.question_1 + feedbacks.question_2 + feedbacks.question_3 + feedbacks.question_4 + feedbacks.question_5)/5
         return None
 
 class BlogSerializerToPost(serializers.ModelSerializer):
