@@ -179,7 +179,8 @@ CROS_ALLOW_CREDENTIALS = False
 
 CORS_ALLOWED_ORIGINS = [
     'http://nomadjourney.ir',
-    'http://api.nomadjourney.ir'
+    'http://api.nomadjourney.ir',
+    'http://127.0.0.1:8000'
 ]
 
 # CORS_ORIGIN_WHITELIST = [
