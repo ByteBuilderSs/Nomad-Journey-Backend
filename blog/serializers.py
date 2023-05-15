@@ -70,8 +70,8 @@ class GeneralBlogSerializer(serializers.ModelSerializer):
         return None
     
     def get_feedback_average(self, obj):
-        feedbacks = Feedback.objects.get(id = obj.feedback_id.id)
-        if feedbacks is not None:
+        if obj.feedback_id is not None:
+            feedbacks = Feedback.objects.get(id = obj.feedback_id.id)
             return float(feedbacks.question_1 + feedbacks.question_2 + feedbacks.question_3 + feedbacks.question_4 + feedbacks.question_5)/5
         return None
 
