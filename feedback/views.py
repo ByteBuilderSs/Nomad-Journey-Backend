@@ -14,20 +14,20 @@ from blog.models import Blog
 
 class FeedbackView(APIView):
     def get(self , request , username):
-        try:
-            user_id = User.objects.get(username = username).id
-            feedback= Feedback.objects.get(user_id = user_id)
-            serializer = FeedbackSerializerToGet(feedback)
-            return Response({
-                'data':serializer.data,
-                'message' : 'feedback fetched successfully'
-            } , status = status.HTTP_201_CREATED)
-        except Exception as e:
-            print(e) 
-            return Response({
-                'data': {},
-                'message':'something went wrong'
-            }, status = status.HTTP_400_BAD_REQUEST )
+        # try:
+        user_id = User.objects.get(username = username).id
+        feedback= Feedback.objects.get(user_id = user_id)
+        serializer = FeedbackSerializerToGet(feedback)
+        return Response({
+            'data':serializer.data,
+            'message' : 'feedback fetched successfully'
+        } , status = status.HTTP_201_CREATED)
+        # except Exception as e:
+        #     print(e) 
+        #     return Response({
+        #         'data': {},
+        #         'message':'something went wrong'
+        #     }, status = status.HTTP_400_BAD_REQUEST )
 
 
     def post(self , request , username):
