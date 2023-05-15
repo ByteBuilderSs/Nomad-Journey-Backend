@@ -11,6 +11,7 @@ import math
 from django.db.models import F
 import datetime
 from utils.views import *
+from utils.models import Language
 
 
 def SortData(data, sort_by, descending=False):
@@ -116,24 +117,27 @@ def GetAnnouncementsForHost(request):
     if start_time and end_time:
         start_date = datetime.datetime.strptime(start_time, '%Y-%m-%d').date()
         end_date = datetime.datetime.strptime(end_time, '%Y-%m-%d').date()
-        print(start_date)
-        print(end_date)
         announcements = announcements.filter(arrival_date__range=[start_date, end_date])
+
     if language_filter_values:
-        announcements_1 = None
-        announcements_2 = None
-
-        announcements_1 = announcements.filter(announcer__langL__language_name__overlap=language_filter_values.split(','))
-        announcements_2 = announcements.filter(announcer__langF__language_name__overlap=language_filter_values.split(','))
-
-        if announcements_1 is not None and announcements_2 is not None:
-            announcements = announcements_1 | announcements_2
-        elif announcements_1 is None and announcements_2 is None:
-            announcements = None
-        elif announcements_1 is None:
-            announcements = announcements_2
-        elif announcements_2 is None:
-            announcements = announcements_1
+        related_users_to_langs = []
+        for lang in language_filter_values.split(','):
+            print(lang)
+            lang_obj = Language.objects.get(id=lang)
+            print(lang_obj)
+            related_users_to_langs.append(lang_obj.langF.all())
+            related_users_to_langs.append(lang_obj.langL.all())
+        print(related_users_to_langs)
+        related_announcments = []
+        traversed_users = []
+        for related_user in related_users_to_langs:
+            print(related_user)
+            if related_user in traversed_users:
+                continue
+            related_announcments.append(Announcement.objects.get(announcer=related_user))
+            traversed_users.append(related_user)
+        print(traversed_users)
+        announcements = traversed_users
 
     # pagination
     page = pagination.paginate_queryset(announcements, request)
