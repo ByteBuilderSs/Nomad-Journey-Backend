@@ -134,7 +134,7 @@ def GetAnnouncementsForHost(request):
             print(related_user)
             if related_user in traversed_users:
                 continue
-            related_announcments.append(Announcement.objects.filter(announcer=related_user['id']))
+            related_announcments += list(Announcement.objects.filter(announcer=related_user['id']))
             traversed_users.append(related_user)
         print(traversed_users)
         print(related_announcments)
