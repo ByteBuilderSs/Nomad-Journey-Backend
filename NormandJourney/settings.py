@@ -50,7 +50,8 @@ INSTALLED_APPS = [
     'anc_request',
     'utils',
     'feedback',
-    'like_post'
+    'like_post',
+    'landing_page'
 ]
 
 MIDDLEWARE = [
