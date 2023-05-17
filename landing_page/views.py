@@ -36,9 +36,14 @@ class MostRatedHost(APIView):
                 'departure_date': announcement.departure_date,
                 'travelers_count' : announcement.travelers_count,
                 'avg_feedback': avg_feedback['avg_feedback'],
-                # Add more fields as needed
             })
 
         return JsonResponse(data, safe=False)
+
+class MostVisitedCities(APIView):
+    def get(self,request):
+        cities = City.objects.annotate(num_announcements=models.Count('announcement')).order_by('-num_announcements')[:3]
+        serializer = CitySerializer(cities, many=True)
+        return Response(serializer.data)
 
 

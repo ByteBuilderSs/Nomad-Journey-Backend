@@ -1,10 +1,7 @@
 from rest_framework import serializers
-from announcement.models import *
-from blog.models import *
-from feedback.models import *
-from accounts.models import *
+from utils.models import City
 
-class MostRatedHostSerializer(serializers.ModelSerializer):
+class CitySerializer(serializers.ModelSerializer):
     class Meta:
-        model = Announcement
-        fields = ['']
+        model = City
+        fields = ('city_name', 'country', 'c_lat', 'c_long', 'city_image64', 'abbrev_city')

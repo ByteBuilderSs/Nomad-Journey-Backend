@@ -6,6 +6,7 @@ class City(models.Model):
     country = models.CharField(max_length=100, blank=True)
     c_lat = models.FloatField()
     c_long = models.FloatField()
+    city_image64 = models.TextField(null=True, blank=True)
     abbrev_city = models.CharField(max_length=3, blank=True)
 
     class Meta:
