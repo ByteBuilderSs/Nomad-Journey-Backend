@@ -50,7 +50,8 @@ INSTALLED_APPS = [
     'anc_request',
     'utils',
     'feedback',
-    'like_post'
+    'like_post',
+    'landing_page'
 ]
 
 MIDDLEWARE = [
@@ -105,8 +106,8 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2', 
         'NAME': 'nomadjourney',        
-        'USER': 'sina',        
-        'PASSWORD': 'sin2023',        
+        'USER': 'postgres',        
+        'PASSWORD': 'aysa1380',        
         'HOST': 'localhost',        
         'PORT': '5432',}
 }
