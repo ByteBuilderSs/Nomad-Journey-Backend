@@ -27,7 +27,8 @@ urlpatterns = [
     path('anc_request/', include('anc_request.urls')),
     path('utils/', include('utils.urls')),
     path('feedback/', include('feedback.urls')),
-    path('like_post/', include('like_post.urls'))
+    path('like_post/', include('like_post.urls')),
+    path('landing-page/' , include('landing_page.urls'))
 ]
 
 urlpatterns = [
