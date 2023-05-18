@@ -49,6 +49,6 @@ class MostVisitedCities(APIView):
 
 class RandomShit(APIView):
     def get(self, request):
-        cities = City.objects.exclude(Q(city_image64='') | Q(city_image64__isnull=True))
+        cities = City.objects.exclude(Q(city_image64='') | Q(city_image64__isnull=True))[:8]
         serializer = CitySerializer(cities, many=True)
         return Response(serializer.data)
