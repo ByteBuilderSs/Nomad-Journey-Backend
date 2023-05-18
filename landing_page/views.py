@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from django.db.models import Avg, ExpressionWrapper, F
+from django.db.models import Avg, ExpressionWrapper, F , Q
 from rest_framework.views import APIView
 from rest_framework import status , generics
 from rest_framework.response import Response
@@ -49,6 +49,6 @@ class MostVisitedCities(APIView):
 
 class RandomShit(APIView):
     def get(self, request):
-        cities = City.objects.exclude(city_image64__exact='')[:8]
+        cities = City.objects.exclude(Q(city_image64='') | Q(city_image64__isnull=True))
         serializer = CitySerializer(cities, many=True)
         return Response(serializer.data)
