@@ -10,6 +10,7 @@ from announcement.models import Announcement
 from feedback.models import Feedback
 from accounts.models import *
 from .serializers import *
+from utils.models import City
 import json
 from django.http import JsonResponse
 
@@ -46,4 +47,8 @@ class MostVisitedCities(APIView):
         serializer = CitySerializer(cities, many=True)
         return Response(serializer.data)
 
-
+class RandomShit(APIView):
+    def get(self, request):
+        cities = City.objects.exclude(city_image64__exact='')[:8]
+        serializer = CitySerializer(cities, many=True)
+        return Response(serializer.data)
