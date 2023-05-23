@@ -81,12 +81,15 @@ class BlogSerializer(serializers.ModelSerializer):
     ans_city = serializers.SerializerMethodField('get_ans_city')
     trip_duration = serializers.SerializerMethodField('get_trip_duration')
     host_username = serializers.SerializerMethodField('get_host_username')
+    is_liked = serializers.SerializerMethodField('get_is_liked')
+    num_likes = serializers.SerializerMethodField()
     average_rate = serializers.SerializerMethodField('get_average_rate')
     class Meta:
         model = Blog
         fields = ['uid','created_at','updated_at','author','blog_title','blog_text',
                 'json_data','main_image_64','slug','tags','tags_name' ,'host_name',
-                'ans_city','trip_duration' , 'host_username' , 'description' , 'secondary_image','average_rate']
+                'ans_city','trip_duration' , 'host_username' , 'description' , 'secondary_image',
+                'is_liked', 'num_likes' , 'average_rate' ]
     
     def get_tag_name(self,obj):
         tags_name_list = []
@@ -114,6 +117,22 @@ class BlogSerializer(serializers.ModelSerializer):
             return float(obj.feedback_id.question_1 + obj.feedback_id.question_2 + obj.feedback_id.question_3 + obj.feedback_id.question_4 + obj.feedback_id.question_5)/5
         else:
             return 0
+    def get_is_liked(self,obj):
+        like = Like.objects.filter(liked_post = obj.uid)
+        likers = []
+        if like is not None:
+            for liker in like:
+                likers.append(liker.liker.id)
+            return likers
+        return None
+    
+    def get_num_likes(self, obj):
+        like = Like.objects.filter(liked_post = obj.uid)
+        likers = []
+        if like is not None:
+            for liker in like:
+                likers.append(liker.liker.id)
+        return len(likers)
 
 class BlogSerializerToPost(serializers.ModelSerializer):
     tags_name = serializers.SerializerMethodField('get_tag_name') 

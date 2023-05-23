@@ -17,23 +17,15 @@ def CreateLike(request, post_id):
     return Response(serializer.data)
 
 @api_view(['GET'])
-@permission_classes([IsAuthenticated])
 def GetPostsWithLike(request, post_id):
-    post = Blog.objects.get(uid=post_id)
     likers_ids = Like.objects.filter(liked_post=post_id).values('liker')
-    likers_objs = User.objects.filter(id__in=likers_ids)
-
-    ref = Like.objects.filter(liked_post=post_id).first()
-
-    setattr(ref, 'post', post)
-    setattr(ref, 'likers', likers_objs)
-
-    serializer = PostWithLikesSerializer(ref)
+    likers_objs = User.objects.filter(id__in=likers_ids.all())
+    serializer = UserCompeleteProfileSerializer(likers_objs, many=True)
     return Response(serializer.data)
 
 @api_view(['DELETE'])
 @permission_classes([IsAuthenticated])
-def DeleteLike(request, like_id):
-    like = Like.objects.get(id=like_id)
+def DeleteLike(request, uid, liker):
+    like = Like.objects.get(liker=liker, liked_post = uid)
     like.delete()
     return Response('Like deleted successfully!')

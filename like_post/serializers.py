@@ -17,22 +17,15 @@ class LikePostSerializer(serializers.ModelSerializer):
         return instance
 
 class PostWithLikesSerializer(serializers.ModelSerializer):
-    post = serializers.SerializerMethodField()
     likers = serializers.SerializerMethodField()
 
     class Meta:
         model = Like
-        fields = ['id', 'post', 'likers']
+        fields = ['id', 'likers']
 
-    def get_post(self, obj):
-        post = obj.post
-        if post is not None:
-            serializer = BlogSerializer(post)
-            return serializer.data
-        return post
 
     def get_likers(self, obj):
-        likers = obj.likers
+        likers = Like
         if likers is not None:
             serializer = UserCompeleteProfileSerializer(likers, many=True)
             return serializer.data
