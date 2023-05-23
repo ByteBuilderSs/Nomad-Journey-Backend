@@ -8,6 +8,10 @@ class City(models.Model):
     c_long = models.FloatField()
     city_image64 = models.TextField(null=True, blank=True)
     abbrev_city = models.CharField(max_length=3, blank=True)
+    area = models.TextField(null=True,blank=True)
+    population = models.TextField(null=True , blank=True)
+    currency = models.TextField(null=True , blank=True)
+    explore_more = models.TextField(null=True , blank=True)
 
     class Meta:
         unique_together = ('city_name', 'country')
