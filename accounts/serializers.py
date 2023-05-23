@@ -13,10 +13,11 @@ class UserSerializer(serializers.ModelSerializer):
     city_name = serializers.SerializerMethodField('get_city_name') 
     class Meta:
         model = User
-        fields = ['first_name', 'last_name', 'email', 'password', 'password_again', 'username' , 'User_city' , 'city_name']
+        fields = ['first_name', 'last_name', 'email', 'password', 'password_again', 'username' , 'User_city' , 'city_name' , 'coins']
         extra_kwargs = {
             'password':{'write_only' : True},
-            'password_again':{'write_only' : True}
+            'password_again':{'write_only' : True},
+            'coins' : {'read_only' : True}
         }
     def get_city_name(self,obj):
         return obj.User_city.city_name
@@ -43,7 +44,7 @@ class UserCompeleteProfileSerializer(serializers.ModelSerializer):
                 'User_city','User_apt','User_postal_code','User_phone_number', 'ssn','first_name','last_name',
                 'email','username','date_joined','hosting_availability','hometown','why_Im_on_nomadjourney','favorite_music_movie_book',
                 'amazing_thing_done','teach_learn_share','what_Ican_share_with_host','interests','langF','langL', 'city_name', 'city_country', 'intrest_name',
-                'langL_name' , 'langF_name']
+                'langL_name' , 'langF_name' , 'coins']
         extra_kwargs = {
             'password':{'write_only' : True},
             'password_again':{'write_only' : True}
@@ -180,7 +181,7 @@ class UserProfileForOverviewSerializer(serializers.ModelSerializer):
                 'User_city','User_apt','User_postal_code','User_phone_number', 'ssn','first_name','last_name',
                 'email','username','date_joined','hosting_availability','hometown','why_Im_on_nomadjourney','favorite_music_movie_book',
                 'amazing_thing_done','teach_learn_share','what_Ican_share_with_host','interests','langF','langL' , 'city_name' , 'intrest_name',
-                'langL_name' , 'langF_name' , 'id']
+                'langL_name' , 'langF_name' , 'id' , 'coins']
     def get_city_name(self,obj):
         return obj.User_city.city_name
     def get_user_age(self,obj):
