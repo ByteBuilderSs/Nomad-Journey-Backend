@@ -89,10 +89,16 @@ class MessageGeneralListView(APIView):
             }, status = status.HTTP_400_BAD_REQUEST)
         
 
-# class MessageDetailView(APIView):
-#     def get(self , request , sender_username , receiver_username):
-#         message_1 = get_object_or_404(Message , sender = get_id(sender_username) , receiver = get_id(receiver_username))
-#         message_2 = get_object_or_404(Message , sender = get_id(receiver_username) , receiver = get_id(sender_username) )
-#         serializer_1 = MessageSerializer(message_1)
-#         serializer_2 = MessageSerializer(message_2)
-#         return Response(serializer_1.data , serializer_2.data)
+class AllMessageDetailView(APIView):
+    def get(self , request , sender_username , receiver_username):
+        message_1 = Message.objects.filter(sender = get_id(sender_username) , receiver = get_id(receiver_username))
+        for m in message_1:
+            m.type = 'sent'
+            m.save()
+        message_2 = Message.objects.filter(sender = get_id(receiver_username) , receiver = get_id(sender_username) )
+        for m in message_2:
+            m.type = 'received'
+            m.save()
+        allMessage = message_1.union(message_2)
+        serializer = MessageSerializer(allMessage , many=True )
+        return Response(serializer.data)

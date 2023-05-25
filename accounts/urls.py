@@ -22,5 +22,6 @@ urlpatterns = [
     # path('GetUsernameAndUserImageByUserId/<str:id>' , GetUsernameAndUserImageByUserId.as_view()),
     path('GetUserProfileForOverview/<str:username>', GetUserProfileForOverview.as_view()),
     path('GetLanguages', LanguageView.as_view()),
-    path('get-profile-photo/<str:user_id>', ProfilePhoto.as_view())
+    path('get-profile-photo/<str:user_id>', ProfilePhoto.as_view()),
+    path('add-coin/<str:username>', AddCoin.as_view()),
 ]
