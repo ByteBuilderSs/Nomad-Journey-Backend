@@ -151,7 +151,7 @@ def GetAnnouncementsForHost(request):
 def CreateAnnouncement(request):
     data = request.data
     print('data is:',data)
-    user = User.objects.get(id = data['announcer'])
+    user = User.objects.get(id = request.user)
     if user.coins < 1:
         return Response({
             'data': serializer.errors,
