@@ -210,21 +210,6 @@ class UserProfileForOverviewSerializer(serializers.ModelSerializer):
             return f"{minutes} minute{'s' if minutes > 1 else ''}, {seconds} second{'s' if seconds > 1 else ''}"
         else:
             return f"{seconds} second{'s' if seconds > 1 else ''}"
-        # today = datetime.today()
-        # joined_since = abs(today.day - obj.date_joined.day)
-        # if joined_since == 0:
-        #     joined_since = abs(today.hour - obj.date_joined.hour)
-        #     if joined_since == 0:
-        #         joined_since = abs(today.minute - obj.date_joined.minute)
-        #         if joined_since == 0:
-        #             joined_since = abs(today.second - obj.date_joined.second)
-        #             return f"{joined_since} seconds"
-        #         else:
-        #             return f"{joined_since} minutes"
-        #     else:
-        #         return f"{joined_since} hours"
-        # else:
-        #     return f"{joined_since} days"
 
 
     def get_post_count(self , obj):
@@ -267,3 +252,16 @@ class UserProfilePhotoSerializer(serializers.ModelSerializer):
         if obj.profile_photo:
             return obj.profile_photo.url
         return None
+    
+class UserAddCoinSerializerGet(serializers.ModelSerializer):
+    price = serializers.SerializerMethodField('get_price') 
+    class Meta:
+        model = User
+        fields = ['coins' , 'coin_to_buy' , 'price']
+    def get_price(self,obj):
+        return obj.coin_to_buy * 25000
+
+class UserAddCoinSerializerPut(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ['coin_to_buy']
