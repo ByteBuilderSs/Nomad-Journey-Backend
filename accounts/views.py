@@ -434,3 +434,45 @@ class ProfilePhoto(APIView):
             return Response("aysa")
         serializer = UserProfilePhotoSerializer(user)
         return Response(serializer.data)
+    
+class AddCoin(APIView):
+    def put(self , request , username):
+        body = json.loads(request.body.decode('utf-8'))
+        user = User.objects.filter(username = username)
+        if len(user) == 0:
+            return Response({
+                'data': {},
+                'message':'invalid username'
+            }, status = status.HTTP_400_BAD_REQUEST )
+        user[0].coins = user[0].coins + int(body['coin_to_buy'])
+        user[0].save()
+        if request.user.id != user[0].id:
+            return Response({
+                'data': {},
+                'message':'you are not authorized to do this'
+            }, status = status.HTTP_400_BAD_REQUEST )
+        serializer = UserAddCoinSerializerPut(user[0] , data = body , partial = True)
+        if not serializer.is_valid():
+            return Response({
+                'data': serializer.errors,
+                'message':'something went wrong'
+            } , status = status.HTTP_400_BAD_REQUEST)
+        serializer.save()
+        return Response({
+            'data': serializer.data,
+            'message' : 'coins added successfully'
+        } , status = status.HTTP_201_CREATED)
+    def get(self , request , username):
+        try:
+            user= User.objects.get(username = username)
+            serializer = UserAddCoinSerializerGet(user)
+            return Response({
+                'data':serializer.data,
+                'message' : 'user coins and price fetched successfully'
+            } , status = status.HTTP_201_CREATED)
+        except Exception as e:
+            print(e) 
+            return Response({
+                'data': {},
+                'message':'something went wrong'
+            }, status = status.HTTP_400_BAD_REQUEST )
