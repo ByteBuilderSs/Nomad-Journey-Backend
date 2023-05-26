@@ -4,7 +4,7 @@ from rest_framework import status , generics
 from rest_framework.response import Response
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from django.shortcuts import get_object_or_404
-from .serializers import MessageSerializer , MessageUnseenSerializer
+from .serializers import MessageSerializer
 from .models import Message 
 from accounts.models import User
 
