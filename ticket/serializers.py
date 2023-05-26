@@ -8,3 +8,4 @@ class MessageSerializer(serializers.ModelSerializer):
         extra_kwargs = {
             'type' : {'read_only' : True}
         }
+
