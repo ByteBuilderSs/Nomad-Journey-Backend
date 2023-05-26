@@ -4,7 +4,7 @@ from rest_framework import status , generics
 from rest_framework.response import Response
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from django.shortcuts import get_object_or_404
-from .serializers import MessageSerializer
+from .serializers import MessageSerializer , MessageUnseenSerializer
 from .models import Message 
 from accounts.models import User
 
@@ -16,6 +16,7 @@ def get_id(username):
 
 class MessageUnseenListView(APIView):
     def get(self , request,sender_username , receiver_username):
+        count = 0
         try:
             if request.user.username!= sender_username and request.user.username != receiver_username:
                 return Response({
@@ -25,10 +26,12 @@ class MessageUnseenListView(APIView):
             messages = Message.objects.filter(sender = get_id(sender_username), receiver = get_id(receiver_username), is_read = False)
             serializer = MessageSerializer(messages, many=True, context={'request': request})
             for message in messages:
+                count+=1
                 message.is_read = True
                 message.save()
             return Response({
                 'data':serializer.data,
+                'count' : count,
                 'message' : 'messages fetched successfully'
             } , status = status.HTTP_201_CREATED)
         except Exception as e:
