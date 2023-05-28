@@ -30,10 +30,8 @@ class MostRatedHost(APIView):
             )
             data.append({
                 'id': announcement.id,
-                'announcer_id' : announcement.announcer,
                 'announcer': announcement.announcer.username,
                 'anc_city': announcement.anc_city.city_name,
-                'city_image' : announcement.anc_city.city_small_image64,
                 'arrival_date': announcement.arrival_date,
                 'departure_date': announcement.departure_date,
                 'travelers_count' : announcement.travelers_count,
