@@ -30,7 +30,7 @@ class MostRatedHost(APIView):
             )
             data.append({
                 'id': announcement.id,
-                'profile_photo' : announcement.announcer.profile_photo,
+                'announcer_id' : announcement.announcer,
                 'announcer': announcement.announcer.username,
                 'anc_city': announcement.anc_city.city_name,
                 'city_image' : announcement.anc_city.city_small_image64,
