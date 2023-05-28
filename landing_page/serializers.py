@@ -16,10 +16,11 @@ class MostRatedHostSerializer(serializers.ModelSerializer):
     anc_city = serializers.SerializerMethodField('get_anc_city') 
     city_image = serializers.SerializerMethodField('get_city_image') 
     avg_feedback = serializers.SerializerMethodField('get_avg_feedback') 
+    profile_photo = serializers.SerializerMethodField('get_profile_phot') 
 
     class Meta:
         Model = Announcement
-        fields = ['id','announcer_username' , 'announcer' ,'anc_city', 'arrival_date','departure_date','travelers_count']
+        fields = ['id','announcer_username' , 'announcer' ,'anc_city', 'arrival_date','departure_date','travelers_count' , 'profile_photo']
     
     def get_announcer_username(obj,self):
         return obj.announcer.username,
@@ -40,3 +41,6 @@ class MostRatedHostSerializer(serializers.ModelSerializer):
             avg_feedback=Avg(F('question_1') + F('question_2') + F('question_3') + F('question_4') + F('question_5')) / 5
         )
         return avg_feedback['avg_feedback']
+    
+    def get_profile_phot(self,obj):
+        return obj.announcer.profile_photo
