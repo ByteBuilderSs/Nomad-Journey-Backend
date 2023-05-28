@@ -43,4 +43,4 @@ class MostRatedHostSerializer(serializers.ModelSerializer):
         return avg_feedback['avg_feedback']
     
     def get_profile_phot(self,obj):
-        return obj.announcer.profile_photo
+        return obj.announcer.profile_photo.url
