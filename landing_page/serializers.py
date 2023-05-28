@@ -19,7 +19,8 @@ class MostRatedHostSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Announcement
-        fields = ('id','announcer_username' , 'announcer' ,'anc_city', 'arrival_date','departure_date','travelers_count' , 'profile_photo')
+        fields = ('id','announcer_username' , 'announcer' ,'anc_city', 'arrival_date','departure_date','travelers_count' , 'profile_photo' 
+                ,'avg_feedback')
     
     def get_announcer_username(obj,self):
         return obj.announcer.username,
