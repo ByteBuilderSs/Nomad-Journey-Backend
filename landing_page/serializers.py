@@ -15,7 +15,7 @@ class MostRatedHostSerializer(serializers.ModelSerializer):
     announcer_username = serializers.SerializerMethodField('get_announcer_username') 
     anc_city = serializers.SerializerMethodField('get_anc_city') 
     city_image = serializers.SerializerMethodField('get_city_image') 
-    # avg_feedback = serializers.SerializerMethodField('get_avg_feedback') 
+    avg_feedback = serializers.SerializerMethodField('get_avg_feedback') 
 
     class Meta:
         Model = Announcement
@@ -30,13 +30,13 @@ class MostRatedHostSerializer(serializers.ModelSerializer):
     def get_city_image(obj,self):
         obj.anc_city.city_small_image64
 
-    # def get_avg_feedback(obj,self):
-    #     avg_feedbacks = Feedback.objects.values('ans_id__main_host').annotate(
-    #     avg_feedback=Avg(F('question_1') + F('question_2') + F('question_3') + F('question_4') + F('question_5')) / 5)
-    #     max_avg_feedback = avg_feedbacks.order_by('-avg_feedback').first()
-    #     max_avg_feedback_value = max_avg_feedback['avg_feedback']
-    #     announcements = Announcement.objects.filter(main_host=max_avg_feedback['ans_id__main_host'])
-    #     avg_feedback = Feedback.objects.filter(ans_id=obj.id).aggregate(
-    #         avg_feedback=Avg(F('question_1') + F('question_2') + F('question_3') + F('question_4') + F('question_5')) / 5
-    #     )
-    #     return avg_feedback['avg_feedback']
+    def get_avg_feedback(obj,self):
+        avg_feedbacks = Feedback.objects.values('ans_id__main_host').annotate(
+        avg_feedback=Avg(F('question_1') + F('question_2') + F('question_3') + F('question_4') + F('question_5')) / 5)
+        max_avg_feedback = avg_feedbacks.order_by('-avg_feedback').first()
+        max_avg_feedback_value = max_avg_feedback['avg_feedback']
+        announcements = Announcement.objects.filter(main_host=max_avg_feedback['ans_id__main_host'])
+        avg_feedback = Feedback.objects.filter(ans_id=obj.id).aggregate(
+            avg_feedback=Avg(F('question_1') + F('question_2') + F('question_3') + F('question_4') + F('question_5')) / 5
+        )
+        return avg_feedback['avg_feedback']
