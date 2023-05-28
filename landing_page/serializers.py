@@ -22,16 +22,16 @@ class MostRatedHostSerializer(serializers.ModelSerializer):
         fields = ('id','announcer_username' , 'announcer' ,'anc_city', 'arrival_date','departure_date','travelers_count' , 'profile_photo' 
                 ,'avg_feedback')
     
-    def get_announcer_username(obj,self):
+    def get_announcer_username(self,obj):
         return obj.announcer.username,
 
-    def get_anc_city(obj,self):
+    def get_anc_city(self,obj):
         return obj.anc_city.city_name
 
-    def get_city_image(obj,self):
+    def get_city_image(self,obj):
         obj.anc_city.city_small_image64
 
-    def get_avg_feedback(obj,self):
+    def get_avg_feedback(self,obj):
         avg_feedbacks = Feedback.objects.values('ans_id__main_host').annotate(
         avg_feedback=Avg(F('question_1') + F('question_2') + F('question_3') + F('question_4') + F('question_5')) / 5)
         max_avg_feedback = avg_feedbacks.order_by('-avg_feedback').first()
