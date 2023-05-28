@@ -14,7 +14,6 @@ class CitySerializer(serializers.ModelSerializer):
 class MostRatedHostSerializer(serializers.ModelSerializer):
     announcer_username = serializers.SerializerMethodField('get_announcer_username') 
     anc_city = serializers.SerializerMethodField('get_anc_city') 
-    city_image = serializers.SerializerMethodField('get_city_image') 
     avg_feedback = serializers.SerializerMethodField('get_avg_feedback') 
     profile_photo = serializers.SerializerMethodField('get_profile_phot') 
 
