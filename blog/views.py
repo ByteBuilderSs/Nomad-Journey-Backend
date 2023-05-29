@@ -208,7 +208,8 @@ class SearchBlog(APIView):
     def get(self, request):
         search_query = request.query_params.get('search', '')
 
-        queryset = Blog.objects.filter(blog_text__icontains=search_query)
+        queryset = Blog.objects.filter(blog_title__icontains=search_query) | \
+                    Blog.objects.filter(description__icontains=search_query)
 
         serializer = BlogSerializer(queryset, many=True)
         return Response(serializer.data)
