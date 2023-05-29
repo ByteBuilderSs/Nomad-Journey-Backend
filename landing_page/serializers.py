@@ -5,11 +5,18 @@ from announcement.models import Announcement
 from feedback.models import *
 
 class CitySerializer(serializers.ModelSerializer):
+    rank = serializers.SerializerMethodField('get_rank') 
     class Meta:
         model = City
         fields = ('city_name', 'country', 'c_lat', 'c_long', 'city_small_image64','city_big_image64', 'abbrev_city' , 'area' , 'population',
-                    'currency','explore_more')
-        
+                    'currency','explore_more','rank')
+    def get_rank(self,obj):
+        ranks = {}
+        cities = City.objects.annotate(num_announcements=models.Count('announcement')).order_by('-num_announcements')[:10]
+        for i in range(len(cities)):
+            if obj == cities[i]:
+                return i + 1
+
 
 class MostRatedHostSerializer(serializers.ModelSerializer):
     announcer_username = serializers.SerializerMethodField('get_announcer_username') 

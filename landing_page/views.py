@@ -43,7 +43,7 @@ class MostRatedHost(APIView):
 
 class MostVisitedCities(APIView):
     def get(self,request):
-        cities = City.objects.annotate(num_announcements=models.Count('announcement')).order_by('-num_announcements')[:5]
+        cities = City.objects.annotate(num_announcements=models.Count('announcement')).order_by('-num_announcements')[:10]
         serializer = CitySerializer(cities, many=True)
         return Response(serializer.data)
 
