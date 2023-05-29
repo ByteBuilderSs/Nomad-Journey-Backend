@@ -203,3 +203,14 @@ class TagViewByUid(APIView):
         tag = get_object_or_404(Tag, uid=uid)
         serializer = TagSerializer(tag)
         return Response(serializer.data)
+
+class SearchBlog(APIView):
+    queryset = Blog.objects.all()
+    serializer_class = BlogSerializer
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        search_param = self.request.query_params.get('search')
+        if search_param:
+            queryset = queryset.filter(blog_text__icontains=search_param)
+        return queryset
