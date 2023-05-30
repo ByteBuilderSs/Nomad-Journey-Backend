@@ -16,17 +16,19 @@ from django.http import JsonResponse
 
 
 class MostRatedHost(APIView):
-    def get(self, request):
-        avg_feedbacks = Feedback.objects.annotate(
+    def get(self,request):
+        avg_feedbacks = Feedback.objects.values('ans_id__main_host').annotate(
             avg_feedback=Avg(F('question_1') + F('question_2') + F('question_3') + F('question_4') + F('question_5')) / 5
         )
         avg_feedback_sorted = avg_feedbacks.order_by('-avg_feedback')
+        # max_avg_feedback_value = max_avg_feedback['avg_feedback']
         announcements_query = []
         print(len(avg_feedback_sorted))
-        for feedback in avg_feedback_sorted:
-            announcements_query.append(Announcement.objects.filter(main_host=feedback['ans_id__main_host']).first())
+        for i in range(len(avg_feedback_sorted)):
+            announcements_query.append(Announcement.objects.filter(main_host=avg_feedback_sorted[i]['ans_id__main_host']).first())
+        # announcements_query = Announcement.objects.filter(main_host=max_avg_feedback['ans_id__main_host'])
         announcements = announcements_query[:10]
-        serializer = MostRatedHostSerializer(announcements, many=True)
+        serializer = MostRatedHostSerializer(announcements , many= True)
         return Response(serializer.data)
 
 class MostVisitedCities(APIView):
