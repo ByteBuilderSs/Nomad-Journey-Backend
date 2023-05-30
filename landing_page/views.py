@@ -20,26 +20,14 @@ class MostRatedHost(APIView):
         avg_feedbacks = Feedback.objects.values('ans_id__main_host').annotate(
             avg_feedback=Avg(F('question_1') + F('question_2') + F('question_3') + F('question_4') + F('question_5')) / 5
         )
-        max_avg_feedback = avg_feedbacks.order_by('-avg_feedback').first()
-        max_avg_feedback_value = max_avg_feedback['avg_feedback']
-        announcements_query = Announcement.objects.filter(main_host=max_avg_feedback['ans_id__main_host'])
+        avg_feedback_sorted = avg_feedbacks.order_by('-avg_feedback')
+        # max_avg_feedback_value = max_avg_feedback['avg_feedback']
+        announcements_query = []
+        for i in range(10):
+            announcements_query.append(Announcement.objects.filter(main_host=avg_feedback_sorted[i]['ans_id__main_host']).first())
+        # announcements_query = Announcement.objects.filter(main_host=max_avg_feedback['ans_id__main_host'])
         announcements = announcements_query[:10]
-        # data = []
         serializer = MostRatedHostSerializer(announcements , many= True)
-        # for announcement in announcements:
-        #     avg_feedback = Feedback.objects.filter(ans_id=announcement.id).aggregate(
-        #         avg_feedback=Avg(F('question_1') + F('question_2') + F('question_3') + F('question_4') + F('question_5')) / 5
-        #     )
-        #     data.append({
-        #         'id': announcement.id,
-        #         'announcer': announcement.announcer.username,
-        #         'anc_city': announcement.anc_city.city_name,
-        #         'arrival_date': announcement.arrival_date,
-        #         'departure_date': announcement.departure_date,
-        #         'travelers_count' : announcement.travelers_count,
-        #         'avg_feedback': avg_feedback['avg_feedback'],
-        #     })
-
         return Response(serializer.data)
 
 class MostVisitedCities(APIView):
