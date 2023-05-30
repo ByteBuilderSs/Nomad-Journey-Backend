@@ -22,7 +22,8 @@ class MostRatedHost(APIView):
         )
         max_avg_feedback = avg_feedbacks.order_by('-avg_feedback').first()
         max_avg_feedback_value = max_avg_feedback['avg_feedback']
-        announcements = Announcement.objects.filter(main_host=max_avg_feedback['ans_id__main_host'])
+        announcements_query = Announcement.objects.filter(main_host=max_avg_feedback['ans_id__main_host'])
+        announcements = announcements_query[:10]
         # data = []
         serializer = MostRatedHostSerializer(announcements , many= True)
         # for announcement in announcements:
@@ -50,6 +51,7 @@ class MostVisitedCities(APIView):
 
 class RandomShit(APIView):
     def get(self, request):
-        cities = City.objects.exclude(Q(city_big_image64=None) | Q(city_big_image64=True))[:8]
+        cities_query = City.objects.exclude(Q(city_big_image64=None) | Q(city_big_image64=True))
+        cities = cities_query[:10]
         serializer = CitySerializer(cities, many=True)
         return Response(serializer.data)
