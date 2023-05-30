@@ -23,7 +23,7 @@ class MostRatedHost(APIView):
         avg_feedback_sorted = avg_feedbacks.order_by('-avg_feedback')
         # max_avg_feedback_value = max_avg_feedback['avg_feedback']
         announcements_query = []
-        for i in range(10):
+        for i in range(len(avg_feedback_sorted)):
             announcements_query.append(Announcement.objects.filter(main_host=avg_feedback_sorted[i]['ans_id__main_host']).first())
         # announcements_query = Announcement.objects.filter(main_host=max_avg_feedback['ans_id__main_host'])
         announcements = announcements_query[:10]
