@@ -12,10 +12,11 @@ class CitySerializer(serializers.ModelSerializer):
                     'currency','explore_more','rank')
     def get_rank(self,obj):
         ranks = {}
-        cities = City.objects.annotate(num_announcements=models.Count('announcement')).order_by('-num_announcements')[:10]
-        cities_with_images = cities.exclude(Q(city_small_image64=None) | Q(city_small_image64=True))
-        for i in range(len(cities_with_images)):
-            if obj == cities_with_images[i]:
+        cities_query = City.objects.annotate(num_announcements=models.Count('announcement')).order_by('-num_announcements')
+        cities_with_images = cities_query.exclude(Q(city_small_image64=None) | Q(city_small_image64=True))
+        cities = cities_with_images[:10]
+        for i in range(len(cities)):
+            if obj == cities[i]:
                 return i + 1
 
 
