@@ -23,10 +23,10 @@ class MostRatedHost(APIView):
         max_avg_feedback = avg_feedbacks.order_by('-avg_feedback').first()
         max_avg_feedback_value = max_avg_feedback['avg_feedback']
         announcements_query = Announcement.objects.filter(main_host=max_avg_feedback['ans_id__main_host'])
-        announcements = []
-        for i in range(10):
-            announcements.append(announcements_query[i])
-        serializer = MostRatedHostSerializer(announcements, many=True)
+        # announcements = []
+        # for i in range(10):
+        #     announcements.append(announcements_query[i])
+        serializer = MostRatedHostSerializer(announcements_query, many=True)
         return Response(serializer.data)
 
 class MostVisitedCities(APIView):
