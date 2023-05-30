@@ -13,8 +13,9 @@ class CitySerializer(serializers.ModelSerializer):
     def get_rank(self,obj):
         ranks = {}
         cities = City.objects.annotate(num_announcements=models.Count('announcement')).order_by('-num_announcements')[:10]
-        for i in range(len(cities)):
-            if obj == cities[i]:
+        cities_with_images = cities.exclude(Q(city_small_image64=None) | Q(city_small_image64=True))
+        for i in range(len(cities_with_images)):
+            if obj == cities_with_images[i]:
                 return i + 1
 
 
