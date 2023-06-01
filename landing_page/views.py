@@ -45,7 +45,7 @@ class RandomShit(APIView):
         cities = cities_query[:10]
         cities_f = []
         for c in cities:
-            if c.city_name != "Sydney" or c.city_name != "Rome" :
+            if c.city_name != "Sydney" and c.city_name != "Rome" :
                 cities_f.append(c)
         serializer = CityRandomshitSerializer(cities_f, many=True)
         return Response(serializer.data)
