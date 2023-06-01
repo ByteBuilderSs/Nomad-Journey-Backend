@@ -41,7 +41,7 @@ class MostVisitedCities(APIView):
 
 class RandomShit(APIView):
     def get(self, request):
-        cities_query = City.objects.exclude(city_big_image64__isnull=True)
+        cities_query = City.objects.exclude(Q(city_big_image64=None) | Q(city_big_image64=True))
         cities = cities_query[:10]
         cities_f = []
         for c in cities:
