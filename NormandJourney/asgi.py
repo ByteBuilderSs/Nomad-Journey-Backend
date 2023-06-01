@@ -15,7 +15,7 @@ from django.urls import path
 from django.core.asgi import get_asgi_application
 
 
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'mirror_project.settings')
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'NormandJourney.settings')
 
 application = ProtocolTypeRouter({
     "http": get_asgi_application(),
