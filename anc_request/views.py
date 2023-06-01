@@ -40,7 +40,7 @@ def CreateRequest(request, anc_id):
 def AcceptRequest(request, req_id, host_id):
     req = AncRequest.objects.get(req_anc = req_id, host = host_id)
     announcement = Announcement.objects.filter(id = req.req_anc.id)
-    user = User.objects.get(id == announcement['announcer'])
+    user = User.objects.get(id = request.user.id)
     if user.coins < 2:
         return Response({
             'data': serializer.errors,
