@@ -487,6 +487,7 @@ class GetUsersRequestsAnnouncer(APIView):
         for re in requests:
             ans = Announcement.objects.get(id = re.req_anc.id)
             announcers_requested.append(User.objects.get(id = ans.announcer.id))
+        announcers_requested = list(set(announcers_requested))
         serializer = UserCompeleteProfileSerializer(announcers_requested ,  many=True)
         return Response({
             'data':serializer.data,
