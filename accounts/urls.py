@@ -24,4 +24,5 @@ urlpatterns = [
     path('GetLanguages', LanguageView.as_view()),
     path('get-profile-photo/<str:user_id>', ProfilePhoto.as_view()),
     path('add-coin/<str:username>', AddCoin.as_view()),
+    path('get-users-requests-announcer/<str:username>' , GetUsersRequestsAnnouncer.as_view()),
 ]

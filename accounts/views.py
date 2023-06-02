@@ -6,6 +6,7 @@ from rest_framework.exceptions import AuthenticationFailed
 from .serializers import *
 from .models import User
 from utils.models import *
+from anc_request.models import *
 from announcement.models import Announcement
 from blog.models import Blog
 from .permissions import IsOwner
@@ -476,3 +477,13 @@ class AddCoin(APIView):
                 'data': {},
                 'message':'something went wrong'
             }, status = status.HTTP_400_BAD_REQUEST )
+        
+
+class GetUsersRequestsAnnouncer(APIView):
+    def get(self , request , username):
+        requests = AncRequest.objects.filter(host = username )
+        announcers_requested = []
+        for re in requests:
+            ans = Announcement.objects.get(id = re.req_anc)
+            announcers_requested.append(User.objects.get(id = ans.announcer))
+        serializer = UserCompeleteProfileSerializer(announcers_requested ,  many=True)
