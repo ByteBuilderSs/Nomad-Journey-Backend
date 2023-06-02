@@ -481,7 +481,8 @@ class AddCoin(APIView):
 
 class GetUsersRequestsAnnouncer(APIView):
     def get(self , request , username):
-        requests = AncRequest.objects.filter(host = username )
+        user_id = User.objects.get(username = username).id
+        requests = AncRequest.objects.filter(host = user_id )
         announcers_requested = []
         for re in requests:
             ans = Announcement.objects.get(id = re.req_anc)
