@@ -485,6 +485,10 @@ class GetUsersRequestsAnnouncer(APIView):
         requests = AncRequest.objects.filter(host = user_id )
         announcers_requested = []
         for re in requests:
-            ans = Announcement.objects.get(id = re.req_anc)
-            announcers_requested.append(User.objects.get(id = ans.announcer))
+            ans = Announcement.objects.get(id = re.req_anc.id)
+            announcers_requested.append(User.objects.get(id = ans.announcer.id))
         serializer = UserCompeleteProfileSerializer(announcers_requested ,  many=True)
+        return Response({
+            'data':serializer.data,
+            'message' : 'users fetched successfully'
+        } , status = status.HTTP_201_CREATED)
