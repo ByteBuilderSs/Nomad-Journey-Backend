@@ -77,11 +77,11 @@ class UserCompeleteProfileSerializer(serializers.ModelSerializer):
         return obj.User_city.country
 
     def get_city_lat(self, obj):
-        city = City.objects.get(id = obj.anc_city.id)
+        city = City.objects.get(id = obj.User_city.id)
         return city.c_lat
     
     def get_city_long(self, obj):
-        city = City.objects.get(id = obj.anc_city.id)
+        city = City.objects.get(id = obj.User_city.id)
         return city.c_long
 
 class UserProfileEdit1Serializer(serializers.ModelSerializer):
