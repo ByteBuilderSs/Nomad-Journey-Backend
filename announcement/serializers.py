@@ -13,11 +13,12 @@ class AnnouncementSerializer(serializers.ModelSerializer):
     city_country = serializers.SerializerMethodField()
     anc_status = serializers.SerializerMethodField()
     announcer_langs = serializers.SerializerMethodField()
+    announcer_profile_photo = serializers.SerializerMethodField()
 
     class Meta:
         model = Announcement
         fields = ['id','announcer', 'anc_city', 'city_name', 'city_country', 'anc_status', 'arrival_date', 'departure_date', 'stay_duration', 'arrival_date_is_flexible',
-                    'departure_date_is_flexible', 'anc_description', 'travelers_count', 'announcer_username', 'anc_timestamp_created', 'announcer_langs']
+                    'departure_date_is_flexible', 'anc_description', 'travelers_count', 'announcer_username', 'anc_timestamp_created', 'announcer_langs', 'announcer_profile_photo']
 
     def create(self, validated_data):
         validated_data['announcer'] = self.context['request'].user
@@ -49,6 +50,10 @@ class AnnouncementSerializer(serializers.ModelSerializer):
     def get_announcer_langs(self, obj):
         user = User.objects.get(id = obj.announcer.id)
         return list(user.langF.values_list('id', flat=True)) + list(user.langL.values_list('id', flat=True))
+    
+    def get_announcer_profile_photo(self, obj):
+        user = User.objects.get(id = obj.announcer.id)
+        return user.profile_photo
 
 class FuckingAnnouncementSerializer(serializers.ModelSerializer):
     city_name = serializers.SerializerMethodField()
