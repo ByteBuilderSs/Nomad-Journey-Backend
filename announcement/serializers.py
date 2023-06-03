@@ -52,8 +52,10 @@ class AnnouncementSerializer(serializers.ModelSerializer):
         return list(user.langF.values_list('id', flat=True)) + list(user.langL.values_list('id', flat=True))
     
     def get_announcer_profile_photo(self, obj):
-        user = User.objects.get(id = obj.announcer.id)
-        return user.profile_photo
+        user = User.objects.get(id=obj.announcer.id)
+        if user.profile_photo:
+            return user.profile_photo
+        return None
 
 class FuckingAnnouncementSerializer(serializers.ModelSerializer):
     city_name = serializers.SerializerMethodField()
