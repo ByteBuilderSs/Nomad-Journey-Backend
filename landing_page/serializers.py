@@ -19,6 +19,11 @@ class CitySerializer(serializers.ModelSerializer):
             if obj == cities[i]:
                 return i + 1
 
+class CityRandomshitSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = City
+        fields = ('city_name', 'country', 'c_lat', 'c_long', 'city_small_image64','city_big_image64', 'abbrev_city' , 'area' , 'population',
+                    'currency','explore_more')
 
 class MostRatedHostSerializer(serializers.ModelSerializer):
     announcer_username = serializers.SerializerMethodField('get_announcer_username') 

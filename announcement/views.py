@@ -89,36 +89,22 @@ def GetAnnouncementsForHost(request):
         announcements = SortData(announcements, sort_by, descending)
 
     # filter
-    city_filter_values = request.GET.get('city', None)
-    country_filter_values = request.GET.get('country', None)
+    city_filter_value = request.GET.get('city', None)
+    country_filter_value = request.GET.get('country', None)
     start_time = request.GET.get('start_time', None)
     end_time = request.GET.get('end_time', None)
     language_filter_values = request.GET.get('language', None)
 
-    if city_filter_values is None and country_filter_values is None:
-        announcements = announcements.filter(anc_city=request.user.User_city)
-    else:
-        announcements_1 = None
-        announcements_2 = None
-        
-        if city_filter_values:
-            announcements_1 = announcements.filter(anc_city__city_name__in=city_filter_values.split(','))
-        if country_filter_values:
-            announcements_2 = announcements.filter(anc_city__country__in=country_filter_values.split(','))
-        
-        if announcements_1 is not None and announcements_2 is not None:
-            announcements = announcements_1 | announcements_2
-        elif announcements_1 is None and announcements_2 is None:
-            announcements = None
-        elif announcements_1 is None:
-            announcements = announcements_2
-        elif announcements_2 is None:
-            announcements = announcements_1
+    if country_filter_value:
+        announcements = announcements.filter(anc_city__country=country_filter_value)
+
+    if city_filter_value:
+        announcements = announcements.filter(anc_city__city_name=city_filter_value)
 
     if start_time and end_time:
         start_date = datetime.datetime.strptime(start_time, '%Y-%m-%d').date()
         end_date = datetime.datetime.strptime(end_time, '%Y-%m-%d').date()
-        announcements = announcements.filter(arrival_date__range=[start_date, end_date])
+        announcements = announcements.filter(arrival_date__range=[start_date, end_date], departure_date__range=[start_date, end_date])
 
     if language_filter_values:
         related_users_to_langs = []

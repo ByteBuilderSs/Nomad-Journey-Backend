@@ -43,5 +43,9 @@ class RandomShit(APIView):
     def get(self, request):
         cities_query = City.objects.exclude(Q(city_big_image64=None) | Q(city_big_image64=True))
         cities = cities_query[:10]
-        serializer = CitySerializer(cities, many=True)
+        cities_f = []
+        for c in cities:
+            if c.city_name != "Sydney" and c.city_name != "Rome" :
+                cities_f.append(c)
+        serializer = CityRandomshitSerializer(cities_f, many=True)
         return Response(serializer.data)
