@@ -227,6 +227,3 @@ EMAIL_HOST_PASSWORD = 'xzyzxnugtocuulmq'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_USE_SSL = False
-
-
-# CHANNELS_WS_PROTOCOLS = ['websocket']
