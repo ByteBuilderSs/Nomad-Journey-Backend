@@ -33,5 +33,5 @@ urlpatterns = [
 
 urlpatterns = [
     path('api/v1/', include(urlpatterns), name='api'),
-    path('', include('NormandJourney.urls'))
+    path('', include('NormandJourney.routing'))
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
