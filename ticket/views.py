@@ -103,5 +103,6 @@ class AllMessageDetailView(APIView):
             m.type = 'received'
             m.save()
         allMessage = message_1.union(message_2)
+        allMessage = allMessage.order_by('-created_at')
         serializer = MessageSerializer(allMessage , many=True )
         return Response(serializer.data)
