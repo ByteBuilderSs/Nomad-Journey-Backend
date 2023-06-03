@@ -44,7 +44,7 @@ class UserCompeleteProfileSerializer(serializers.ModelSerializer):
                 'User_city','User_apt','User_postal_code','User_phone_number', 'ssn','first_name','last_name',
                 'email','username','date_joined','hosting_availability','hometown','why_Im_on_nomadjourney','favorite_music_movie_book',
                 'amazing_thing_done','teach_learn_share','what_Ican_share_with_host','interests','langF','langL', 'city_name', 'city_country', 'intrest_name',
-                'langL_name' , 'langF_name' , 'coins']
+                'langL_name' , 'langF_name' , 'coins','User_address_lat','User_address_long']
         extra_kwargs = {
             'password':{'write_only' : True},
             'password_again':{'write_only' : True}
