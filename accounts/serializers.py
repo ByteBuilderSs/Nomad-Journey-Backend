@@ -164,6 +164,34 @@ class UserProfileEdit5Serializer(serializers.ModelSerializer):
                 'description_of_sleeping_arrangement','roommate_situation','additional_information','i_have_pet','kids_at_home',
                 'smoking_at_home','wheelchair_accessible' , 'User_address_lat' , 'User_address_long']
 
+
+class UserProfileEdit6Serializer(serializers.ModelSerializer):
+    city_name = serializers.SerializerMethodField('get_city_name') 
+    city_country = serializers.SerializerMethodField('get_city_country') 
+
+    class Meta:
+        model = User
+        fields = ['User_address','User_apt','User_city','User_postal_code' , 'city_name',
+                'city_country' , 'User_address_lat' , 'User_address_long']
+    def get_city_name(self,obj):
+        return obj.User_city.city_name
+    
+    def get_city_country(self, obj):
+        return obj.User_city.country
+    
+class UserProfileEdit7Serializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ['sleeping_arrangments','description_of_sleeping_arrangement',
+                'roommate_situation','additional_information','i_have_pet','kids_at_home',
+                'smoking_at_home','wheelchair_accessible']
+
+class UserProfileEdit8Serializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ['is_sun','is_sat','is_mon','is_tue','is_wed','is_thu','is_fri','maximum_number_of_guests',
+                'prefered_gender_to_host','is_pet_friendly','is_kid_friendly','is_smoking_allowed']
+
 class UserProfileForOverviewSerializer(serializers.ModelSerializer):
     city_name = serializers.SerializerMethodField('get_city_name') 
     user_age = serializers.SerializerMethodField('get_user_age')
