@@ -33,6 +33,7 @@ ALLOWED_HOSTS = ['*']
 # Application definition
 
 INSTALLED_APPS = [
+    'daphne',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -67,6 +68,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'channels.middleware.WebSocketMiddleware'
 ]
 
 CORS_ORIGIN_ALLOW_ALL=False
@@ -207,7 +209,7 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
 
 
-ASGI_APPLICATION = 'NormandJourney.asgi.application'
+ASGI_APPLICATION = 'NormandJourney.routing.application'
 
 
 CHANNEL_LAYERS = {

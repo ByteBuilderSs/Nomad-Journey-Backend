@@ -9,18 +9,13 @@ https://docs.djangoproject.com/en/4.1/howto/deployment/asgi/
 
 import os
 from channels.routing import ProtocolTypeRouter, URLRouter
-from channels.auth import AuthMiddlewareStack
-from notification import consumers
-from django.urls import path
 from django.core.asgi import get_asgi_application
+from .routing import websocket_urlpatterns
 
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'NormandJourney.settings')
 
 application = ProtocolTypeRouter({
-    "http": get_asgi_application(),
-    "websocket":AuthMiddlewareStack(
-        URLRouter(
-            [path('notif/', consumers.NotificationConsumer.as_asgi())]
-        ))
+    'http': get_asgi_application(),
+    'websocket': URLRouter(websocket_urlpatterns),
 })
