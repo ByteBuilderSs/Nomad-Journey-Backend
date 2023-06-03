@@ -7,6 +7,7 @@ from NormandJourney.tools import hash_sha256
 from datetime import datetime
 from announcement.models import Announcement
 from blog.models import Blog
+from utils.models import *
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -36,6 +37,8 @@ class UserCompeleteProfileSerializer(serializers.ModelSerializer):
     langF_name = serializers.SerializerMethodField('get_langF_name') 
     city_name = serializers.SerializerMethodField('get_city_name') 
     city_country = serializers.SerializerMethodField('get_city_country')
+    city_lat = serializers.SerializerMethodField()
+    city_long = serializers.SerializerMethodField()
 
     class Meta:
         model = User
@@ -44,9 +47,9 @@ class UserCompeleteProfileSerializer(serializers.ModelSerializer):
                 'User_city','User_apt','User_postal_code','User_phone_number', 'ssn','first_name','last_name',
                 'email','username','date_joined','hosting_availability','hometown','why_Im_on_nomadjourney','favorite_music_movie_book',
                 'amazing_thing_done','teach_learn_share','what_Ican_share_with_host','interests','langF','langL', 'city_name', 'city_country', 'intrest_name',
-                'langL_name' , 'langF_name' , 'coins','User_address_lat','User_address_long']
+                'langL_name' , 'langF_name' , 'coins','User_address_lat','User_address_long','city_lat','city_long']
         extra_kwargs = {
-            'password':{'write_only' : True},
+            'password':{'write_only' : True},   
             'password_again':{'write_only' : True}
         }
     def get_intrest_name(self,obj):
@@ -72,6 +75,14 @@ class UserCompeleteProfileSerializer(serializers.ModelSerializer):
 
     def get_city_country(self,obj):
         return obj.User_city.country
+
+    def get_city_lat(self, obj):
+        city = City.objects.get(id = obj.anc_city.id)
+        return city.c_lat
+    
+    def get_city_long(self, obj):
+        city = City.objects.get(id = obj.anc_city.id)
+        return city.c_long
 
 class UserProfileEdit1Serializer(serializers.ModelSerializer):
     class Meta:
