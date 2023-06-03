@@ -67,8 +67,7 @@ MIDDLEWARE = [
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
-    'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'channels.middleware.WebSocketMiddleware'
+    'django.middleware.clickjacking.XFrameOptionsMiddleware'
 ]
 
 CORS_ORIGIN_ALLOW_ALL=False
@@ -110,7 +109,7 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2', 
         'NAME': 'nomadjourney',        
-        'USER': 'aysa',        
+        'USER': 'postgres',        
         'PASSWORD': 'aysa1380',        
         'HOST': 'localhost',        
         'PORT': '5432',}
@@ -209,7 +208,7 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
 
 
-ASGI_APPLICATION = 'NormandJourney.routing.application'
+ASGI_APPLICATION = 'NormandJourney.asgi.application'
 
 
 CHANNEL_LAYERS = {
@@ -228,3 +227,6 @@ EMAIL_HOST_PASSWORD = 'xzyzxnugtocuulmq'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_USE_SSL = False
+
+
+# CHANNELS_WS_PROTOCOLS = ['websocket']
