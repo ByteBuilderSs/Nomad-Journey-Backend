@@ -12,9 +12,9 @@ class NotificationConsumer(WebsocketConsumer):
         # if self.scope["user"].is_anonymous:
         #     self.close()
         # else:
-            kwargs = self.scope['url_route']['kwargs']
+            # kwargs = self.scope['url_route']['kwargs']
 
-            self.receiver_id = kwargs['receiver_id']
+            # self.receiver_id = kwargs['receiver_id']
 
             async_to_sync(self.channel_layer.group_add)("Sample", self.channel_name)
             self.accept()
@@ -25,7 +25,7 @@ class NotificationConsumer(WebsocketConsumer):
 
 
     def receive(self, text_data):
-        async_to_sync(self.create_notification)(sender_id=1, receiver_id=self.receiver_id, message=text_data)
+        async_to_sync(self.create_notification)(sender_id=1, receiver_id=2, message=text_data)
 
 
     def send_notification(self, event):
