@@ -54,7 +54,10 @@ class AnnouncementSerializer(serializers.ModelSerializer):
     def get_announcer_profile_photo(self, obj):
         user = User.objects.get(id=obj.announcer.id)
         try:
-            return user.profile_photo
+            if user.profile_photo:
+                return user.profile_photo
+            else:
+                return None
         except:
             return None
 
