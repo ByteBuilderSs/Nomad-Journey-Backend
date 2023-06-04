@@ -117,7 +117,7 @@ class GetContacts(APIView):
         volunteers = []
         for i in announcements:
             volunteers.append(serializer_1.get_volunteers(i))
-        volunteers = list(set(volunteers))
+        volunteers = volunteers
         requests = AncRequest.objects.filter(host = user_id )
         announcers_requested = []
         for re in requests:
