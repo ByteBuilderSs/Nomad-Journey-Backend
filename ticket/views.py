@@ -114,7 +114,7 @@ class GetContacts(APIView):
         user_id  = User.objects.get(username = username).id
         announcements = Announcement.objects.get(announcer = user_id )
         serializer_1 = UnAuthAnnouncementDetailsSerializer(announcements, many=False)
-        volunteers = serializer_1.get_volunteers()
+        volunteers = serializer_1.get_volunteers(announcements.id)
         requests = AncRequest.objects.filter(host = user_id )
         announcers_requested = []
         for re in requests:
