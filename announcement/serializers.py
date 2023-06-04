@@ -140,7 +140,7 @@ class UnAuthAnnouncementDetailsSerializer(serializers.ModelSerializer):
         fields = ['id', 'announcer', 'anc_city', 'city_name', 'city_country', 'city_lat', 'city_long', 'anc_status', 'arrival_date', 'departure_date', 'stay_duration', 'arrival_date_is_flexible',
                     'departure_date_is_flexible', 'anc_description', 'travelers_count', 'anc_timestamp_created',
                     'host_id', 'host_firstName', 'host_lastName', 'host_username', 'host_nationality', 'host_birthdate', 'host_latitude', 'host_longitude',
-                    'announcer_firstName', 'announcer_lastName', 'announcer_username', 'announcer_nationality', 'announcer_birthdate', 'volunteers']
+                    'announcer_firstName', 'announcer_lastName', 'announcer_username', 'announcer_nationality', 'announcer_birthdate', 'volunteers','existFeedback','existPost']
 
     def get_anc_status(self, obj):
         current_time = datetime.datetime.now().date()

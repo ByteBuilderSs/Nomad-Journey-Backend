@@ -13,7 +13,8 @@ from django.db.models import F
 import datetime
 from utils.views import *
 from utils.models import Language
-
+from feedback.models import Feedback
+from blog.models import Blog
 
 def SortData(data, sort_by, descending=False):
     if sort_by == 'anc_timestamp_created':
@@ -55,6 +56,14 @@ def UserAnnouncements(request, username):
 @api_view(['GET'])
 def UserAnnouncementsMoreDetails(request, pk):
     announcements = Announcement.objects.get(id=pk)
+    blog = Blog.objects.filter(annoncement = pk)
+    feedback = Feedback.objects.filter(ans_id = pk)
+    if len(blog)!=0:
+        announcements.existPost = True
+        announcements.save()
+    if len(feedback) != 0:
+        announcements.existFeedback = True
+        announcements.save()
     serializer = UnAuthAnnouncementDetailsSerializer(announcements, many=False)
     return Response(serializer.data)
 
