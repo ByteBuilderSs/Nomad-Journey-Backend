@@ -112,17 +112,19 @@ class AllMessageDetailView(APIView):
 class GetContacts(APIView):
     def get(self,request,username):
         user_id  = User.objects.get(username = username).id
-        announcements = Announcement.objects.get(announcer = user_id )
+        announcements = Announcement.objects.filter(announcer = user_id )
         serializer_1 = UnAuthAnnouncementDetailsSerializer(announcements, many=False)
-        volunteers = serializer_1.get_volunteers(announcements)
+        volunteers = []
+        for i in announcements:
+            volunteers.append(serializer_1.get_volunteers(i))
+        volunteers = list(set(volunteers))
         requests = AncRequest.objects.filter(host = user_id )
         announcers_requested = []
         for re in requests:
             ans = Announcement.objects.get(id = re.req_anc.id)
             announcers_requested.append(User.objects.get(id = ans.announcer.id))
         announcers_requested = list(set(announcers_requested))
-        final_list = announcers_requested + volunteers
-        # final_list = list(set(final_list))
+        final_list = list(set(announcers_requested) | set(volunteers))
         serializer = ContactSerializer(final_list ,  many=True)
         return Response({
             'data':serializer.data,
