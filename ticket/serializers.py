@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from .models import Message
+from accounts.models import User
 
 class MessageSerializer(serializers.ModelSerializer):
     class Meta:
@@ -9,3 +10,8 @@ class MessageSerializer(serializers.ModelSerializer):
             'type' : {'read_only' : True}
         }
 
+
+class ContactSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ['first_name', 'last_name', 'id', 'username']

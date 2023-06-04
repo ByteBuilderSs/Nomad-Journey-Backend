@@ -4,9 +4,11 @@ from rest_framework import status , generics
 from rest_framework.response import Response
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from django.shortcuts import get_object_or_404
-from .serializers import MessageSerializer
+from .serializers import *
 from .models import Message 
 from accounts.models import User
+from announcement.models import *
+from announcement.serializers import *
 
 
 
@@ -106,3 +108,22 @@ class AllMessageDetailView(APIView):
         allMessage = allMessage.order_by('created_at')
         serializer = MessageSerializer(allMessage , many=True )
         return Response(serializer.data)
+
+class GetContacts(APIView):
+    def get(self,request,username):
+        user_id  = User.objects.get(username = username).id
+        announcements = Announcement.objects.get(announcer = user_id )
+        serializer_1 = UnAuthAnnouncementDetailsSerializer(announcements, many=False)
+        volunteers = serializer_1.get_volunteers()
+        requests = AncRequest.objects.filter(host = user_id )
+        announcers_requested = []
+        for re in requests:
+            ans = Announcement.objects.get(id = re.req_anc.id)
+            announcers_requested.append(User.objects.get(id = ans.announcer.id))
+        announcers_requested = list(set(announcers_requested))
+        final_list = announcers_requested.union(volunteers)
+        serializer = ContactSerializer(final_list ,  many=True)
+        return Response({
+            'data':serializer.data,
+            'message' : 'users fetched successfully'
+        } , status = status.HTTP_201_CREATED)
