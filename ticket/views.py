@@ -122,7 +122,7 @@ class GetContacts(APIView):
             announcers_requested.append(User.objects.get(id = ans.announcer.id))
         announcers_requested = list(set(announcers_requested))
         final_list = announcers_requested + volunteers
-        final_list = list(set(final_list))
+        # final_list = list(set(final_list))
         serializer = ContactSerializer(final_list ,  many=True)
         return Response({
             'data':serializer.data,
