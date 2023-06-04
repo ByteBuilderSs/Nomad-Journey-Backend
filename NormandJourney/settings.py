@@ -175,14 +175,17 @@ AUTH_USER_MODEL = 'accounts.User'
 #     'JWT_AUTH_HEADER_PREFIX': 'Bearer',
 # }
 
-# CROS_ORIGIN_ALLOW_ALL = True
-CROS_ALLOW_CREDENTIALS = False
+CORS_ORIGIN_ALLOW_ALL = True
+CORS_ALLOW_CREDENTIALS = False
 
-# CORS_ALLOWED_ORIGINS = [
-#     'http://nomadjourney.ir',
-#     'http://api.nomadjourney.ir',
-#     'http://127.0.0.1:8000'
-# ]
+CORS_ALLOWED_ORIGINS = [
+    'https://nomadjourney.ir',
+    'https://api.nomadjourney.ir',
+    'https://127.0.0.1:8000',
+    'http://nomadjourney.ir',
+    'http://api.nomadjourney.ir',
+    'http://127.0.0.1:8000'
+]
 
 # CORS_ORIGIN_WHITELIST = [
 #     "http://localhost:3000" ,
