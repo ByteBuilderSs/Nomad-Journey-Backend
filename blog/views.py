@@ -23,9 +23,9 @@ class PublicBlogView(APIView):
     def get(self , request):
         try:
             blogs = Blog.objects.all()
-            page_number = request.GET.get('page' , 1)
-            paginator = Paginator(blogs , 3) #how many blogs per page
-            serializer = BlogSerializer(paginator.page(page_number) , many = True)
+            # page_number = request.GET.get('page' , 1)
+            # paginator = Paginator(blogs , 3) #how many blogs per page
+            serializer = BlogSerializer(blogs , many = True)
             return Response({
                 'data':serializer.data,
                 'message' : 'blogs fetched successfully'
