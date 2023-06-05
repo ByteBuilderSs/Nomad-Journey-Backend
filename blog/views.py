@@ -23,9 +23,9 @@ class PublicBlogView(APIView):
     def get(self , request):
         try:
             blogs = Blog.objects.all()
-            page_number = request.GET.get('page' , 1)
-            paginator = Paginator(blogs , 3) #how many blogs per page
-            serializer = BlogSerializer(paginator.page(page_number) , many = True)
+            # page_number = request.GET.get('page' , 1)
+            # paginator = Paginator(blogs , 3) #how many blogs per page
+            serializer = BlogSerializer(blogs , many = True)
             return Response({
                 'data':serializer.data,
                 'message' : 'blogs fetched successfully'
@@ -202,4 +202,14 @@ class TagViewByUid(APIView):
     def get(self , request , uid):
         tag = get_object_or_404(Tag, uid=uid)
         serializer = TagSerializer(tag)
+        return Response(serializer.data)
+
+class SearchBlog(APIView):
+    def get(self, request):
+        search_query = request.query_params.get('search', '')
+
+        queryset = Blog.objects.filter(blog_title__icontains=search_query) | \
+                    Blog.objects.filter(description__icontains=search_query)
+
+        serializer = BlogSerializer(queryset, many=True)
         return Response(serializer.data)

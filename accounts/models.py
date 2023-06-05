@@ -153,6 +153,8 @@ class User(AbstractUser):
     kids_at_home = models.BooleanField(null=True , blank=True)
     smoking_at_home = models.BooleanField(null=True , blank=True)
     wheelchair_accessible = models.BooleanField(null=True , blank=True)
+    coin_to_buy = models.IntegerField(null=True , blank=True)
+    coins = models.IntegerField(default=5)
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []
 

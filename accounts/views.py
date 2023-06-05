@@ -6,6 +6,7 @@ from rest_framework.exceptions import AuthenticationFailed
 from .serializers import *
 from .models import User
 from utils.models import *
+from anc_request.models import *
 from announcement.models import Announcement
 from blog.models import Blog
 from .permissions import IsOwner
@@ -384,6 +385,133 @@ class UserProfileEdit5(APIView):
                 'message':'something went wrong'
             }, status = status.HTTP_400_BAD_REQUEST )
 
+class UserProfileEdit6(APIView):
+    def patch(self , request , username):
+        body = json.loads(request.body.decode('utf-8'))
+        user = User.objects.filter(username = username)
+        if len(user) == 0:
+            return Response({
+                'data': {},
+                'message':'invalid username'
+            }, status = status.HTTP_400_BAD_REQUEST )
+        if request.user.id != user[0].id:
+            return Response({
+                'data': {},
+                'message':'you are not authorized to do this'
+            }, status = status.HTTP_400_BAD_REQUEST )
+        if body.get('User_postal_code')  is None:
+            return Response({
+                'data': {},
+                'message':'postal code field should not be null'
+            }, status = status.HTTP_400_BAD_REQUEST )
+        serializer = UserProfileEdit6Serializer(user[0] , data = body , partial = True)
+        if not serializer.is_valid():
+            return Response({
+                'data': serializer.errors,
+                'message':'something went wrong'
+            } , status = status.HTTP_400_BAD_REQUEST)
+        serializer.save()
+        return Response({
+            'data': serializer.data,
+            'message' : 'user updated successfully'
+        } , status = status.HTTP_201_CREATED)
+
+
+class UserProfileEdit7(APIView):
+    def patch(self , request , username):
+        try:
+            body = json.loads(request.body.decode('utf-8'))
+            user = User.objects.filter(username = username)
+            if len(user) == 0:
+                return Response({
+                    'data': {},
+                    'message':'invalid username'
+                }, status = status.HTTP_400_BAD_REQUEST )
+            if request.user.id != user[0].id:
+                return Response({
+                    'data': {},
+                    'message':'you are not authorized to do this'
+                }, status = status.HTTP_400_BAD_REQUEST )
+            serializer = UserProfileEdit7Serializer(user[0] , data = body , partial = True)
+            if not serializer.is_valid():
+                return Response({
+                    'data': serializer.errors,
+                    'message':'something went wrong'
+                } , status = status.HTTP_400_BAD_REQUEST)
+            serializer.save()
+            return Response({
+                'data': serializer.data,
+                'message' : 'user updated successfully'
+            } , status = status.HTTP_201_CREATED)
+        except Exception as e:
+            print(e) 
+            return Response({
+                'data': {},
+                'message':'something went wrong'
+            }, status = status.HTTP_400_BAD_REQUEST )
+    def get(self , request , username):
+        try:
+            user= User.objects.get(username = username)
+            serializer = UserProfileEdit7Serializer(user)
+            return Response({
+                'data':serializer.data,
+                'message' : 'user info fetched successfully'
+            } , status = status.HTTP_201_CREATED)
+        except Exception as e:
+            print(e) 
+            return Response({
+                'data': {},
+                'message':'something went wrong'
+            }, status = status.HTTP_400_BAD_REQUEST )
+
+
+class UserProfileEdit8(APIView):
+    def patch(self , request , username):
+        try:
+            body = json.loads(request.body.decode('utf-8'))
+            user = User.objects.filter(username = username)
+            if len(user) == 0:
+                return Response({
+                    'data': {},
+                    'message':'invalid username'
+                }, status = status.HTTP_400_BAD_REQUEST )
+            if request.user.id != user[0].id:
+                return Response({
+                    'data': {},
+                    'message':'you are not authorized to do this'
+                }, status = status.HTTP_400_BAD_REQUEST )
+            serializer = UserProfileEdit8Serializer(user[0] , data = body , partial = True)
+            if not serializer.is_valid():
+                return Response({
+                    'data': serializer.errors,
+                    'message':'something went wrong'
+                } , status = status.HTTP_400_BAD_REQUEST)
+            serializer.save()
+            return Response({
+                'data': serializer.data,
+                'message' : 'user updated successfully'
+            } , status = status.HTTP_201_CREATED)
+        except Exception as e:
+            print(e) 
+            return Response({
+                'data': {},
+                'message':'something went wrong'
+            }, status = status.HTTP_400_BAD_REQUEST )
+    def get(self , request , username):
+        try:
+            user= User.objects.get(username = username)
+            serializer = UserProfileEdit8Serializer(user)
+            return Response({
+                'data':serializer.data,
+                'message' : 'user info fetched successfully'
+            } , status = status.HTTP_201_CREATED)
+        except Exception as e:
+            print(e) 
+            return Response({
+                'data': {},
+                'message':'something went wrong'
+            }, status = status.HTTP_400_BAD_REQUEST )
+        
 # class GetUsernameAndUserImageByUserId(APIView):
 #     def get(self,request , id):
 #         user = get_object_or_404(User, id=id)
@@ -434,3 +562,61 @@ class ProfilePhoto(APIView):
             return Response("aysa")
         serializer = UserProfilePhotoSerializer(user)
         return Response(serializer.data)
+    
+class AddCoin(APIView):
+    def put(self , request , username):
+        body = json.loads(request.body.decode('utf-8'))
+        user = User.objects.filter(username = username)
+        if len(user) == 0:
+            return Response({
+                'data': {},
+                'message':'invalid username'
+            }, status = status.HTTP_400_BAD_REQUEST )
+        user[0].coins = user[0].coins + int(body['coin_to_buy'])
+        user[0].save()
+        if request.user.id != user[0].id:
+            return Response({
+                'data': {},
+                'message':'you are not authorized to do this'
+            }, status = status.HTTP_400_BAD_REQUEST )
+        serializer = UserAddCoinSerializerPut(user[0] , data = body , partial = True)
+        if not serializer.is_valid():
+            return Response({
+                'data': serializer.errors,
+                'message':'something went wrong'
+            } , status = status.HTTP_400_BAD_REQUEST)
+        serializer.save()
+        return Response({
+            'data': serializer.data,
+            'message' : 'coins added successfully'
+        } , status = status.HTTP_201_CREATED)
+    def get(self , request , username):
+        try:
+            user= User.objects.get(username = username)
+            serializer = UserAddCoinSerializerGet(user)
+            return Response({
+                'data':serializer.data,
+                'message' : 'user coins and price fetched successfully'
+            } , status = status.HTTP_201_CREATED)
+        except Exception as e:
+            print(e) 
+            return Response({
+                'data': {},
+                'message':'something went wrong'
+            }, status = status.HTTP_400_BAD_REQUEST )
+        
+
+class GetUsersRequestsAnnouncer(APIView):
+    def get(self , request , username):
+        user_id = User.objects.get(username = username).id
+        requests = AncRequest.objects.filter(host = user_id )
+        announcers_requested = []
+        for re in requests:
+            ans = Announcement.objects.get(id = re.req_anc.id)
+            announcers_requested.append(User.objects.get(id = ans.announcer.id))
+        announcers_requested = list(set(announcers_requested))
+        serializer = UserCompeleteProfileSerializer(announcers_requested ,  many=True)
+        return Response({
+            'data':serializer.data,
+            'message' : 'users fetched successfully'
+        } , status = status.HTTP_201_CREATED)

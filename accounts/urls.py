@@ -22,5 +22,10 @@ urlpatterns = [
     # path('GetUsernameAndUserImageByUserId/<str:id>' , GetUsernameAndUserImageByUserId.as_view()),
     path('GetUserProfileForOverview/<str:username>', GetUserProfileForOverview.as_view()),
     path('GetLanguages', LanguageView.as_view()),
-    path('get-profile-photo/<str:user_id>', ProfilePhoto.as_view())
+    path('get-profile-photo/<str:user_id>', ProfilePhoto.as_view()),
+    path('add-coin/<str:username>', AddCoin.as_view()),
+    path('get-users-requests-announcer/<str:username>' , GetUsersRequestsAnnouncer.as_view()),
+    path('UserProfileEdit6/<str:username>' , UserProfileEdit6.as_view()),
+    path('UserProfileEdit7/<str:username>' , UserProfileEdit7.as_view()),
+    path('UserProfileEdit8/<str:username>' , UserProfileEdit8.as_view()),
 ]

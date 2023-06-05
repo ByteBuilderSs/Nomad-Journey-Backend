@@ -19,6 +19,7 @@ class Like(models.Model):
     )
 
     like_timestamp_created = models.DateTimeField(auto_now_add=True)
-
+    class Meta:
+        unique_together = ('liked_post', 'liker')
     def __str__(self):
         return 'This is a like with ID ' + str(self.id) + '.'

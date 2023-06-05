@@ -1,6 +1,7 @@
 from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
+from rest_framework import generics , status
 from .models import AncRequest
 from .serializers import AncRequestSerializer
 from announcement.models import Announcement
@@ -39,6 +40,14 @@ def CreateRequest(request, anc_id):
 def AcceptRequest(request, req_id, host_id):
     req = AncRequest.objects.get(req_anc = req_id, host = host_id)
     announcement = Announcement.objects.filter(id = req.req_anc.id)
+    user = User.objects.get(id = request.user.id)
+    if user.coins < 2:
+        return Response({
+            'data': serializer.errors,
+            'message':'you need more coins to accept host'
+        } , status = status.HTTP_400_BAD_REQUEST)
+    user.coins = user.coins - 2
+    user.save()
     announcement.update(anc_status='A')
     announcement.update(main_host=req.host)
     serializer = AnnouncementSerializer(data=announcement)

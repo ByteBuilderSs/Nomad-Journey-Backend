@@ -59,7 +59,8 @@ class Announcement(models.Model):
     )
     arrival_date = models.DateField(null=True, blank=True)
     departure_date = models.DateField(null=True, blank=True)
-
+    existPost = models.BooleanField(default=False)
+    existFeedback = models.BooleanField(default=False)
     @property
     def stay_duration(self):
         return (self.departure_date - self.arrival_date).days

@@ -50,7 +50,8 @@ INSTALLED_APPS = [
     'anc_request',
     'utils',
     'feedback',
-    'like_post'
+    'like_post',
+    'landing_page'
 ]
 
 MIDDLEWARE = [
@@ -174,14 +175,17 @@ AUTH_USER_MODEL = 'accounts.User'
 #     'JWT_AUTH_HEADER_PREFIX': 'Bearer',
 # }
 
-# CROS_ORIGIN_ALLOW_ALL = True
-CROS_ALLOW_CREDENTIALS = False
+CORS_ORIGIN_ALLOW_ALL = True
+CORS_ALLOW_CREDENTIALS = False
 
-# CORS_ALLOWED_ORIGINS = [
-#     'http://nomadjourney.ir',
-#     'http://api.nomadjourney.ir',
-#     'http://127.0.0.1:8000'
-# ]
+CORS_ALLOWED_ORIGINS = [
+    'https://nomadjourney.ir',
+    'https://api.nomadjourney.ir',
+    'https://127.0.0.1:8000',
+    'http://nomadjourney.ir',
+    'http://api.nomadjourney.ir',
+    'http://127.0.0.1:8000'
+]
 
 # CORS_ORIGIN_WHITELIST = [
 #     "http://localhost:3000" ,
@@ -202,3 +206,11 @@ SIMPLE_JWT = {
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 MEDIA_URL = '/media/'
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST_USER = 'NomadJourneyEmail@gmail.com'
+EMAIL_HOST_PASSWORD = 'xzyzxnugtocuulmq'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_USE_SSL = False
