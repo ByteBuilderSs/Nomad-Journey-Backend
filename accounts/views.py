@@ -40,7 +40,7 @@ def calculate_expiry_date():
 
 def send_reset_email(email, reset_token):
     subject = 'Password Reset'
-    message = f'Click the link to reset your password: http://example.com/reset?token={reset_token}'
+    message = f'Click the link to reset your password: https://nomadjourney.ir/reset?token={reset_token}'
     sender_email = settings.EMAIL_HOST_USER
     recipient_list = [email]
     send_mail(subject, message, sender_email, recipient_list)
