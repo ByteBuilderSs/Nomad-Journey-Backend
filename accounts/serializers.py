@@ -203,6 +203,11 @@ class UserProfileEdit8Serializer(serializers.ModelSerializer):
         fields = ['is_sun','is_sat','is_mon','is_tue','is_wed','is_thu','is_fri','maximum_number_of_guests',
                 'prefered_gender_to_host','is_pet_friendly','is_kid_friendly','is_smoking_allowed']
 
+class UserProfileEdit9Serializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ['old_password' , 'new_password']
+
 class UserProfileForOverviewSerializer(serializers.ModelSerializer):
     city_name = serializers.SerializerMethodField('get_city_name') 
     user_age = serializers.SerializerMethodField('get_user_age')

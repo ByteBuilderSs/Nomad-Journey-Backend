@@ -72,6 +72,8 @@ class User(AbstractUser):
     email = models.EmailField(max_length=255 , unique=True)
     password = models.CharField(max_length=255)
     password_again = models.CharField(max_length=255)
+    old_password = models.CharField(max_length=255 , null=True,blank=True)
+    new_password = models.CharField(max_length=255 , null=True,blank=True)
     username = models.CharField(max_length=255 , unique=True)
     date_joined = models.DateTimeField(auto_now_add=True)
     hosting_availability = models.CharField(max_length=50, choices=HOSTING_AVAILABILITY_CHOICE , null=True,blank=True)
