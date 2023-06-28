@@ -17,9 +17,23 @@ from NormandJourney.tools import hash_sha256
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.parsers import MultiPartParser
 from django.contrib.auth.hashers import make_password ,check_password
+from django.core.mail import send_mail
+from django.template.loader import render_to_string
+from django.utils import timezone
+from datetime import timedelta
+
+def generate_reset_token(user):
+    payload = {
+        'user_id': user.id,
+        'email': user.email,
+        'exp': datetime.datetime.utcnow() + datetime.timedelta(hours=24)  # تاریخ انقضای توکن: 24 ساعت بعد از زمان فعلی
+    }
+    token = jwt.encode(payload, 'your_secret_key', algorithm='HS256')
+    return token.decode('utf-8')
 
 
-
+def calculate_expiry_date():
+    return timezone.now() + timedelta(hours=72)
 
 class RegisterView(APIView):
     permission_classes = (AllowAny,)
@@ -73,7 +87,51 @@ class LoginView(APIView):
                 return response
             except:
                 return Response({"message": "Something went wrong"}, status=status.HTTP_400_BAD_REQUEST)
+    def send_reset_password_email(self, user):
+        # Create reset password token
+        reset_token = generate_reset_token(user)  # تابعی که یک توکن بازنشانی رمز عبور ایجاد کند
+        expiry_date = calculate_expiry_date()  # تابعی که تاریخ انقضای توکن را محاسبه کند
+        
+        # Update user's reset token and expiry date
+        user.reset_token = reset_token
+        user.reset_token_expiry = expiry_date
+        user.save()
+        
+        # Send email to user with the reset password link
+        subject = 'Reset Your Password'
+        message = render_to_string('reset_password_email.html', {
+            'reset_token': reset_token,
+            'username': user.username
+        })
+        from_email = 'noreply@example.com'
+        to_email = user.email
+        send_mail(subject, message, from_email, [to_email])
 
+class ResetPasswordView(APIView):
+    permission_classes = (AllowAny,)
+    
+    def post(self, request):
+        reset_token = request.data.get('reset_token')
+        password = request.data.get('password')
+        confirm_password = request.data.get('confirm_password')
+        
+        if not reset_token or not password or not confirm_password:
+            return Response({'message': 'Please provide reset token, password, and confirm password.'}, status=status.HTTP_400_BAD_REQUEST)
+        
+        user = User.objects.filter(reset_token=reset_token).first()
+        
+        if not user or user.reset_token_expiry < timezone.now():
+            return Response({'message': 'Invalid or expired reset token.'}, status=status.HTTP_400_BAD_REQUEST)
+        
+        if password != confirm_password:
+            return Response({'message': 'Passwords do not match.'}, status=status.HTTP_400_BAD_REQUEST)
+        
+        user.set_password(password)
+        user.reset_token = None
+        user.reset_token_expiry = None
+        user.save()
+        
+        return Response({'message': 'Password reset successful.'}, status=status.HTTP_200_OK)
 
 class UserView(APIView):
     permission_classes=(IsAuthenticated,)
@@ -93,7 +151,6 @@ class UserView(APIView):
             serializer = UserCompeleteProfileSerializer(user)
             return Response(serializer.data)
 
-    
 class LogoutView(APIView):
     permission_classes = (IsAuthenticated,)
 

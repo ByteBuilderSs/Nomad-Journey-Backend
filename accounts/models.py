@@ -66,6 +66,9 @@ class User(AbstractUser):
     profile_photo = models.ImageField(upload_to='img_profile', null=True, blank=True)
     # end
 
+    reset_token = models.CharField(max_length=255, null=True, blank=True)
+    reset_token_expiry = models.DateTimeField(null=True, blank=True)
+
     ssn = models.CharField(max_length=20 , null=True,blank=True)
     first_name = models.CharField(max_length=255)
     last_name = models.CharField(max_length=255)
