@@ -51,17 +51,17 @@ class ResetPasswordPageView(APIView):
         reset_token = request.GET.get('token', '')
 
         user_model = get_user_model()
-        user = get_object_or_404(user_model, password_reset_token=reset_token)
+        user = get_object_or_404(user_model, reset_token=reset_token)
 
         return Response({"reset_token": reset_token})
 
     def post(self, request):
         password = request.data.get('password', '')
         user_model = get_user_model()
-        user = get_object_or_404(user_model, password_reset_token=request.data.get('reset_token', ''))
+        user = get_object_or_404(user_model, reset_token=request.data.get('reset_token', ''))
 
         user.set_password(password)
-        user.password_reset_token = ''
+        user.reset_token = ''
         user.save()
 
         return Response(status=status.HTTP_200_OK)
