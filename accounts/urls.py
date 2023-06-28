@@ -29,4 +29,5 @@ urlpatterns = [
     path('UserProfileEdit7/<str:username>' , UserProfileEdit7.as_view()),
     path('UserProfileEdit8/<str:username>' , UserProfileEdit8.as_view()),
     path('UserProfileEdit9/<str:username>' , UserProfileEdit9.as_view()),
+    path('UserProfileEdit10/<str:username>' , UserProfileEdit10.as_view()),
 ]

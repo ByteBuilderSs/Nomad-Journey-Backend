@@ -556,6 +556,47 @@ class UserProfileEdit9(APIView):
                 'message':'something went wrong'
             }, status = status.HTTP_400_BAD_REQUEST )
 
+class UserProfileEdit10(APIView):
+    def patch(self , request , username):
+        try:
+            body = json.loads(request.body.decode('utf-8'))
+            user = User.objects.filter(username = username)
+            if len(user) == 0:
+                return Response({
+                    'data': {},
+                    'message':'invalid username'
+                }, status = status.HTTP_400_BAD_REQUEST )
+            if request.user.id != user[0].id:
+                return Response({
+                    'data': {},
+                    'message':'you are not authorized to do this'
+                }, status = status.HTTP_400_BAD_REQUEST )
+            if not check_password(body['password'] , user[0].password):
+                return Response({
+                    'data': {},
+                    'message':'you are not authorized to do this'
+                }, status = status.HTTP_400_BAD_REQUEST )
+            user[0].email = body['new_email']
+            user[0].save()
+            serializer = UserProfileEdit9Serializer(user[0] , data = body , partial = True)
+            if not serializer.is_valid():
+                return Response({
+                    'data': serializer.errors,
+                    'message':'something went wrong'
+                } , status = status.HTTP_400_BAD_REQUEST)
+            serializer.save()
+            return Response({
+                'data': serializer.data,
+                'message' : 'user updated successfully'
+            } , status = status.HTTP_201_CREATED)
+        except Exception as e:
+            print(e) 
+            return Response({
+                'data': {},
+                'message':'something went wrong'
+            }, status = status.HTTP_400_BAD_REQUEST )
+
+
 # class GetUsernameAndUserImageByUserId(APIView):
 #     def get(self,request , id):
 #         user = get_object_or_404(User, id=id)

@@ -70,6 +70,7 @@ class User(AbstractUser):
     first_name = models.CharField(max_length=255)
     last_name = models.CharField(max_length=255)
     email = models.EmailField(max_length=255 , unique=True)
+    new_email = models.EmailField(max_length=255 , unique=True , null=True,blank=True)
     password = models.CharField(max_length=255)
     password_again = models.CharField(max_length=255)
     old_password = models.CharField(max_length=255 , null=True,blank=True)
