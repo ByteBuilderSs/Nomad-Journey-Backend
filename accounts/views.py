@@ -16,7 +16,9 @@ import json
 from NormandJourney.tools import hash_sha256
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.parsers import MultiPartParser
-from django.contrib.auth.hashers import make_password
+from django.contrib.auth.hashers import make_password ,check_password
+
+
 
 
 class RegisterView(APIView):
@@ -528,12 +530,13 @@ class UserProfileEdit9(APIView):
                     'data': {},
                     'message':'you are not authorized to do this'
                 }, status = status.HTTP_400_BAD_REQUEST )
-            if user[0].password != make_password(body['old_password']):
+            if not check_password(user[0].password , body['old_password'] )
                 return Response({
                     'data': {},
                     'message':'you are not authorized to do this'
                 }, status = status.HTTP_400_BAD_REQUEST )
             user[0].password = make_password(body['new_password'])
+            user[0].password_again = hash_sha256(body['new_password'])
             user[0].save()
             serializer = UserProfileEdit9Serializer(user[0] , data = body , partial = True)
             if not serializer.is_valid():
