@@ -207,6 +207,10 @@ class UserProfileEdit9Serializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ['old_password' , 'new_password']
+        extra_kwargs = {
+            'old_password':{'write_only' : True},
+            'new_password':{'write_only' : True}
+        }
 
 class UserProfileForOverviewSerializer(serializers.ModelSerializer):
     city_name = serializers.SerializerMethodField('get_city_name') 
