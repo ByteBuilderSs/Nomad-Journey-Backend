@@ -527,7 +527,7 @@ class UserProfileEdit9(APIView):
                     'data': {},
                     'message':'you are not authorized to do this'
                 }, status = status.HTTP_400_BAD_REQUEST )
-            if user[0].password != hash_sha256(body['old_password']):
+            if user[0].password_again != hash_sha256(body['old_password']):
                 return Response({
                     'data': {},
                     'message':'you are not authorized to do this'
