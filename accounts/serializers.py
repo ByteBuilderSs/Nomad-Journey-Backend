@@ -12,10 +12,10 @@ from utils.models import *
 
 class UserSerializer(serializers.ModelSerializer):
     city_name = serializers.SerializerMethodField('get_city_name') 
-    reset_password_token = serializers.CharField(write_only=True, allow_blank=True, required=False)
     class Meta:
         model = User
-        fields = ['first_name', 'last_name', 'email', 'password', 'password_again', 'username' , 'User_city' , 'city_name' , 'coins']
+        fields = ['first_name', 'last_name', 'email', 'password', 'password_again', 'username' , 'User_city' , 'city_name' , 'coins' , 'reset_token',
+                'reset_token_expiry']
         extra_kwargs = {
             'password':{'write_only' : True},
             'password_again':{'write_only' : True},
