@@ -24,6 +24,7 @@ from django.utils import timezone
 from datetime import timedelta
 from django.core.mail import send_mail
 from django.conf import settings
+from django.contrib.auth import get_user_model
 
 def generate_reset_token(user):
     payload = {
@@ -40,10 +41,30 @@ def calculate_expiry_date():
 
 def send_reset_email(email, reset_token):
     subject = 'Password Reset'
-    message = f'Click the link to reset your password: https://nomadjourney.ir/reset?token={reset_token}'
+    message = f'Click the link to reset your password: http://188.121.102.52:8000/api/v1/accounts/reset?token={reset_token}'
     sender_email = settings.EMAIL_HOST_USER
     recipient_list = [email]
     send_mail(subject, message, sender_email, recipient_list)
+
+class ResetPasswordPageView(APIView):
+    def get(self, request):
+        reset_token = request.GET.get('token', '')
+
+        user_model = get_user_model()
+        user = get_object_or_404(user_model, password_reset_token=reset_token)
+
+        return Response({"reset_token": reset_token})
+
+    def post(self, request):
+        password = request.data.get('password', '')
+        user_model = get_user_model()
+        user = get_object_or_404(user_model, password_reset_token=request.data.get('reset_token', ''))
+
+        user.set_password(password)
+        user.password_reset_token = ''
+        user.save()
+
+        return Response(status=status.HTTP_200_OK)
 
 class RegisterView(APIView):
     permission_classes = (AllowAny,)

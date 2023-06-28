@@ -31,4 +31,5 @@ urlpatterns = [
     path('UserProfileEdit9/<str:username>' , UserProfileEdit9.as_view()),
     path('UserProfileEdit10/<str:username>' , UserProfileEdit10.as_view()),
     path('reset-password/', ForgetPasswordView.as_view()),
+    path('reset/<token>', ResetPasswordPageView.as_view()),
 ]
