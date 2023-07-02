@@ -41,6 +41,7 @@ def calculate_expiry_date():
 
 def send_reset_email(email, reset_token):
     subject = 'Password Reset'
+    # message = f'Click the link to reset your password: http://188.121.102.52:8000/api/v1/accounts/reset?token={reset_token}'
     message = f'Click the link to reset your password: http://188.121.102.52:8000/api/v1/accounts/reset?token={reset_token}'
     sender_email = settings.EMAIL_HOST_USER
     recipient_list = [email]
