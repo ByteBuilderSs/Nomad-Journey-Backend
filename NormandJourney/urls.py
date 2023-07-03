@@ -28,7 +28,8 @@ urlpatterns = [
     path('utils/', include('utils.urls')),
     path('feedback/', include('feedback.urls')),
     path('like_post/', include('like_post.urls')),
-    path('landing-page/' , include('landing_page.urls'))
+    path('landing-page/' , include('landing_page.urls')),
+    path('notification/', include('notification.urls'))
 ]
 
 urlpatterns = [
