@@ -9,8 +9,8 @@ class Notification(models.Model):
         ('chosen_as_main_host', 'chosen_as_main_host')
     )
 
-    user_sender = models.ForeignKey(User, on_delete=models.CASCADE, default=None, related_name='sender', null=True)
-    user_receiver = models.ForeignKey(User, on_delete=models.CASCADE, default=None, related_name='receiver', null=True)
+    user_sender = models.ForeignKey(User, on_delete=models.CASCADE, default=None, related_name='notif_sender', null=True)
+    user_receiver = models.ForeignKey(User, on_delete=models.CASCADE, default=None, related_name='notif_receiver', null=True)
     notif_type = models.CharField(choices=NOTIF_TYPE_CHOICES, default=None, max_length=100)
     is_seen = models.BooleanField(null=True, blank=True, default=False)
     created_at = models.DateTimeField(auto_now_add=True)
