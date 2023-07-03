@@ -8,6 +8,7 @@ from announcement.models import Announcement
 from accounts.models import User
 from accounts.serializers import UserSerializer
 from announcement.serializers import AnnouncementSerializer
+from notification.models import Notification
 
 
 @api_view(['GET'])
@@ -33,6 +34,13 @@ def CreateRequest(request, anc_id):
 
     if serializer.is_valid():
         serializer.save()
+
+    notif = Notification.objects.create(
+        user_sender=request.user,
+        user_receiver=announcement.announcer,
+        notif_type='offer_to_host'
+    ) 
+
     return Response(serializer.data)
 
 @api_view(['PUT'])
@@ -53,6 +61,13 @@ def AcceptRequest(request, req_id, host_id):
     serializer = AnnouncementSerializer(data=announcement)
     if serializer.is_valid():
         serializer.save()
+
+    notif = Notification.objects.create(
+        user_sender=request.user,
+        user_receiver=host_id,
+        notif_type='chosen_as_main_host'
+    ) 
+
     return Response(serializer.data)
 
 @api_view(['PUT'])
