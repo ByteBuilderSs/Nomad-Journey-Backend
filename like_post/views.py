@@ -4,6 +4,7 @@ from rest_framework.permissions import IsAuthenticated
 from blog.models import Blog
 from .serializers import *
 from accounts.models import User
+from notification.models import Notification
 
 
 @api_view(['POST'])
@@ -14,6 +15,13 @@ def CreateLike(request, post_id):
 
     if serializer.is_valid():
         serializer.save()
+
+    notif = Notification.objects.create(
+        user_sender=request.user,
+        user_receiver=post.author,
+        notif_type='like_post'
+    ) 
+
     return Response(serializer.data)
 
 @api_view(['GET'])

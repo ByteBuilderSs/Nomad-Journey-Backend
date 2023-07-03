@@ -51,7 +51,8 @@ INSTALLED_APPS = [
     'utils',
     'feedback',
     'like_post',
-    'landing_page'
+    'landing_page',
+    'notification'
 ]
 
 MIDDLEWARE = [
