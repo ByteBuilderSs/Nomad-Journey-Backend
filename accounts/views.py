@@ -714,7 +714,7 @@ class ProfilePhoto(APIView):
             return Response("aysa")
         serializer = UserProfilePhotoSerializer(user)
         return Response(serializer.data)
-    
+
 class AddCoin(APIView):
     def put(self , request , username):
         body = json.loads(request.body.decode('utf-8'))
