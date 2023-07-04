@@ -26,7 +26,7 @@ class NotificationSerializer(serializers.ModelSerializer):
         sender = User.objects.get(id=obj.user_sender.id).username
         return sender
 
-    def get_profile_photo_URL(self, obj):
+    def get_sender_profile_photo_URL(self, obj):
         sender = User.objects.get(id=obj.user_sender.id)
 
         if sender.profile_photo:
