@@ -92,6 +92,8 @@ class BlogViewUserForView(APIView):
                 'message':'the announcement status is not Done'
             } , status = status.HTTP_400_BAD_REQUEST)
         serializer = BlogSerializerToPost(data = data)
+        ans.existPost = True
+        ans.save()
         if not serializer.is_valid():
             return Response({
                 'data': serializer.errors,
@@ -150,7 +152,7 @@ class BlogViewUserForView(APIView):
             data = json.loads(request.body.decode('utf-8'))
             # data = request.data
             blog = Blog.objects.filter(uid = data.get('uid'))
-
+            ans = Announcement.objects.get(id = data['annoncement'] )
             if not blog.exists():
                 return Response({
                     'data': {},
@@ -161,7 +163,8 @@ class BlogViewUserForView(APIView):
                     'data': {},
                     'message':'you are not authorized to do this'
                 }, status = status.HTTP_400_BAD_REQUEST )
-
+            ans.existPost = False
+            ans.save()
             blog[0].delete()
             return Response({
                 'data':{},
