@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from .models import Message
 from accounts.models import User
+from utils.models import City
 
 class MessageSerializer(serializers.ModelSerializer):
     class Meta:
@@ -12,6 +13,11 @@ class MessageSerializer(serializers.ModelSerializer):
 
 
 class ContactSerializer(serializers.ModelSerializer):
+    city_name = serializers.SerializerMethodField()
     class Meta:
         model = User
-        fields = ['first_name', 'last_name', 'id', 'username' , 'User_city']
+        fields = ['first_name', 'last_name', 'id', 'username' , 'city_name']
+
+    def get_city_name(self, obj):
+        city = City.objects.get(id = obj.anc_city.id)
+        return city.city_name
