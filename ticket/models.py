@@ -16,7 +16,7 @@ class Message(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     is_read = models.BooleanField(default=False)
     type = models.CharField(max_length=10, choices=MESSAGE_TYPES)
-    ans_id = models.ForeignKey(Announcement , on_delete=models.CASCADE , related_name='ans')
+    # ans_id = models.ForeignKey(Announcement , on_delete=models.CASCADE , related_name='ans')
     # room = models.ForeignKey(Room, on_delete=models.CASCADE, related_name='messages')
     def __str__(self):
         return self.message

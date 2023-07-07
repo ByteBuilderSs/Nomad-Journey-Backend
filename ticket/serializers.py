@@ -6,7 +6,7 @@ from announcement.models import Announcement
 class MessageSerializer(serializers.ModelSerializer):
     class Meta:
         model = Message
-        fields = ['sender', 'receiver', 'message', 'created_at' , 'is_read','ans_id' , 'type']
+        fields = ['sender', 'receiver', 'message', 'created_at' , 'is_read', 'type']
         extra_kwargs = {
             'type' : {'read_only' : True}
         }
