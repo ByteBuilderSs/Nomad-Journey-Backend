@@ -47,12 +47,13 @@ class MostLikedBlogView(APIView):
         num_like_blogs = {}
         for i in range(len(blogs)):
             num_like_blogs[i] = len(Like.objects.filter(liked_post = blogs[i].uid))
-
+            print("num of likes:" , num_like_blogs[i])
         num_like_blogs = sorted(num_like_blogs.items(), key=lambda x:x[1])
         for key in num_like_blogs:
             final_blog.append(i)
         for i in final_blog:
             res.append(blogs[i])
+            print("blog:" , blogs[i])
         serializer = BlogSerializer(res[:15] , many = True)
         return Response({
             'data':serializer.data,
