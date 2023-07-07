@@ -40,28 +40,28 @@ class PublicBlogView(APIView):
         
 class MostLikedBlogView(APIView):
     def get(self , request):
-        try:
-            blogs = Blog.objects.all()
-            final_blog = []
-            num_like_blogs = {}
-            for blog in blogs:
-                num_like_blogs[blog] = len(Like.objects.filter(liked_post = blog.uid))
+        # try:
+        blogs = Blog.objects.all()
+        final_blog = []
+        num_like_blogs = {}
+        for blog in blogs:
+            num_like_blogs[blog] = len(Like.objects.filter(liked_post = blog.uid))
 
-            num_like_blogs = sorted(num_like_blogs.items(), key=lambda x:x[1])
-            for key in num_like_blogs:
-                final_blog.append(key)
+        num_like_blogs = sorted(num_like_blogs.items(), key=lambda x:x[1])
+        for key in num_like_blogs:
+            final_blog.append(key)
 
-            serializer = BlogSerializer(final_blog[:15] , many = True)
-            return Response({
-                'data':serializer.data,
-                'message' : 'blogs fetched successfully'
-            } , status = status.HTTP_201_CREATED)
-        except Exception as e:
-            print(e) 
-            return Response({
-                'data': {},
-                'message':'something went wrong'
-            }, status = status.HTTP_400_BAD_REQUEST )
+        serializer = BlogSerializer(final_blog[:15] , many = True)
+        return Response({
+            'data':serializer.data,
+            'message' : 'blogs fetched successfully'
+        } , status = status.HTTP_201_CREATED)
+        # except Exception as e:
+        #     print(e) 
+        #     return Response({
+        #         'data': {},
+        #         'message':'something went wrong'
+        #     }, status = status.HTTP_400_BAD_REQUEST )
 
 class BlogView(APIView):
     permission_classes = (IsAuthenticated,)
