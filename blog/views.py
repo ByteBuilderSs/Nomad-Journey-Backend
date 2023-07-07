@@ -46,7 +46,7 @@ class MostLikedBlogView(APIView):
         res = []
         num_like_blogs = {}
         for i in range(len(blogs)):
-            num_like_blogs[i] = len(Like.objects.filter(liked_post = blog.uid))
+            num_like_blogs[i] = len(Like.objects.filter(liked_post = blogs[i].uid))
 
         num_like_blogs = sorted(num_like_blogs.items(), key=lambda x:x[1])
         for key in num_like_blogs:
