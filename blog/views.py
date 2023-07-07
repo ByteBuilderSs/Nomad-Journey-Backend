@@ -152,7 +152,7 @@ class BlogViewUserForView(APIView):
             data = json.loads(request.body.decode('utf-8'))
             # data = request.data
             blog = Blog.objects.filter(uid = data.get('uid'))
-            ans = Blog.objects.filter(id = blog['annoncement'])
+            ans = Announcement.objects.get(id = blog[0].annoncement.id)
             # ans = Announcement.objects.get(id = data['annoncement'] )
             if not blog.exists():
                 return Response({
