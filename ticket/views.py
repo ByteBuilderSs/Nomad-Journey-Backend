@@ -142,7 +142,7 @@ class GetContactVolunteers(APIView):
             for host in request_announcements:
                 volunteers.append(User.objects.get(id = host.host.id))
         volunteers = list(set(volunteers))
-        serializer = ContactVolunteerSerializer(volunteers ,  many=True)
+        serializer = ContactSerializer(volunteers ,  many=True)
         return Response({
             'data':serializer.data,
             'message' : 'users fetched successfully'
@@ -158,7 +158,7 @@ class GetContactRequest(APIView):
             ans = Announcement.objects.get(id = re.req_anc.id)
             announcers_requested.append(User.objects.get(id = ans.announcer.id))
         announcers_requested = list(set(announcers_requested))
-        serializer = ContactRequestSerializer(announcers_requested ,  many=True)
+        serializer = ContactSerializer(announcers_requested ,  many=True)
         return Response({
             'data':serializer.data,
             'message' : 'users fetched successfully'
