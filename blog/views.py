@@ -6,6 +6,7 @@ from rest_framework.permissions import AllowAny, IsAuthenticated
 from django.shortcuts import get_object_or_404
 from django.core.paginator import Paginator
 from .models import Blog , Tag
+from like_post.models import *
 from announcement.models import Announcement
 from feedback.models import Feedback
 from .serializers import *
@@ -26,6 +27,31 @@ class PublicBlogView(APIView):
             # page_number = request.GET.get('page' , 1)
             # paginator = Paginator(blogs , 3) #how many blogs per page
             serializer = BlogSerializer(blogs , many = True)
+            return Response({
+                'data':serializer.data,
+                'message' : 'blogs fetched successfully'
+            } , status = status.HTTP_201_CREATED)
+        except Exception as e:
+            print(e) 
+            return Response({
+                'data': {},
+                'message':'something went wrong'
+            }, status = status.HTTP_400_BAD_REQUEST )
+        
+class MostLikedBlogView(APIView):
+    def get(self , request):
+        try:
+            blogs = Blog.objects.all()
+            final_blog = []
+            num_like_blogs = {}
+            for blog in blogs:
+                num_like_blogs[blog] = len(Like.objects.filter(liked_post = blog.uid))
+
+            num_like_blogs = sorted(num_like_blogs.items(), key=lambda x:x[1])
+            for key in num_like_blogs:
+                final_blog.append(key)
+
+            serializer = BlogSerializer(final_blog[:15] , many = True)
             return Response({
                 'data':serializer.data,
                 'message' : 'blogs fetched successfully'
