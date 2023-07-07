@@ -10,5 +10,6 @@ urlpatterns = [
     path('tags/' , TagView.as_view()),
     path('tagdetail/<uid>' , TagViewByUid.as_view()),
     path('others-profile-post/<str:username>' , BlogViewUserForView.as_view()),
-    path('search-blog/', SearchBlog.as_view())
+    path('search-blog/', SearchBlog.as_view()),
+    path('most-liked-blog/', MostLikedBlogView.as_view())
 ]
