@@ -19,5 +19,5 @@ class ContactSerializer(serializers.ModelSerializer):
         fields = ['first_name', 'last_name', 'id', 'username' , 'city_name']
 
     def get_city_name(self, obj):
-        city = City.objects.get(id = obj.anc_city.id)
+        city = City.objects.get(id = obj.User_city.id)
         return city.city_name
