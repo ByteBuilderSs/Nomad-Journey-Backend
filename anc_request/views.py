@@ -31,9 +31,8 @@ def GetRequestsOfHost(request, host_id):
 def CreateRequest(request, anc_id):
     announcement = Announcement.objects.get(id=anc_id)
 
-    announcer = User.objects.get(id=announcement.announcer)
-    if announcer.User_address_lat is None or announcer.User_address_long is None:
-        return Response(status=400)
+    if announcement.announcer.User_address_lat is None or announcement.announcer.User_address_long is None:
+        return Response('You should complete your location info.', status=400)
 
     serializer = AncRequestSerializer(data=request.data, context={"request" : request, "announcement" : announcement})
 
