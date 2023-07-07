@@ -131,3 +131,35 @@ class GetContacts(APIView):
             'data':serializer.data,
             'message' : 'users fetched successfully'
         } , status = status.HTTP_201_CREATED)
+
+class GetContactVolunteers(APIView):
+    def get(self,requset , username):
+        user_id  = User.objects.get(username = username).id
+        announcements = Announcement.objects.filter(announcer = user_id )
+        volunteers = []
+        for ans in announcements:
+            request_announcements = AncRequest.objects.filter(req_anc = ans.id)
+            for host in request_announcements:
+                volunteers.append(User.objects.get(id = host.host.id))
+        volunteers = list(set(volunteers))
+        serializer = ContactSerializer(volunteers ,  many=True)
+        return Response({
+            'data':serializer.data,
+            'message' : 'users fetched successfully'
+        } , status = status.HTTP_201_CREATED)
+
+class GetContactRequest(APIView):
+    def get(self,requset , username):
+        user_id  = User.objects.get(username = username).id
+        announcements = Announcement.objects.filter(announcer = user_id )
+        requests = AncRequest.objects.filter(host = user_id )
+        announcers_requested = []
+        for re in requests:
+            ans = Announcement.objects.get(id = re.req_anc.id)
+            announcers_requested.append(User.objects.get(id = ans.announcer.id))
+        announcers_requested = list(set(announcers_requested))
+        serializer = ContactSerializer(announcers_requested ,  many=True)
+        return Response({
+            'data':serializer.data,
+            'message' : 'users fetched successfully'
+        } , status = status.HTTP_201_CREATED)
