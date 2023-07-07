@@ -10,6 +10,7 @@ from like_post.models import *
 from announcement.models import Announcement
 from feedback.models import Feedback
 from .serializers import *
+from accounts.serializers import UserProfileForOverviewSerializer
 import json
 from accounts.models import User
 from rest_framework.decorators import api_view
@@ -71,6 +72,19 @@ class BlogView(APIView):
                 'data': {},
                 'message':'something went wrong'
             }, status = status.HTTP_400_BAD_REQUEST )
+
+class AuthorLikedBlog(APIView):
+    def get(self,request,username):
+        user_id = User.objects.get(username = username).id
+        liked_blogs = Blog.objects.filter(like__liker__username=username)
+        authors = liked_blogs.values('author').distinct()
+        authors_data = User.objects.filter(id__in=authors).order_by('id')
+        serializer = UserProfileForOverviewSerializer(authors_data , many = True)
+        return Response({
+            'data':serializer.data,
+            'message' : 'authors fetched successfully'
+        } , status = status.HTTP_201_CREATED)
+
 
 class BlogViewUserForView(APIView):
     def get(self , request , username):
