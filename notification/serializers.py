@@ -13,14 +13,12 @@ class NotificationSerializer(serializers.ModelSerializer):
         fields = ['id', 'user_sender', 'user_receiver', 'notif_type', 'is_seen', 'created_at', 'message', 'sender_username', 'sender_profile_photo_URL']
 
     def get_message(self, obj):
-        sender = User.objects.get(id=obj.user_sender.id).username
-
         if obj.notif_type == 'like_post':
-            return sender + ' liked your post.'
+            return ' liked your post.'
         elif obj.notif_type == 'offer_to_host':
-            return sender + ' offered to become your host.'
+            return ' offered to become your host.'
         elif obj.notif_type == 'chosen_as_main_host':
-            return sender + ' chose you as their host.'
+            return ' chose you as their host.'
 
     def get_sender_username(self, obj):
         sender = User.objects.get(id=obj.user_sender.id).username
