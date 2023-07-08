@@ -87,8 +87,20 @@ def GetAnnouncementsForHost(request):
     pagination = PageNumberPagination()
 
     # initial objects
+    announcements = Announcement.objects.all()
+    current_time = datetime.datetime.now().date()
+    for a in announcements:
+        if a.anc_status == 'P' and current_time > a.arrival_date:
+            setattr(a , 'anc_status' , 'E')
+            a.save()
+        elif a.anc_status == 'A' and current_time >= a.departure_date:
+            setattr(a , 'anc_status' , 'D')
+            a.save()
+        else:
+            continue
+
     request_ids = AncRequest.objects.filter(host=request.user.id).values('req_anc')
-    announcements = Announcement.objects.filter(anc_status='P')
+    announcements = announcements.filter(anc_status='P')
     announcements = announcements.exclude(id__in=request_ids).exclude(announcer=request.user.id)
 
     # sorting

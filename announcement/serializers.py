@@ -11,7 +11,6 @@ class AnnouncementSerializer(serializers.ModelSerializer):
     announcer_username = serializers.SerializerMethodField()
     city_name = serializers.SerializerMethodField()
     city_country = serializers.SerializerMethodField()
-    anc_status = serializers.SerializerMethodField()
     announcer_langs = serializers.SerializerMethodField()
 
     class Meta:
@@ -24,15 +23,6 @@ class AnnouncementSerializer(serializers.ModelSerializer):
         instance = self.Meta.model(**validated_data)
         instance.save()
         return instance
-
-    def get_anc_status(self, obj):
-        current_time = datetime.datetime.now().date()
-        if obj.anc_status == 'P' and current_time >= obj.arrival_date:
-            return 'E'
-        elif obj.anc_status == 'A' and current_time >= obj.departure_date:
-            return 'D'
-        else:
-            return obj.anc_status
 
     def get_city_name(self, obj):
         city = City.objects.get(id = obj.anc_city.id)
