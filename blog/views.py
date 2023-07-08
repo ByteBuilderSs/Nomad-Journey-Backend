@@ -14,6 +14,7 @@ from accounts.serializers import UserProfileForOverviewSerializer
 import json
 from accounts.models import User
 from rest_framework.decorators import api_view
+from django.db.models import Avg, ExpressionWrapper, F , Q
 
 @api_view(['GET'])
 def GeneralBlogView(request):
@@ -42,8 +43,9 @@ class PublicBlogView(APIView):
 class MostLikedBlogView(APIView):
     def get(self , request):
         # try:
-        popular_blogs = Blog.objects.annotate(num_likes=models.Count('like')).order_by('-num_likes')[:15]
-        serializer = BlogSerializer(popular_blogs, many=True)
+        popular_blogs = Blog.objects.annotate(num_likes=models.Count('like')).order_by('-num_likes')
+        popular_blogs_images = popular_blogs.exclude(Q(main_image_64=None) | Q(main_image_64=True))
+        serializer = BlogSerializer(popular_blogs_images[:5], many=True)
         return Response({
             'data':serializer.data,
             'message' : 'blogs fetched successfully'
