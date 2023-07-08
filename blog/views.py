@@ -85,8 +85,9 @@ class AuthorLikedBlog(APIView):
         # for blog in liked_blogs:
         #     authors_data.append(User.objects.get(id = blog.author))
         
+        authors = liked_blogs.values('author').distinct()
         authors_data = User.objects.filter(id__in=authors).order_by('id')
-        serializer = UserProfileForOverviewSerializer(random.choices , many = True)
+        serializer = UserProfileForOverviewSerializer(authors_data , many = True)
         return Response({
             'data':serializer.data,
             'message' : 'authors fetched successfully'
