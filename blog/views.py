@@ -12,6 +12,7 @@ from feedback.models import Feedback
 from .serializers import *
 from accounts.serializers import UserProfileForOverviewSerializer
 import json
+import random
 from accounts.models import User
 from rest_framework.decorators import api_view
 from django.db.models import Avg, ExpressionWrapper, F , Q
@@ -79,9 +80,13 @@ class AuthorLikedBlog(APIView):
     def get(self,request,username):
         user_id = User.objects.get(username = username).id
         liked_blogs = Blog.objects.filter(like__liker__username=username)
-        authors = liked_blogs.values('author').distinct()
-        authors_data = User.objects.filter(id__in=authors).order_by('id')
-        serializer = UserProfileForOverviewSerializer(authors_data , many = True)
+        # authors = liked_blogs.values('author').distinct()
+        authors_data = []
+        for blog in liked_blogs:
+            authors_data.append(User.objects.get(id = blog.author))
+        
+        # authors_data = User.objects.filter(id__in=authors).order_by('id')
+        serializer = UserProfileForOverviewSerializer(random.choices(authors_data, k=5) , many = True)
         return Response({
             'data':serializer.data,
             'message' : 'authors fetched successfully'
