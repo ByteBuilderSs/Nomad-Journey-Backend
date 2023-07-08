@@ -10,5 +10,6 @@ urlpatterns = [
     path('get-all-messages/<sender_username>/<receiver_username>/' , AllMessageDetailView.as_view()),
     path('get-contacts/<username>/' , GetContacts.as_view()),
     path('get-contacts-volunteers/<username>/' , GetContactVolunteers.as_view()),
-    path('get-contacts-requests/<username>/' , GetContactRequest.as_view())
+    path('get-contacts-requests/<username>/' , GetContactRequest.as_view()),
+    path('all-unseen-messages/<sender_username>/' , AllMessageUnseenListView.as_view()),
 ]

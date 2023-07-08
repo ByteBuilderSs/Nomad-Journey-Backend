@@ -43,6 +43,33 @@ class MessageUnseenListView(APIView):
                 'message':'something went wrong'
             }, status = status.HTTP_400_BAD_REQUEST )
 
+class AllMessageUnseenListView(APIView):
+    def get(self , request,sender_username):
+        count = 0
+        try:
+            if request.user.username!= sender_username:
+                return Response({
+                    'data': {},
+                    'message':'you are not authorized to do this'
+                }, status = status.HTTP_400_BAD_REQUEST )
+            messages = Message.objects.filter(sender = get_id(sender_username), is_read = False)
+            serializer = MessageSerializer(messages, many=True, context={'request': request})
+            for message in messages:
+                count+=1
+                message.is_read = True
+                message.save()
+            return Response({
+                'data':serializer.data,
+                'count' : count,
+                'message' : 'messages fetched successfully'
+            } , status = status.HTTP_201_CREATED)
+        except Exception as e:
+            print(e) 
+            return Response({
+                'data': {},
+                'message':'something went wrong'
+            }, status = status.HTTP_400_BAD_REQUEST )
+
 class MessageGeneralListView(APIView):
     def get(self , request,sender_username , receiver_username):
         try:
