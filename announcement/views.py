@@ -175,6 +175,19 @@ def CreateAnnouncement(request):
 @permission_classes([IsAuthenticated])
 def EditAnnouncement(request, pk):
     announcement = Announcement.objects.get(id=pk)
+
+    if announcement.anc_status == 'E' or announcement.anc_status == 'D':
+        return Response("You can't edit this announcement because it is expired or done.", status=400)
+
+    anc_requests = AncRequest.objects.filter(req_anc=announcement.id)
+    for req in anc_requests:
+        req.delete()
+
+    if announcement.anc_status == 'A':
+        announcement.main_host = None
+        announcement.anc_status = 'P'
+        announcement.save()
+
     serializer = AnnouncementSerializer(instance=announcement, data=request.data)
 
     if serializer.is_valid():
