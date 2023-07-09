@@ -61,7 +61,7 @@ class AllMessageUnseenListView(APIView):
                 message.save()
             return Response({
                 'data':serializer.data,
-                'count' : message_count,
+                'count' : count,
                 'message' : 'messages fetched successfully'
             } , status = status.HTTP_201_CREATED)
         except Exception as e:
@@ -82,7 +82,7 @@ class MessageGeneralListView(APIView):
             messages = Message.objects.filter(sender = get_id(sender_username), receiver = get_id(receiver_username))
             serializer = MessageSerializer(messages, many=True, context={'request': request})
             for message in messages:
-                message.is_read = True
+                # message.is_read = True
                 message.save()
             return Response({
                 'data':serializer.data,
