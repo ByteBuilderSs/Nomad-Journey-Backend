@@ -16,6 +16,11 @@ class FeedbackViewByAncId(APIView):
     def get(self , request , anc_id):
         # try:
         feedback= Feedback.objects.filter(ans_id = anc_id)
+        if len(feedback) == 0:
+            return Response({
+                'data': {},
+                'message':'invalid anc id'
+            }, status = status.HTTP_400_BAD_REQUEST )
         serializer = FeedbackSerializerToGet(feedback[0])
         return Response({
             'data':serializer.data,
