@@ -47,11 +47,11 @@ class AllMessageUnseenListView(APIView):
     def get(self , request,sender_username):
         count = 0
         try:
-            if request.user.username!= sender_username:
-                return Response({
-                    'data': {},
-                    'message':'you are not authorized to do this'
-                }, status = status.HTTP_400_BAD_REQUEST )
+            # if request.user.username!= sender_username:
+            #     return Response({
+            #         'data': {},
+            #         'message':'you are not authorized to do this'
+            #     }, status = status.HTTP_400_BAD_REQUEST )
             messages = Message.objects.filter(sender = get_id(sender_username), is_read = False)
             message_count = message.count
             serializer = MessageSerializer(messages, many=True, context={'request': request})
