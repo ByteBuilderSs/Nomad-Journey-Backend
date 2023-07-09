@@ -27,7 +27,7 @@ class PublicBlogView(APIView):
     def get(self , request):
         try:
             blogs = Blog.objects.all()
-            blogs_ordered = blogs.order_by('created_at')
+            blogs_ordered = blogs.order_by('-created_at')
             # page_number = request.GET.get('page' , 1)
             # paginator = Paginator(blogs , 3) #how many blogs per page
             serializer = BlogSerializer(blogs_ordered , many = True)
