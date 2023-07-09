@@ -162,7 +162,7 @@ def CreateAnnouncement(request):
     serializer = AnnouncementSerializer(data=request.data, context={"request" : request})
     if user.coins < 1:
         return Response({
-            'data': serializer.errors,
+            'data': {},
             'message':'you need more coins to create announcement'
         } , status = status.HTTP_400_BAD_REQUEST)
     user.coins = user.coins - 1
