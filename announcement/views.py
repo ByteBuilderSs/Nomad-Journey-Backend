@@ -159,6 +159,7 @@ def CreateAnnouncement(request):
     data = request.data
     print('data is:',data)
     user = User.objects.get(id = request.user.id)
+    serializer = AnnouncementSerializer(data=request.data, context={"request" : request})
     if user.coins < 1:
         return Response({
             'data': serializer.errors,
@@ -166,7 +167,6 @@ def CreateAnnouncement(request):
         } , status = status.HTTP_400_BAD_REQUEST)
     user.coins = user.coins - 1
     user.save()
-    serializer = AnnouncementSerializer(data=request.data, context={"request" : request})
     if serializer.is_valid():
         serializer.save()
     return Response(serializer.data)
