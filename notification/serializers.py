@@ -19,6 +19,8 @@ class NotificationSerializer(serializers.ModelSerializer):
             return ' offered to become your host.'
         elif obj.notif_type == 'chosen_as_main_host':
             return ' chose you as their host.'
+        elif obj.notif_type == 'rejected_as_main_host':
+            return ' rejected you as a host.'
 
     def get_sender_username(self, obj):
         sender = User.objects.get(id=obj.user_sender.id).username

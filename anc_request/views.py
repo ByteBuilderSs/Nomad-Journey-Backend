@@ -66,9 +66,11 @@ def AcceptRequest(request, req_id, host_id):
     if serializer.is_valid():
         serializer.save()
 
+    host = User.objects.get(id=host_id)
+
     notif = Notification.objects.create(
         user_sender=request.user,
-        user_receiver=host_id,
+        user_receiver=host,
         notif_type='chosen_as_main_host'
     ) 
 
@@ -78,5 +80,14 @@ def AcceptRequest(request, req_id, host_id):
 @permission_classes([IsAuthenticated])
 def RejectRequest(request, req_id, host_id):
     req = AncRequest.objects.get(req_anc = req_id, host = host_id)
+
+    host = User.objects.get(id=host_id)
+
+    notif = Notification.objects.create(
+        user_sender=request.user,
+        user_receiver=host,
+        notif_type='rejected_as_main_host'
+    ) 
+
     req.delete()
     return Response('Request deleted successfully!')

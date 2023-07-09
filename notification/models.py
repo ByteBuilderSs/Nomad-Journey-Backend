@@ -6,7 +6,8 @@ class Notification(models.Model):
     NOTIF_TYPE_CHOICES = (
         ('like_post', 'like_post'),
         ('offer_to_host', 'offer_to_host'),
-        ('chosen_as_main_host', 'chosen_as_main_host')
+        ('chosen_as_main_host', 'chosen_as_main_host'),
+        ('rejected_as_main_host', 'rejected_as_main_host')
     )
 
     user_sender = models.ForeignKey(User, on_delete=models.CASCADE, default=None, related_name='notif_sender', null=True)
