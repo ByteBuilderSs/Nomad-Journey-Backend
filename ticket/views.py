@@ -29,7 +29,7 @@ class MessageUnseenListView(APIView):
             serializer = MessageSerializer(messages, many=True, context={'request': request})
             for message in messages:
                 count+=1
-                message.is_read = True
+                # message.is_read = True
                 message.save()
             return Response({
                 'data':serializer.data,
