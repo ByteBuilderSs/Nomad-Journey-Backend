@@ -53,6 +53,7 @@ class AllMessageUnseenListView(APIView):
                     'message':'you are not authorized to do this'
                 }, status = status.HTTP_400_BAD_REQUEST )
             messages = Message.objects.filter(sender = get_id(sender_username), is_read = False)
+            message_count = message.count
             serializer = MessageSerializer(messages, many=True, context={'request': request})
             for message in messages:
                 count+=1
@@ -60,7 +61,7 @@ class AllMessageUnseenListView(APIView):
                 message.save()
             return Response({
                 'data':serializer.data,
-                'count' : count,
+                'count' : message_count,
                 'message' : 'messages fetched successfully'
             } , status = status.HTTP_201_CREATED)
         except Exception as e:
