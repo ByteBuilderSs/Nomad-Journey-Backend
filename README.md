@@ -1,5 +1,5 @@
-# Nomad-Journey-Backend
-**Nomad Journey** is a dynamic web application built with Django that brings the spirit of adventure and camaraderie to life. Inspired by the concept of couch surfing, it empowers travelers to create announcements for their future journeys while enabling hosts to graciously accept or kindly decline these invitations.
+# Nomad Journey
+Nomad Journey is a dynamic web application built with Django that brings the spirit of adventure and camaraderie to life. Inspired by the concept of couch surfing, it empowers travelers to create announcements for their future journeys while enabling hosts to graciously accept or kindly decline these invitations.
 
 ## Features
 **Seamless Announcements:** Travelers can effortlessly craft announcements, detailing their upcoming journeys and sharing their travel preferences.
