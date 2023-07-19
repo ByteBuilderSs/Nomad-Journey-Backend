@@ -32,7 +32,7 @@ class Blog(models.Model):
     tags = models.ManyToManyField(Tag, related_name='TaggedModel' , blank=True)
     annoncement = models.ForeignKey(Announcement , on_delete=models.CASCADE, null=True)
     def __str__(self):
-        return self.blog_title
+        return self.blog_title +" " + str(self.uid)
 
     def save(self, *args, **kwargs):
         value = self.blog_title[0:250]

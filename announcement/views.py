@@ -87,8 +87,20 @@ def GetAnnouncementsForHost(request):
     pagination = PageNumberPagination()
 
     # initial objects
+    announcements = Announcement.objects.all()
+    current_time = datetime.datetime.now().date()
+    for a in announcements:
+        if a.anc_status == 'P' and current_time > a.arrival_date:
+            setattr(a , 'anc_status' , 'E')
+            a.save()
+        elif a.anc_status == 'A' and current_time >= a.departure_date:
+            setattr(a , 'anc_status' , 'D')
+            a.save()
+        else:
+            continue
+
     request_ids = AncRequest.objects.filter(host=request.user.id).values('req_anc')
-    announcements = Announcement.objects.filter(anc_status='P')
+    announcements = announcements.filter(anc_status='P')
     announcements = announcements.exclude(id__in=request_ids).exclude(announcer=request.user.id)
 
     # sorting
@@ -147,14 +159,14 @@ def CreateAnnouncement(request):
     data = request.data
     print('data is:',data)
     user = User.objects.get(id = request.user.id)
+    serializer = AnnouncementSerializer(data=request.data, context={"request" : request})
     if user.coins < 1:
         return Response({
-            'data': serializer.errors,
+            'data': {},
             'message':'you need more coins to create announcement'
         } , status = status.HTTP_400_BAD_REQUEST)
     user.coins = user.coins - 1
     user.save()
-    serializer = AnnouncementSerializer(data=request.data, context={"request" : request})
     if serializer.is_valid():
         serializer.save()
     return Response(serializer.data)
@@ -163,6 +175,19 @@ def CreateAnnouncement(request):
 @permission_classes([IsAuthenticated])
 def EditAnnouncement(request, pk):
     announcement = Announcement.objects.get(id=pk)
+
+    if announcement.anc_status == 'E' or announcement.anc_status == 'D':
+        return Response("You can't edit this announcement because it is expired or done.", status=400)
+
+    anc_requests = AncRequest.objects.filter(req_anc=announcement.id)
+    for req in anc_requests:
+        req.delete()
+
+    if announcement.anc_status == 'A':
+        announcement.main_host = None
+        announcement.anc_status = 'P'
+        announcement.save()
+
     serializer = AnnouncementSerializer(instance=announcement, data=request.data)
 
     if serializer.is_valid():

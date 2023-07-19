@@ -14,7 +14,8 @@ class UserSerializer(serializers.ModelSerializer):
     city_name = serializers.SerializerMethodField('get_city_name') 
     class Meta:
         model = User
-        fields = ['first_name', 'last_name', 'email', 'password', 'password_again', 'username' , 'User_city' , 'city_name' , 'coins']
+        fields = ['first_name', 'last_name', 'email', 'password', 'password_again', 'username' , 'User_city' , 'city_name' , 'coins' , 'reset_token',
+                'reset_token_expiry']
         extra_kwargs = {
             'password':{'write_only' : True},
             'password_again':{'write_only' : True},
@@ -202,6 +203,24 @@ class UserProfileEdit8Serializer(serializers.ModelSerializer):
         model = User
         fields = ['is_sun','is_sat','is_mon','is_tue','is_wed','is_thu','is_fri','maximum_number_of_guests',
                 'prefered_gender_to_host','is_pet_friendly','is_kid_friendly','is_smoking_allowed']
+
+class UserProfileEdit9Serializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ['old_password' , 'new_password']
+        extra_kwargs = {
+            'old_password':{'write_only' : True},
+            'new_password':{'write_only' : True}
+        }
+
+class UserProfileEdit10Serializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ['password' , 'new_email']
+        extra_kwargs = {
+            'password':{'write_only' : True}
+        }
+
 
 class UserProfileForOverviewSerializer(serializers.ModelSerializer):
     city_name = serializers.SerializerMethodField('get_city_name') 

@@ -78,6 +78,8 @@ class GeneralBlogSerializer(serializers.ModelSerializer):
 class BlogSerializer(serializers.ModelSerializer):
     tags_name = serializers.SerializerMethodField('get_tag_name') 
     host_name = serializers.SerializerMethodField('get_host_name')
+    author_name = serializers.SerializerMethodField('get_author_name')
+    author_username = serializers.SerializerMethodField('get_author_username')
     ans_city = serializers.SerializerMethodField('get_ans_city')
     trip_duration = serializers.SerializerMethodField('get_trip_duration')
     host_username = serializers.SerializerMethodField('get_host_username')
@@ -89,7 +91,7 @@ class BlogSerializer(serializers.ModelSerializer):
         fields = ['uid','created_at','updated_at','author','blog_title','blog_text',
                 'json_data','main_image_64','slug','tags','tags_name' ,'host_name',
                 'ans_city','trip_duration' , 'host_username' , 'description' , 'secondary_image',
-                'is_liked', 'num_likes' , 'average_rate' ]
+                'is_liked', 'num_likes' , 'average_rate'  , 'author_name' , 'author_username']
     
     def get_tag_name(self,obj):
         tags_name_list = []
@@ -133,6 +135,12 @@ class BlogSerializer(serializers.ModelSerializer):
             for liker in like:
                 likers.append(liker.liker.id)
         return len(likers)
+
+    def get_author_name(self,obj):
+        return f"{obj.author.first_name} {obj.author.last_name}"
+    
+    def get_author_username(self,obj):
+        return obj.author.username
 
 class BlogSerializerToPost(serializers.ModelSerializer):
     tags_name = serializers.SerializerMethodField('get_tag_name') 

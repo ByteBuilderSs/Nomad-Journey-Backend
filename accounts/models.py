@@ -66,12 +66,18 @@ class User(AbstractUser):
     profile_photo = models.ImageField(upload_to='img_profile', null=True, blank=True)
     # end
 
+    reset_token = models.CharField(max_length=255, null=True, blank=True)
+    reset_token_expiry = models.DateTimeField(null=True, blank=True)
+
     ssn = models.CharField(max_length=20 , null=True,blank=True)
     first_name = models.CharField(max_length=255)
     last_name = models.CharField(max_length=255)
     email = models.EmailField(max_length=255 , unique=True)
+    new_email = models.EmailField(max_length=255 , unique=True , null=True,blank=True)
     password = models.CharField(max_length=255)
     password_again = models.CharField(max_length=255)
+    old_password = models.CharField(max_length=255 , null=True,blank=True)
+    new_password = models.CharField(max_length=255 , null=True,blank=True)
     username = models.CharField(max_length=255 , unique=True)
     date_joined = models.DateTimeField(auto_now_add=True)
     hosting_availability = models.CharField(max_length=50, choices=HOSTING_AVAILABILITY_CHOICE , null=True,blank=True)

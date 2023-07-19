@@ -6,12 +6,16 @@ from rest_framework.permissions import AllowAny, IsAuthenticated
 from django.shortcuts import get_object_or_404
 from django.core.paginator import Paginator
 from .models import Blog , Tag
+from like_post.models import *
 from announcement.models import Announcement
 from feedback.models import Feedback
 from .serializers import *
+from accounts.serializers import UserProfileForOverviewSerializer
 import json
+import random
 from accounts.models import User
 from rest_framework.decorators import api_view
+from django.db.models import Avg, ExpressionWrapper, F , Q
 
 @api_view(['GET'])
 def GeneralBlogView(request):
@@ -23,9 +27,10 @@ class PublicBlogView(APIView):
     def get(self , request):
         try:
             blogs = Blog.objects.all()
+            blogs_ordered = blogs.order_by('-created_at')
             # page_number = request.GET.get('page' , 1)
             # paginator = Paginator(blogs , 3) #how many blogs per page
-            serializer = BlogSerializer(blogs , many = True)
+            serializer = BlogSerializer(blogs_ordered , many = True)
             return Response({
                 'data':serializer.data,
                 'message' : 'blogs fetched successfully'
@@ -36,6 +41,23 @@ class PublicBlogView(APIView):
                 'data': {},
                 'message':'something went wrong'
             }, status = status.HTTP_400_BAD_REQUEST )
+        
+class MostLikedBlogView(APIView):
+    def get(self , request):
+        # try:
+        popular_blogs = Blog.objects.annotate(num_likes=models.Count('like')).order_by('-num_likes')
+        popular_blogs_images = popular_blogs.exclude(Q(main_image_64=None) | Q(main_image_64=True))
+        serializer = BlogSerializer(popular_blogs_images[:5], many=True)
+        return Response({
+            'data':serializer.data,
+            'message' : 'blogs fetched successfully'
+        } , status = status.HTTP_201_CREATED)
+        # except Exception as e:
+        #     print(e) 
+        #     return Response({
+        #         'data': {},
+        #         'message':'something went wrong'
+        #     }, status = status.HTTP_400_BAD_REQUEST )
 
 class BlogView(APIView):
     permission_classes = (IsAuthenticated,)
@@ -54,6 +76,24 @@ class BlogView(APIView):
                 'data': {},
                 'message':'something went wrong'
             }, status = status.HTTP_400_BAD_REQUEST )
+
+class AuthorLikedBlog(APIView):
+    def get(self,request,username):
+        user_id = User.objects.get(username = username).id
+        liked_blogs = Blog.objects.filter(like__liker__username=username)
+        authors = liked_blogs.values('author').distinct()
+        # authors_data = []
+        # for blog in liked_blogs:
+        #     authors_data.append(User.objects.get(id = blog.author))
+        
+        authors = liked_blogs.values('author').distinct()
+        authors_data = User.objects.filter(id__in=authors).order_by('id')
+        serializer = UserProfileForOverviewSerializer(random.choices(authors_data, k=5)  , many = True)
+        return Response({
+            'data':serializer.data,
+            'message' : 'authors fetched successfully'
+        } , status = status.HTTP_201_CREATED)
+
 
 class BlogViewUserForView(APIView):
     def get(self , request , username):
@@ -92,6 +132,8 @@ class BlogViewUserForView(APIView):
                 'message':'the announcement status is not Done'
             } , status = status.HTTP_400_BAD_REQUEST)
         serializer = BlogSerializerToPost(data = data)
+        ans.existPost = True
+        ans.save()
         if not serializer.is_valid():
             return Response({
                 'data': serializer.errors,
@@ -150,7 +192,8 @@ class BlogViewUserForView(APIView):
             data = json.loads(request.body.decode('utf-8'))
             # data = request.data
             blog = Blog.objects.filter(uid = data.get('uid'))
-
+            ans = Announcement.objects.get(id = blog[0].annoncement.id)
+            # ans = Announcement.objects.get(id = data['annoncement'] )
             if not blog.exists():
                 return Response({
                     'data': {},
@@ -161,7 +204,8 @@ class BlogViewUserForView(APIView):
                     'data': {},
                     'message':'you are not authorized to do this'
                 }, status = status.HTTP_400_BAD_REQUEST )
-
+            ans.existPost = False
+            ans.save()
             blog[0].delete()
             return Response({
                 'data':{},

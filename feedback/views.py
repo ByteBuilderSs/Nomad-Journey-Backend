@@ -12,12 +12,33 @@ import json
 from accounts.models import User
 from blog.models import Blog
 
+class FeedbackViewByAncId(APIView):
+    def get(self , request , anc_id):
+        # try:
+        feedback= Feedback.objects.filter(ans_id = anc_id)
+        if len(feedback) == 0:
+            return Response({
+                'data': {},
+                'message':'invalid anc id'
+            }, status = status.HTTP_400_BAD_REQUEST )
+        serializer = FeedbackSerializerToGet(feedback[0])
+        return Response({
+            'data':serializer.data,
+            'message' : 'feedback fetched successfully'
+        } , status = status.HTTP_201_CREATED)
+        # except Exception as e:
+        #     print(e) 
+        #     return Response({
+        #         'data': {},
+        #         'message':'something went wrong'
+        #     }, status = status.HTTP_400_BAD_REQUEST )
+
 class FeedbackView(APIView):
     def get(self , request , username):
         # try:
         user_id = User.objects.get(username = username).id
         feedback= Feedback.objects.filter(user_id = user_id)
-        serializer = FeedbackSerializerToGet(feedback , many = True )
+        serializer = FeedbackSerializerToGet(feedback[0])
         return Response({
             'data':serializer.data,
             'message' : 'feedback fetched successfully'

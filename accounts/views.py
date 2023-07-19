@@ -13,10 +13,59 @@ from .permissions import IsOwner
 import jwt , datetime
 from django.shortcuts import get_object_or_404
 import json
+from rest_framework.exceptions import NotFound
 from NormandJourney.tools import hash_sha256
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.parsers import MultiPartParser
+from django.contrib.auth.hashers import make_password ,check_password
+from django.core.mail import send_mail
+from django.template.loader import render_to_string
+from django.utils import timezone
+from datetime import timedelta
+from django.core.mail import send_mail
+from django.conf import settings
+from django.contrib.auth import get_user_model
 
+def generate_reset_token(user):
+    payload = {
+        'user_id': user.id,
+        'email': user.email,
+        'exp': datetime.datetime.utcnow() + datetime.timedelta(hours=24)  # تاریخ انقضای توکن: 24 ساعت بعد از زمان فعلی
+    }
+    token = jwt.encode(payload, 'your_secret_key', algorithm='HS256')
+    return token.decode('utf-8')
+
+
+def calculate_expiry_date():
+    return timezone.now() + timedelta(hours=72)
+
+def send_reset_email(email, reset_token):
+    subject = 'Password Reset'
+    # message = f'Click the link to reset your password: http://188.121.102.52:8000/api/v1/accounts/reset?token={reset_token}'
+    message = f'Click the link to reset your password: http://localhost:3000/resetpass?token={reset_token}'
+    sender_email = settings.EMAIL_HOST_USER
+    recipient_list = [email]
+    send_mail(subject, message, sender_email, recipient_list)
+
+class ResetPasswordPageView(APIView):
+    def get(self, request):
+        reset_token = request.GET.get('token', '')
+
+        user_model = get_user_model()
+        user = get_object_or_404(user_model, reset_token=reset_token)
+
+        return Response({"reset_token": reset_token})
+
+    def post(self, request):
+        password = request.data.get('password', '')
+        user_model = get_user_model()
+        user = get_object_or_404(user_model, reset_token=request.data.get('reset_token', ''))
+
+        user.set_password(password)
+        user.reset_token = ''
+        user.save()
+
+        return Response(status=status.HTTP_200_OK)
 
 class RegisterView(APIView):
     permission_classes = (AllowAny,)
@@ -71,6 +120,28 @@ class LoginView(APIView):
             except:
                 return Response({"message": "Something went wrong"}, status=status.HTTP_400_BAD_REQUEST)
 
+class ForgetPasswordView(APIView):
+    def post(self, request):
+        email = request.data.get('email')
+
+        try:
+            user = User.objects.get(email=email)
+        except User.DoesNotExist:
+            raise NotFound('User not found')
+
+        # Generate reset token
+        reset_token = generate_reset_token(user)
+        expiry_date = calculate_expiry_date()
+
+        # Update user model with reset token and expiry
+        user.reset_token = reset_token
+        user.reset_token_expiry = expiry_date
+        user.save()
+
+        # Send email with reset link
+        send_reset_email(user.email, reset_token)
+
+        return Response({'message': 'Password reset email sent'})
 
 class UserView(APIView):
     permission_classes=(IsAuthenticated,)
@@ -90,7 +161,6 @@ class UserView(APIView):
             serializer = UserCompeleteProfileSerializer(user)
             return Response(serializer.data)
 
-    
 class LogoutView(APIView):
     permission_classes = (IsAuthenticated,)
 
@@ -511,7 +581,89 @@ class UserProfileEdit8(APIView):
                 'data': {},
                 'message':'something went wrong'
             }, status = status.HTTP_400_BAD_REQUEST )
-        
+
+class UserProfileEdit9(APIView):
+    def patch(self , request , username):
+        try:
+            body = json.loads(request.body.decode('utf-8'))
+            user = User.objects.filter(username = username)
+            if len(user) == 0:
+                return Response({
+                    'data': {},
+                    'message':'invalid username'
+                }, status = status.HTTP_400_BAD_REQUEST )
+            if request.user.id != user[0].id:
+                return Response({
+                    'data': {},
+                    'message':'you are not authorized to do this'
+                }, status = status.HTTP_400_BAD_REQUEST )
+            if not check_password(body['old_password'] , user[0].password):
+                return Response({
+                    'data': {},
+                    'message':'you are not authorized to do this'
+                }, status = status.HTTP_400_BAD_REQUEST )
+            user[0].password = make_password(body['new_password'])
+            user[0].password_again = hash_sha256(body['new_password'])
+            user[0].save()
+            serializer = UserProfileEdit9Serializer(user[0] , data = body , partial = True)
+            if not serializer.is_valid():
+                return Response({
+                    'data': serializer.errors,
+                    'message':'something went wrong'
+                } , status = status.HTTP_400_BAD_REQUEST)
+            serializer.save()
+            return Response({
+                'data': serializer.data,
+                'message' : 'user updated successfully'
+            } , status = status.HTTP_201_CREATED)
+        except Exception as e:
+            print(e) 
+            return Response({
+                'data': {},
+                'message':'something went wrong'
+            }, status = status.HTTP_400_BAD_REQUEST )
+
+class UserProfileEdit10(APIView):
+    def patch(self , request , username):
+        try:
+            body = json.loads(request.body.decode('utf-8'))
+            user = User.objects.filter(username = username)
+            if len(user) == 0:
+                return Response({
+                    'data': {},
+                    'message':'invalid username'
+                }, status = status.HTTP_400_BAD_REQUEST )
+            if request.user.id != user[0].id:
+                return Response({
+                    'data': {},
+                    'message':'you are not authorized to do this'
+                }, status = status.HTTP_400_BAD_REQUEST )
+            if not check_password(body['password'] , user[0].password):
+                return Response({
+                    'data': {},
+                    'message':'you are not authorized to do this'
+                }, status = status.HTTP_400_BAD_REQUEST )
+            user[0].email = body['new_email']
+            user[0].save()
+            serializer = UserProfileEdit9Serializer(user[0] , data = body , partial = True)
+            if not serializer.is_valid():
+                return Response({
+                    'data': serializer.errors,
+                    'message':'something went wrong'
+                } , status = status.HTTP_400_BAD_REQUEST)
+            serializer.save()
+            return Response({
+                'data': serializer.data,
+                'message' : 'user updated successfully'
+            } , status = status.HTTP_201_CREATED)
+        except Exception as e:
+            print(e) 
+            return Response({
+                'data': {},
+                'message':'something went wrong'
+            }, status = status.HTTP_400_BAD_REQUEST )
+
+
 # class GetUsernameAndUserImageByUserId(APIView):
 #     def get(self,request , id):
 #         user = get_object_or_404(User, id=id)
@@ -562,7 +714,7 @@ class ProfilePhoto(APIView):
             return Response("aysa")
         serializer = UserProfilePhotoSerializer(user)
         return Response(serializer.data)
-    
+
 class AddCoin(APIView):
     def put(self , request , username):
         body = json.loads(request.body.decode('utf-8'))

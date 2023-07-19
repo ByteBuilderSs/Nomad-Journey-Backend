@@ -43,6 +43,34 @@ class MessageUnseenListView(APIView):
                 'message':'something went wrong'
             }, status = status.HTTP_400_BAD_REQUEST )
 
+class AllMessageUnseenListView(APIView):
+    def get(self , request,sender_username):
+        count = 0
+        try:
+            # if request.user.username!= sender_username:
+            #     return Response({
+            #         'data': {},
+            #         'message':'you are not authorized to do this'
+            #     }, status = status.HTTP_400_BAD_REQUEST )
+            messages = Message.objects.filter(sender = get_id(sender_username), is_read = False)
+            message_count = messages.count()
+            serializer = MessageSerializer(messages, many=True)
+            for message in messages:
+                count+=1
+                message.is_read = True
+                message.save()
+            return Response({
+                'data':serializer.data,
+                'count' : count,
+                'message' : 'messages fetched successfully'
+            } , status = status.HTTP_201_CREATED)
+        except Exception as e:
+            print(e) 
+            return Response({
+                'data': {},
+                'message':'something went wrong'
+            }, status = status.HTTP_400_BAD_REQUEST )
+
 class MessageGeneralListView(APIView):
     def get(self , request,sender_username , receiver_username):
         try:
@@ -54,7 +82,7 @@ class MessageGeneralListView(APIView):
             messages = Message.objects.filter(sender = get_id(sender_username), receiver = get_id(receiver_username))
             serializer = MessageSerializer(messages, many=True, context={'request': request})
             for message in messages:
-                message.is_read = True
+                # message.is_read = True
                 message.save()
             return Response({
                 'data':serializer.data,
@@ -127,6 +155,38 @@ class GetContacts(APIView):
         announcers_requested = list(set(announcers_requested))
         final_list = list(set(announcers_requested) | set(volunteers))
         serializer = ContactSerializer(final_list ,  many=True)
+        return Response({
+            'data':serializer.data,
+            'message' : 'users fetched successfully'
+        } , status = status.HTTP_201_CREATED)
+
+class GetContactVolunteers(APIView):
+    def get(self,requset , username):
+        user_id  = User.objects.get(username = username).id
+        announcements = Announcement.objects.filter(announcer = user_id )
+        volunteers = []
+        for ans in announcements:
+            request_announcements = AncRequest.objects.filter(req_anc = ans.id)
+            for host in request_announcements:
+                volunteers.append(User.objects.get(id = host.host.id))
+        volunteers = list(set(volunteers))
+        serializer = ContactSerializer(volunteers ,  many=True)
+        return Response({
+            'data':serializer.data,
+            'message' : 'users fetched successfully'
+        } , status = status.HTTP_201_CREATED)
+
+class GetContactRequest(APIView):
+    def get(self,requset , username):
+        user_id  = User.objects.get(username = username).id
+        announcements = Announcement.objects.filter(announcer = user_id )
+        requests = AncRequest.objects.filter(host = user_id )
+        announcers_requested = []
+        for re in requests:
+            ans = Announcement.objects.get(id = re.req_anc.id)
+            announcers_requested.append(User.objects.get(id = ans.announcer.id))
+        announcers_requested = list(set(announcers_requested))
+        serializer = ContactSerializer(announcers_requested ,  many=True)
         return Response({
             'data':serializer.data,
             'message' : 'users fetched successfully'

@@ -8,6 +8,7 @@ from announcement.models import Announcement
 from accounts.models import User
 from accounts.serializers import UserSerializer
 from announcement.serializers import AnnouncementSerializer
+from notification.models import Notification
 
 
 @api_view(['GET'])
@@ -29,10 +30,21 @@ def GetRequestsOfHost(request, host_id):
 @permission_classes([IsAuthenticated])
 def CreateRequest(request, anc_id):
     announcement = Announcement.objects.get(id=anc_id)
+
+    if request.user.User_address_lat is None or request.user.User_address_long is None:
+        return Response('You should complete your location info.', status=400)
+
     serializer = AncRequestSerializer(data=request.data, context={"request" : request, "announcement" : announcement})
 
     if serializer.is_valid():
         serializer.save()
+
+    notif = Notification.objects.create(
+        user_sender=request.user,
+        user_receiver=announcement.announcer,
+        notif_type='offer_to_host'
+    ) 
+
     return Response(serializer.data)
 
 @api_view(['PUT'])
@@ -53,11 +65,29 @@ def AcceptRequest(request, req_id, host_id):
     serializer = AnnouncementSerializer(data=announcement)
     if serializer.is_valid():
         serializer.save()
+
+    host = User.objects.get(id=host_id)
+
+    notif = Notification.objects.create(
+        user_sender=request.user,
+        user_receiver=host,
+        notif_type='chosen_as_main_host'
+    ) 
+
     return Response(serializer.data)
 
 @api_view(['PUT'])
 @permission_classes([IsAuthenticated])
 def RejectRequest(request, req_id, host_id):
     req = AncRequest.objects.get(req_anc = req_id, host = host_id)
+
+    host = User.objects.get(id=host_id)
+
+    notif = Notification.objects.create(
+        user_sender=request.user,
+        user_receiver=host,
+        notif_type='rejected_as_main_host'
+    ) 
+
     req.delete()
     return Response('Request deleted successfully!')
